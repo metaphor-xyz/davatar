@@ -14,13 +14,13 @@ export default function ConnectWallet() {
   const connect = useCallback(async () => {
     await connector.connect();
     const provider = new WalletConnectProvider({ connector, infuraId: 'e6e57d41c8b2411ea434bf96efe69f08' });
-    await provider.enable();
+    if (provider.chainId !== 3) {
+      alert('Woah! Use Ropsten Test Network for now.');
+      connector.killSession();
+      return;
+    }
     const wallet = new Web3(provider as any);
     setWallet(wallet);
-    const accounts = await wallet.eth.getAccounts();
-    console.log(accounts);
-    const sig = await wallet.eth.personal.sign('datatosign', accounts[0], '');
-    console.log(sig);
   }, [connector]);
 
   return (

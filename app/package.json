@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@carlosdp/react-native-dapp": "^1.5.4",
+    "@ensdomains/ensjs": "^2.0.1",
+    "@react-native-async-storage/async-storage": "~1.15.0",
     "@walletconnect/web3-provider": "^1.5.4",
     "expo": "~42.0.0",
     "firebase": "8.2.3",
@@ -8,8 +10,7 @@
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-web": "~0.13.12",
-    "web3": "^1.5.1",
-    "@react-native-async-storage/async-storage": "~1.15.0"
+    "web3": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
