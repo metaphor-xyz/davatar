@@ -1,7 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { registerRootComponent } from 'expo';
 import firebase from 'firebase';
+
+import WalletProvider from './WalletProvider';
+import ConnectWallet from './ConnectWallet';
 
 const firebaseConfig = {
   apiKey: "AIzaSyA7fqVE1VoM81x3bJfKOaH7tK0Ka8b9FvI",
@@ -23,7 +26,9 @@ if (process.env.NODE_ENV === 'development') {
 function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <WalletProvider>
+        <ConnectWallet />
+      </WalletProvider>
     </View>
   );
 }

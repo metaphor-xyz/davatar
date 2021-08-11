@@ -1,5 +1,8 @@
 import React, { createContext, useState, useContext } from 'react';
 import Web3 from 'web3';
+import WalletConnectProvider from '@carlosdp/react-native-dapp';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface Context {
   wallet: Web3 | null;
@@ -13,7 +16,17 @@ export default function WalletProvider(props: React.PropsWithChildren<{}>) {
 
   return (
     <WalletContext.Provider value={{ wallet, setWallet }}>
-      {props.children}
+      <WalletConnectProvider
+        redirectUrl={Platform.OS === 'web' ? window.location.origin : 'garnet://'}
+        storageOptions={{
+          // @ts-ignore
+          asyncStorage: AsyncStorage,
+        }}
+      >
+        <>
+          {props.children}
+        </>
+      </WalletConnectProvider>
     </WalletContext.Provider>
   );
 }
