@@ -1,5 +1,5 @@
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 export interface Props {
   title: string;
@@ -22,20 +22,19 @@ export default function Button(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: '16px',
-    maxWidth: '330px',
-    width: '100%',
-    backgroundColor: '#5C59EB',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: "16px",
+    maxWidth: "330px",
+    width: "100%",
+    backgroundColor: "#5C59EB",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 16,
   },
   text: {
-    color: '#fff',
-    fontFamily: 'Inter, sans-serif',
-    fontWeight: '600',
+    color: "#fff",
+    fontFamily: "Inter, sans-serif",
+    fontWeight: "600",
     fontSize: 16,
   },
 });
-
