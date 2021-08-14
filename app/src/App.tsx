@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { registerRootComponent } from "expo";
 import firebase from "firebase";
@@ -29,11 +29,24 @@ if (process.env.NODE_ENV === "development") {
 }
 
 function App() {
+  const [authReady, setAuthReady] = useState(false);
+  const [_user, setUser] = useState<any | null>(null);
   const [step, setStep] = useState(VIEW_STEPS.CONNECT);
 
   const navigateToStep = useCallback((nextStep: string) => {
     return () => setStep(nextStep);
   }, []);
+
+  useEffect(() => {
+    return firebase.auth().onAuthStateChanged(u => {
+      setUser(u);
+      setAuthReady(true);
+
+      if (step === VIEW_STEPS.CONNECT) {
+        setStep(VIEW_STEPS.SELECT_NFT);
+      }
+    });
+  }, [step]);
 
   let stepComponent = undefined;
   switch (step) {
@@ -72,6 +85,10 @@ function App() {
     default: {
       stepComponent = <Text style={styles.spaced}>An error occured!!!2</Text>;
     }
+  }
+
+  if (!authReady) {
+    stepComponent = <Text style={styles.spaced}>Loading...</Text>;
   }
 
   return (

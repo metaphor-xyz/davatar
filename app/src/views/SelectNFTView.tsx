@@ -1,8 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import ConnectWallet from "../ConnectWallet";
-import { spacing, VIEW_STEPS } from "../constants";
+import firebase from 'firebase';
+
+import { spacing } from "../constants";
 import Button from "./Button";
+import CustomImagePicker from '../CustomImagePicker';
+import { useWallet } from '../WalletProvider';
 
 type Props = {
   onBack?: () => void;
@@ -10,15 +13,33 @@ type Props = {
 };
 
 export default function SelectNFTView({ onBack, onNext }: Props) {
+  const [avatar, setAvatar] = useState<Blob | null>(null);
+  const wallet = useWallet();
+
+  const upload = useCallback(async () => {
+    if (wallet) {
+      const avatarId = await firebase.functions().httpsCallable('createAvatar')();
+
+      // await firebase.storage().ref().child(`${wallet}/${avatarId}`).put(avatar);
+
+      console.log('uploaded!');
+
+      onNext();
+    }
+  }, [avatar, onNext]);
+
   return (
     <>
       <Text style={styles.spaced}>Select NFT</Text>
+      <View>
+        <CustomImagePicker onChange={setAvatar} />
+      </View>
       <View style={styles.buttonsContainer}>
         <View>
           <Button title="Back" onPress={onBack} />
         </View>
         <View>
-          <Button title="Next" onPress={onNext} />
+          <Button title="Next" onPress={upload} />
         </View>
       </View>
     </>

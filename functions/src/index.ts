@@ -3,7 +3,10 @@ import * as admin from "firebase-admin";
 import Web3 from "web3";
 import axios from "axios";
 
+admin.initializeApp();
+
 const IPFS_NODE = "http://localhost:8080";
+const web3 = new Web3("wss://mainnet.infura.io/ws/v3/e6e57d41c8b2411ea434bf96efe69f08");
 
 const randomString = (length: number): string => {
   return [...Array(length)].map((_i) => (~~(Math.random() * 36))
@@ -13,19 +16,20 @@ const randomString = (length: number): string => {
 export const connectWallet = functions.https.onCall(async (data) => {
   const {address, signature} = data;
 
-  const web3 = new Web3();
-  const signedAddress = await new Promise((resolve, reject) => {
-    web3.eth.personal.ecRecover("message", signature, (e, addr) => {
-      if (e) {
-        reject(e);
-      } else {
-        resolve(addr);
-      }
-    });
-  });
+  if (!address) {
+    throw new Error("need address");
+  }
+
+  const challenge = "message";
+
+  if (!signature) {
+    return challenge;
+  }
+
+  const signedAddress = web3.eth.accounts.recover(challenge, signature);
 
   if (signedAddress !== address) {
-    throw new Error("address used to sign message does not match");
+    throw new Error("address used to sign challenge does not match");
   }
 
   const token = await admin.auth().createCustomToken(address);

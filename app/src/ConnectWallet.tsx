@@ -4,6 +4,7 @@ import { useWalletConnect } from "@carlosdp/react-native-dapp";
 import Web3 from "web3";
 import { useWallet } from "./WalletProvider";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import firebase from 'firebase';
 
 import Button from "./views/Button";
 
@@ -21,21 +22,36 @@ export default function ConnectWallet({
 
   const connect = useCallback(async () => {
     try {
-      await connector.connect();
       const provider = new WalletConnectProvider({
         connector,
         infuraId: "e6e57d41c8b2411ea434bf96efe69f08",
       });
-      console.log(provider);
-      const wallet = new Web3(provider as any);
+      await provider.enable();
 
-      if ((await wallet.eth.net.getNetworkType()) !== "ropsten") {
+      const wallet = new Web3(provider as any);
+      const networkType = await wallet.eth.net.getNetworkType();
+
+      if (networkType !== "ropsten") {
         alert("Woah! Use Ropsten Test Network for now.");
         connector.killSession();
         return;
       }
 
       setWallet(wallet);
+
+      const accounts = await wallet.eth.getAccounts();
+      const address = accounts[0];
+      console.log(accounts);
+
+      const challenge = await firebase.functions().httpsCallable('connectWallet')({ address });
+
+      const signature = await wallet.eth.personal.sign(challenge.data, address, 'password');
+      console.log(signature);
+
+      const result = await firebase.functions().httpsCallable('connectWallet')({ address, signature });
+
+      await firebase.auth().signInWithCustomToken(result.data);
+
       if (onConnectSuccess) {
         onConnectSuccess();
       }
