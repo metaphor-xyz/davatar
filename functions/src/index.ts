@@ -38,6 +38,7 @@ export const connectWallet = functions.https.onCall(async (data) => {
 });
 
 export const createAvatar = functions.https.onCall(async (data, context) => {
+  functions.logger.info(context.auth);
   if (!context.auth) {
     throw new Error("must be logged in");
   }
@@ -88,7 +89,7 @@ export const storeIpfs = functions.https.onCall(async (data, context) => {
 
   const storageKey = `${context.auth.uid}/${avatarId}`;
 
-  const fileExists = await admin.storage().bucket("avatars")
+  const fileExists = await admin.storage().bucket()
       .file(storageKey).exists();
 
   if (!fileExists) {

@@ -4,7 +4,8 @@ import { useWalletConnect } from "@carlosdp/react-native-dapp";
 import Web3 from "web3";
 import { useWallet } from "./WalletProvider";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import firebase from 'firebase';
+
+import { httpsCallable, signInWithCustomToken } from './firebase';
 
 import Button from "./views/Button";
 
@@ -43,14 +44,14 @@ export default function ConnectWallet({
       const address = accounts[0];
       console.log(accounts);
 
-      const challenge = await firebase.functions().httpsCallable('connectWallet')({ address });
+      const challenge = await httpsCallable('connectWallet')({ address });
 
-      const signature = await wallet.eth.personal.sign(challenge.data, address, 'password');
+      const signature = await wallet.eth.personal.sign(challenge.data as string, address, 'password');
       console.log(signature);
 
-      const result = await firebase.functions().httpsCallable('connectWallet')({ address, signature });
+      const result = await httpsCallable('connectWallet')({ address, signature });
 
-      await firebase.auth().signInWithCustomToken(result.data);
+      signInWithCustomToken(result.data as string);
 
       if (onConnectSuccess) {
         onConnectSuccess();

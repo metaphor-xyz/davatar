@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import firebase from 'firebase';
+import React, { useState, useCallback, useEffect } from "react";
+import { StyleSheet, Text, View, Image } from "react-native";
 
 import { spacing } from "../constants";
 import Button from "./Button";
 import CustomImagePicker from '../CustomImagePicker';
 import { useWallet } from '../WalletProvider';
+import { httpsCallable, storageRef, uploadBytes } from '../firebase';
 
 type Props = {
   onBack?: () => void;
@@ -14,23 +14,37 @@ type Props = {
 
 export default function SelectNFTView({ onBack, onNext }: Props) {
   const [avatar, setAvatar] = useState<Blob | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const wallet = useWallet();
 
   const upload = useCallback(async () => {
     if (wallet) {
-      const avatarId = await firebase.functions().httpsCallable('createAvatar')();
+      const avatarId = await httpsCallable('createAvatar')();
+      storageRef()
 
-      // await firebase.storage().ref().child(`${wallet}/${avatarId}`).put(avatar);
-
-      console.log('uploaded!');
+      const ref = storageRef(`${wallet}/${avatarId.data}`);
+      await uploadBytes(ref, avatar);
 
       onNext();
     }
   }, [avatar, onNext]);
 
+  useEffect(() => {
+    if (avatar) {
+      const fileReaderInstance = new FileReader();
+      fileReaderInstance.readAsDataURL(avatar); 
+      fileReaderInstance.onload = () => {
+        setPreview(fileReaderInstance.result as string);
+      };
+    }
+  }, [avatar]);
+
   return (
     <>
       <Text style={styles.spaced}>Select NFT</Text>
+      <View>
+        { preview && <Image style={styles.preview} source={{ uri: preview }} /> }
+      </View>
       <View>
         <CustomImagePicker onChange={setAvatar} />
       </View>
@@ -65,5 +79,10 @@ const styles = StyleSheet.create({
   },
   spaced: {
     paddingTop: spacing(2),
+  },
+  preview: {
+    flex: 1,
+    width: "200px",
+    height: "200px",
   },
 });

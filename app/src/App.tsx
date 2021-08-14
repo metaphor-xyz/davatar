@@ -1,8 +1,8 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { registerRootComponent } from "expo";
-import firebase from "firebase";
 
+import { onAuthStateChanged } from './firebase';
 import ConnectView from "./views/ConnectView";
 import { spacing, VIEW_STEPS } from "./constants";
 import AboutView from "./views/AboutView";
@@ -11,22 +11,6 @@ import SelectNFTView from "./views/SelectNFTView";
 import SelectSocialsView from "./views/SelectSocialsView";
 import Link from "./views/Link";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA7fqVE1VoM81x3bJfKOaH7tK0Ka8b9FvI",
-  authDomain: "drop---avatars.firebaseapp.com",
-  projectId: "drop---avatars",
-  storageBucket: "drop---avatars.appspot.com",
-  messagingSenderId: "297448976018",
-  appId: "1:297448976018:web:5c49b68e6711ef06ae804b",
-  measurementId: "G-ZMSMGXMDGX",
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-if (process.env.NODE_ENV === "development") {
-  firebase.functions().useEmulator("localhost", 5001);
-  firebase.auth().useEmulator("http://localhost:9099");
-}
 
 function App() {
   const [authReady, setAuthReady] = useState(false);
@@ -38,11 +22,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    return firebase.auth().onAuthStateChanged(u => {
+    return onAuthStateChanged(u => {
       setUser(u);
       setAuthReady(true);
 
-      if (step === VIEW_STEPS.CONNECT) {
+      if (!!u && step === VIEW_STEPS.CONNECT) {
         setStep(VIEW_STEPS.SELECT_NFT);
       }
     });
