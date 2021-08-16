@@ -15,15 +15,19 @@ type Props = {
 export default function SelectNFTView({ onBack, onNext }: Props) {
   const [avatar, setAvatar] = useState<Blob | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const wallet = useWallet();
+  const { wallet } = useWallet();
 
   const upload = useCallback(async () => {
     if (wallet) {
       const avatarId = await httpsCallable('createAvatar')();
-      storageRef()
 
-      const ref = storageRef(`${wallet}/${avatarId.data}`);
+      const accounts = await wallet.eth.getAccounts();
+      const address = accounts[0];
+
+      const ref = storageRef(`${address}/${avatarId.data}`);
       await uploadBytes(ref, avatar);
+
+      await httpsCallable('storeIpfs')({ address, avatarId: avatarId.data });
 
       onNext();
     }

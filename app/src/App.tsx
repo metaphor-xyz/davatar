@@ -6,15 +6,26 @@ import { onAuthStateChanged } from './firebase';
 import ConnectView from "./views/ConnectView";
 import { spacing, VIEW_STEPS } from "./constants";
 import AboutView from "./views/AboutView";
-import WalletProvider from "./WalletProvider";
+import WalletProvider, { useWallet } from "./WalletProvider";
 import SelectNFTView from "./views/SelectNFTView";
 import SelectSocialsView from "./views/SelectSocialsView";
 import Link from "./views/Link";
 
 
 function App() {
+  return (
+    <View style={styles.outerContainer}>
+      <WalletProvider>
+        <Navigation />
+      </WalletProvider>
+    </View>
+  );
+}
+
+function Navigation() {
   const [authReady, setAuthReady] = useState(false);
-  const [_user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<any | null>(null);
+  const { wallet } = useWallet();
   const [step, setStep] = useState(VIEW_STEPS.CONNECT);
 
   const navigateToStep = useCallback((nextStep: string) => {
@@ -25,12 +36,14 @@ function App() {
     return onAuthStateChanged(u => {
       setUser(u);
       setAuthReady(true);
-
-      if (!!u && step === VIEW_STEPS.CONNECT) {
-        setStep(VIEW_STEPS.SELECT_NFT);
-      }
     });
   }, [step]);
+
+  useEffect(() => {
+    if (!!user && !!wallet && step === VIEW_STEPS.CONNECT) {
+      setStep(VIEW_STEPS.SELECT_NFT);
+    }
+  }, [user, wallet]);
 
   let stepComponent = undefined;
   switch (step) {
@@ -76,27 +89,20 @@ function App() {
   }
 
   return (
-    <View style={styles.outerContainer}>
-      <WalletProvider>
-        <View style={styles.container}>
-          <View style={styles.topNav}>
-            <div />
-            <Link
-              title={step === VIEW_STEPS.ABOUT ? "Back" : "About"}
-              onPress={
-                step === VIEW_STEPS.ABOUT
-                  ? navigateToStep(VIEW_STEPS.CONNECT)
-                  : navigateToStep(VIEW_STEPS.ABOUT)
-              }
-            />
-          </View>
-          <Text style={styles.spaced}>Welcome to DAOvatars!</Text>
-
-          {stepComponent}
-
-          <Text style={styles.spaced}>Powered by Garnet</Text>
-        </View>
-      </WalletProvider>
+    <View style={styles.container}>
+      <View style={styles.topNav}>
+        <Link
+          title={step === VIEW_STEPS.ABOUT ? "Back" : "About"}
+          onPress={
+            step === VIEW_STEPS.ABOUT
+            ? navigateToStep(VIEW_STEPS.CONNECT)
+            : navigateToStep(VIEW_STEPS.ABOUT)
+          }
+        />
+      </View>
+      <Text style={styles.spaced}>Welcome to DAOvatars!</Text>
+      {stepComponent}
+      <Text style={styles.spaced}>Powered by Garnet</Text>
     </View>
   );
 }

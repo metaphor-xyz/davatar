@@ -5,7 +5,7 @@ import axios from "axios";
 
 admin.initializeApp();
 
-const IPFS_NODE = "http://localhost:8080";
+const IPFS_NODE = "http://localhost:8081";
 const web3 = new Web3("wss://mainnet.infura.io/ws/v3/e6e57d41c8b2411ea434bf96efe69f08");
 
 const randomString = (length: number): string => {
@@ -89,7 +89,7 @@ export const storeIpfs = functions.https.onCall(async (data, context) => {
 
   const storageKey = `${context.auth.uid}/${avatarId}`;
 
-  const fileExists = await admin.storage().bucket()
+  const [fileExists] = await admin.storage().bucket()
       .file(storageKey).exists();
 
   if (!fileExists) {
@@ -103,9 +103,14 @@ export const storeIpfs = functions.https.onCall(async (data, context) => {
   });
 
   if (response.status === 200) {
-    return true;
+    await admin.firestore().collection("avatars")
+        .doc(context.auth.uid).update({
+          ipns: response.data.hash,
+        });
+
+    return response.data;
   } else {
-    return false;
+    return null;
   }
 });
 
