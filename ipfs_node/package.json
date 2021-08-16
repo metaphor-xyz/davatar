@@ -3,7 +3,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node build/index.js"
   },
   "author": "",
   "license": "ISC",
