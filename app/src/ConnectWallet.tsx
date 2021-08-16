@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import { View } from "react-native";
 import { useWalletConnect } from "@carlosdp/react-native-dapp";
-import Web3 from "web3";
 import { useWallet } from "./WalletProvider";
-import WalletConnectProvider from "@walletconnect/web3-provider";
+
+import { httpsCallable, signInWithCustomToken } from './firebase';
 
 import Button from "./views/Button";
 
@@ -17,25 +17,29 @@ export default function ConnectWallet({
   onConnectFail,
 }: Props) {
   const connector = useWalletConnect();
-  const { setWallet } = useWallet();
+  const { connect } = useWallet();
 
-  const connect = useCallback(async () => {
+  const connectWallet = useCallback(async () => {
     try {
-      await connector.connect();
-      const provider = new WalletConnectProvider({
-        connector,
-        infuraId: "e6e57d41c8b2411ea434bf96efe69f08",
-      });
-      console.log(provider);
-      const wallet = new Web3(provider as any);
+      const wallet = await connect();
 
-      if ((await wallet.eth.net.getNetworkType()) !== "ropsten") {
-        alert("Woah! Use Ropsten Test Network for now.");
-        connector.killSession();
-        return;
+      if (!wallet) {
+        throw new Error('no wallet connected');
       }
 
-      setWallet(wallet);
+      const accounts = await wallet.eth.getAccounts();
+      const address = accounts[0];
+      console.log(accounts);
+
+      const challenge = await httpsCallable('connectWallet')({ address });
+
+      const signature = await wallet.eth.personal.sign(challenge.data as string, address, 'password');
+      console.log(signature);
+
+      const result = await httpsCallable('connectWallet')({ address, signature });
+
+      signInWithCustomToken(result.data as string);
+
       if (onConnectSuccess) {
         onConnectSuccess();
       }
@@ -49,7 +53,7 @@ export default function ConnectWallet({
 
   return (
     <View>
-      <Button title="Connect Wallet" onPress={connect} />
+      <Button title="Connect Wallet" onPress={connectWallet} />
     </View>
   );
 }

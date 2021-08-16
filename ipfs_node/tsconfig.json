@@ -19,8 +19,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noEmit": false,
-    "outDir": "lib",
-    "sourceMap": true
+    "outDir": "build",
+    "tsBuildInfoFile": "build/.tsbuildinfo",
+    "incremental": true
   },
   "include": ["src"]
 }

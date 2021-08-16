@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import ConnectWallet from "../ConnectWallet";
-import { spacing, VIEW_STEPS } from "../constants";
+import { spacing } from "../constants";
 
 type Props = {
   onSuccess?: () => void;
