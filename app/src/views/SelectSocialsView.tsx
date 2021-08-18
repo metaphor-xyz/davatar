@@ -18,7 +18,7 @@ export default function SelectSocialsView({ onBack }: Props) {
     if (address) {
       return snapshot('avatars', address, doc => {
         const data = doc.data() as any;
-        setAvatarUri(`https://ipfs.io/ipns/${data.ipns}`);
+        setAvatarUri(`http://localhost:8082/ipns/${data.ipns}`);
       });
     }
   }, []);

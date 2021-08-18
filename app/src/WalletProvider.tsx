@@ -21,7 +21,7 @@ function WalletProvider(props: React.PropsWithChildren<{}>) {
 
   const connect = useCallback(async () => {
     if (!connector.connected) {
-      connector.connect();
+      await connector.connect();
     }
     const provider = new WalletConnectProvider({
       connector,
@@ -31,12 +31,6 @@ function WalletProvider(props: React.PropsWithChildren<{}>) {
     await provider.enable();
 
     const newWallet = new Web3(provider as any);
-    const networkType = await newWallet.eth.net.getNetworkType();
-    if (networkType !== "ropsten") {
-      alert("Woah! Use Ropsten Test Network for now.");
-      connector.killSession();
-      throw new Error('must use ropsten');
-    }
 
     const accounts = await newWallet.eth.getAccounts();
 

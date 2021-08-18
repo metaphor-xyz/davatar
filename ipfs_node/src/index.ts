@@ -1,4 +1,5 @@
 import IPFS from 'ipfs-core';
+import Gateway from 'ipfs-http-gateway';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import admin from 'firebase-admin';
@@ -12,15 +13,33 @@ admin.initializeApp({
 
 (async function() {
   const ipfs = await IPFS.create({
+    start: true,
     repo: './data',
+    EXPERIMENTAL: { ipnsPubsub: true },
+    config: {
+      Addresses: {
+        Gateway: '/ip4/0.0.0.0/tcp/8082',
+      },
+    },
   });
+
+  const gateway = new Gateway(ipfs);
+  await gateway.start();
+  console.log(gateway._gatewayServers);
+
   const updateAvatar = async (address: string, file: any) => {
     if (!(await ipfs.key.list()).find(k => k.name === address)) {
       await ipfs.key.gen(address);
     }
 
+    console.log('adding file');
     const ipfsFile = await ipfs.add(file);
-    const ipns = await ipfs.name.publish(ipfsFile.cid);//, { key: address });
+    console.log(`added ${ipfsFile.cid}`);
+    const ipns = await ipfs.name.publish(ipfsFile.cid, {
+      key: address,
+      allowOffline: false,
+      resolve: true,
+    });
     console.log(ipns);
 
     return ipns.name;
