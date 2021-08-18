@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { spacing } from "../constants";
 
-export default function AboutView() {
+export default function AboutScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.spaced}>

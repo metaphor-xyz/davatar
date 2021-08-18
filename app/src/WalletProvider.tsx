@@ -1,8 +1,17 @@
-import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import Web3 from 'web3';
-import { withWalletConnect, useWalletConnect } from '@carlosdp/react-native-dapp';
-import { Platform } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useCallback,
+  useEffect,
+} from "react";
+import Web3 from "web3";
+import {
+  withWalletConnect,
+  useWalletConnect,
+} from "@carlosdp/react-native-dapp";
+import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 export interface Context {
@@ -64,7 +73,7 @@ function WalletProvider(props: React.PropsWithChildren<{}>) {
 }
 
 export default withWalletConnect(WalletProvider, {
-  redirectUrl: Platform.OS === 'web' ? window.location.origin : 'garnet://',
+  redirectUrl: Platform.OS === "web" ? window.location.origin : "garnet://",
   storageOptions: {
     // @ts-ignore
     asyncStorage: AsyncStorage,
@@ -75,9 +84,8 @@ export function useWallet() {
   const context = useContext(WalletContext);
 
   if (!context) {
-    throw new Error('useWallet must be used inside WalletContext');
+    throw new Error("useWallet must be used inside WalletContext");
   }
 
   return context;
 }
-

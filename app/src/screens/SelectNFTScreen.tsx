@@ -1,25 +1,21 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 
-import { spacing } from "../constants";
-import Button from "./Button";
-import CustomImagePicker from '../CustomImagePicker';
-import { useWallet } from '../WalletProvider';
-import { httpsCallable, storageRef, uploadBytes } from '../firebase';
+import { spacing, VIEW_STEPS } from "../constants";
+import Button from "../views/Button";
+import CustomImagePicker from "../CustomImagePicker";
+import { useWallet } from "../WalletProvider";
+import { httpsCallable, storageRef, uploadBytes } from "../firebase";
+import { useScreenSteps } from "../ScreenStepProvider";
 
-type Props = {
-  onBack?: () => void;
-  onNext?: () => void;
-};
-
-export default function SelectNFTView({ onBack, onNext }: Props) {
+export default function SelectNFTScreen({ navigation }) {
   const [avatar, setAvatar] = useState<Blob | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const { wallet } = useWallet();
 
   const upload = useCallback(async () => {
     if (wallet) {
-      const avatarId = await httpsCallable('createAvatar')();
+      const avatarId = await httpsCallable("createAvatar")();
 
       const accounts = await wallet.eth.getAccounts();
       const address = accounts[0];
@@ -27,16 +23,16 @@ export default function SelectNFTView({ onBack, onNext }: Props) {
       const ref = storageRef(`${address}/${avatarId.data}`);
       await uploadBytes(ref, avatar);
 
-      await httpsCallable('storeIpfs')({ address, avatarId: avatarId.data });
+      await httpsCallable("storeIpfs")({ address, avatarId: avatarId.data });
 
-      onNext();
+      navigation.navigate(VIEW_STEPS.SELECT_SOCIAL_WEBSITES);
     }
-  }, [avatar, onNext]);
+  }, [avatar]);
 
   useEffect(() => {
     if (avatar) {
       const fileReaderInstance = new FileReader();
-      fileReaderInstance.readAsDataURL(avatar); 
+      fileReaderInstance.readAsDataURL(avatar);
       fileReaderInstance.onload = () => {
         setPreview(fileReaderInstance.result as string);
       };
@@ -47,14 +43,17 @@ export default function SelectNFTView({ onBack, onNext }: Props) {
     <>
       <Text style={styles.spaced}>Select NFT</Text>
       <View>
-        { preview && <Image style={styles.preview} source={{ uri: preview }} /> }
+        {preview && <Image style={styles.preview} source={{ uri: preview }} />}
       </View>
       <View>
         <CustomImagePicker onChange={setAvatar} />
       </View>
       <View style={styles.buttonsContainer}>
         <View>
-          <Button title="Back" onPress={onBack} />
+          <Button
+            title="Back"
+            onPress={() => navigation.navigate(VIEW_STEPS.CONNECT)}
+          />
         </View>
         <View>
           <Button title="Next" onPress={upload} />
