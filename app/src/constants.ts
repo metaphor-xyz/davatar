@@ -4,6 +4,7 @@ export const VIEW_STEPS = {
   SELECT_NFT: "SELECT_NFT",
   SELECT_SOCIAL_WEBSITES: "SELECT_SOCIAL_WEBSITES",
   ERROR: "ERROR",
+  MORE_MODAL: "MORE_MODAL",
 };
 
 export function spacing(multiple: number) {

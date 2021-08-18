@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useWalletConnect } from "@carlosdp/react-native-dapp";
 import { useWallet } from "./WalletProvider";
 
-import { httpsCallable, signInWithCustomToken } from './firebase';
+import { httpsCallable, signInWithCustomToken } from "./firebase";
 
 import Button from "./views/Button";
 
@@ -24,19 +24,26 @@ export default function ConnectWallet({
       const wallet = await connect();
 
       if (!wallet) {
-        throw new Error('no wallet connected');
+        throw new Error("no wallet connected");
       }
 
       const accounts = await wallet.eth.getAccounts();
       const address = accounts[0];
       console.log(accounts);
 
-      const challenge = await httpsCallable('connectWallet')({ address });
+      const challenge = await httpsCallable("connectWallet")({ address });
 
-      const signature = await wallet.eth.personal.sign(challenge.data as string, address, 'password');
+      const signature = await wallet.eth.personal.sign(
+        challenge.data as string,
+        address,
+        "password"
+      );
       console.log(signature);
 
-      const result = await httpsCallable('connectWallet')({ address, signature });
+      const result = await httpsCallable("connectWallet")({
+        address,
+        signature,
+      });
 
       signInWithCustomToken(result.data as string);
 
@@ -52,7 +59,7 @@ export default function ConnectWallet({
   }, [connector]);
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Button title="Connect Wallet" onPress={connectWallet} />
     </View>
   );

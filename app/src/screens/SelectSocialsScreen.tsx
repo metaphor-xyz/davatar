@@ -2,22 +2,19 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 
 import { spacing } from "../constants";
-import Button from "./Button";
+import Button from "../views/Button";
 import { snapshot } from '../firebase';
 import { useWallet } from '../WalletProvider';
 import { BASE_URL } from '../helpers';
+import PageContainer from "../views/PageContainer";
 
-type Props = {
-  onBack?: () => void;
-};
-
-export default function SelectSocialsView({ onBack }: Props) {
+export default function SelectSocialsScreen({ navigation }) {
   const { address } = useWallet();
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
 
   useEffect(() => {
     if (address) {
-      return snapshot('avatars', address, doc => {
+      return snapshot("avatars", address, (doc) => {
         const data = doc.data() as any;
         setAvatarUri(`${BASE_URL}/ipfs/ipns/${data.ipns}`);
       });
@@ -25,27 +22,22 @@ export default function SelectSocialsView({ onBack }: Props) {
   }, []);
 
   return (
-    <>
+    <PageContainer>
       <Text style={styles.spaced}>Select Discord, ENS, Twitter...</Text>
-      {avatarUri && <Image style={styles.preview} source={{ uri: avatarUri }} />}
+      {avatarUri && (
+        <Image style={styles.preview} source={{ uri: avatarUri }} />
+      )}
       <View style={styles.buttonsContainer}>
         <View>
-          <Button title="Back" onPress={onBack} />
+          <Button title="Back" onPress={() => navigation.goBack()} />
         </View>
         <View></View>
       </View>
-    </>
+    </PageContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-  },
   buttonsContainer: {
     flexDirection: "row",
     width: "225px",
