@@ -5,13 +5,13 @@ import { getStorage, connectStorageEmulator, ref, uploadBytes as upload } from '
 import { getFirestore, connectFirestoreEmulator, collection as firestoreCollection, doc as firestoreDoc, getDoc, onSnapshot, DocumentSnapshot } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA7fqVE1VoM81x3bJfKOaH7tK0Ka8b9FvI",
-  authDomain: "drop---avatars.firebaseapp.com",
-  projectId: "drop---avatars",
-  storageBucket: "drop---avatars.appspot.com",
-  messagingSenderId: "297448976018",
-  appId: "1:297448976018:web:5c49b68e6711ef06ae804b",
-  measurementId: "G-ZMSMGXMDGX",
+  apiKey: "AIzaSyAm2FjysC_pxJpqwNbUsDu9icIg_H_SUJs",
+  authDomain: "daovatar.firebaseapp.com",
+  projectId: "daovatar",
+  storageBucket: "daovatar.appspot.com",
+  messagingSenderId: "509581687894",
+  appId: "1:509581687894:web:313949f00b50c02d698ff7",
+  measurementId: "G-QSVB1TDZ5C",
 };
 
 export namespace Firebase {

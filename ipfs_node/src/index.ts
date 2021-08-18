@@ -3,12 +3,13 @@ import Gateway from 'ipfs-http-gateway';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import admin from 'firebase-admin';
+import proxy from 'express-http-proxy';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8081;
 
 admin.initializeApp({
-  projectId: "drop---avatars",
-  storageBucket: "drop---avatars.appspot.com",
+  projectId: "daovatar",
+  storageBucket: "daovatar.appspot.com",
 });
 
 (async function() {
@@ -25,7 +26,6 @@ admin.initializeApp({
 
   const gateway = new Gateway(ipfs);
   await gateway.start();
-  console.log(gateway._gatewayServers);
 
   const updateAvatar = async (address: string, file: any) => {
     if (!(await ipfs.key.list()).find(k => k.name === address)) {
@@ -52,6 +52,7 @@ admin.initializeApp({
   }));
   app.use(express.json());
   app.use(express.urlencoded( { extended: true }));
+  app.use('/ipfs', proxy('http://localhost:8082'));
 
   app.post('/store', async (req, res) => {
     const { address, storageKey } = req.body;
