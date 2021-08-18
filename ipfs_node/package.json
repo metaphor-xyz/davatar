@@ -18,6 +18,8 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "firebase-admin": "^9.11.0",
-    "ipfs-core": "^0.10.0"
+    "ipfs-core": "^0.10.0",
+    "ipfs-http-client": "^52.0.1",
+    "ipfs-http-gateway": "^0.6.0"
   }
 }
