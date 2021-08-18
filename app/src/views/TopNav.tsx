@@ -1,32 +1,31 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 
 import { spacing, VIEW_STEPS } from "../constants";
-import Button from "./Button";
-import CustomImagePicker from "../CustomImagePicker";
-import { useWallet } from "../WalletProvider";
-import { httpsCallable, storageRef, uploadBytes } from "../firebase";
 import Link from "./Link";
-import { useScreenSteps } from "../ScreenStepProvider";
 import MoreButton from "./MoreButton";
+import PageContainer from "./PageContainer";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function TopNav() {
-  const { step, wrappedSetStepFunction } = useScreenSteps();
+  const navigation: any = useNavigation();
+  const route = useRoute();
+  const step = route.name;
 
   return (
-    <>
+    <PageContainer>
       <View style={styles.topNav}>
         <Link
-          title={step === VIEW_STEPS.ABOUT ? "Back" : "Aboutt"}
+          title={step === VIEW_STEPS.ABOUT ? "Back" : "About"}
           onPress={
             step === VIEW_STEPS.ABOUT
-              ? wrappedSetStepFunction(VIEW_STEPS.CONNECT)
-              : wrappedSetStepFunction(VIEW_STEPS.ABOUT)
+              ? () => navigation.goBack()
+              : () => navigation.navigate(VIEW_STEPS.ABOUT)
           }
         />
         <MoreButton />
       </View>
-    </>
+    </PageContainer>
   );
 }
 

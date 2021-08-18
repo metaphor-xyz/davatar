@@ -1,11 +1,10 @@
-import React, { ReactChild } from "react";
+import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 export interface Props {
   title?: string;
   onPress?: () => void;
   disabled?: boolean;
-  children?: ReactChild | ReactChild[];
 }
 
 export default function Button(props: Props) {
@@ -16,10 +15,7 @@ export default function Button(props: Props) {
       disabled={props.disabled}
       activeOpacity={0.8}
     >
-      <Text style={styles.text}>
-        {props.title}
-        {props.children}
-      </Text>
+      <Text style={styles.text}>{props.title}</Text>
     </TouchableOpacity>
   );
 }

@@ -1,82 +1,34 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Modal, View, Text } from "react-native";
+import React from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
 
-import Button from "./Button";
-
+// @ts-ignore
 import dotsImageSrc from "../images/dots.png";
+import { useNavigation } from "@react-navigation/native";
+import { spacing, VIEW_STEPS } from "../constants";
 
 export default function MoreButton() {
-  const [visible, setVisible] = useState(false);
-
-  const toggleOpen = useCallback(() => {
-    setVisible((lastVisible) => !lastVisible);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setVisible(false);
-  }, []);
-
-  console.log("visible: ", visible);
+  const navigation: any = useNavigation();
 
   return (
-    <>
-      <Button onPress={toggleOpen}>
-        <img src={dotsImageSrc} />
-      </Button>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={visible}
-        onRequestClose={toggleOpen}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text>MENU</Text>
-            <Button title="Close" onPress={toggleOpen} />
-          </View>
-        </View>
-      </Modal>
-    </>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate(VIEW_STEPS.MORE_MODAL)}
+      activeOpacity={0.8}
+    >
+      <img src={dotsImageSrc} />
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  outerContainer: {
-    backgroundColor: "#fff",
-    width: "100%",
-    height: "100%",
+  container: {
+    padding: spacing(1),
+    paddingRight: spacing(2),
+    paddingLeft: spacing(2),
+    backgroundColor: "#5C59EB",
     display: "flex",
     alignItems: "center",
-  },
-  container: {
-    width: "100%",
-    maxWidth: "750px",
-    minHeight: "450px",
-    paddingRight: "32px",
-    paddingLeft: "32px",
-    alignItems: "center",
-    // justifyContent: "center",
-  },
-  centeredView: {
-    flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    borderRadius: 16,
   },
 });

@@ -6,7 +6,7 @@ import Button from "../views/Button";
 import CustomImagePicker from "../CustomImagePicker";
 import { useWallet } from "../WalletProvider";
 import { httpsCallable, storageRef, uploadBytes } from "../firebase";
-import { useScreenSteps } from "../ScreenStepProvider";
+import PageContainer from "../views/PageContainer";
 
 export default function SelectNFTScreen({ navigation }) {
   const [avatar, setAvatar] = useState<Blob | null>(null);
@@ -40,7 +40,7 @@ export default function SelectNFTScreen({ navigation }) {
   }, [avatar]);
 
   return (
-    <>
+    <PageContainer>
       <Text style={styles.spaced}>Select NFT</Text>
       <View>
         {preview && <Image style={styles.preview} source={{ uri: preview }} />}
@@ -50,16 +50,13 @@ export default function SelectNFTScreen({ navigation }) {
       </View>
       <View style={styles.buttonsContainer}>
         <View>
-          <Button
-            title="Back"
-            onPress={() => navigation.navigate(VIEW_STEPS.CONNECT)}
-          />
+          <Button title="Back" onPress={() => navigation.goBack()} />
         </View>
         <View>
           <Button title="Next" onPress={upload} />
         </View>
       </View>
-    </>
+    </PageContainer>
   );
 }
 

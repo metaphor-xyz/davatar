@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 
-import { spacing, VIEW_STEPS } from "../constants";
+import { spacing } from "../constants";
 import Button from "../views/Button";
 import { snapshot } from "../firebase";
 import { useWallet } from "../WalletProvider";
-import { useScreenSteps } from "../ScreenStepProvider";
+import PageContainer from "../views/PageContainer";
 
 export default function SelectSocialsScreen({ navigation }) {
   const { address } = useWallet();
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
-  const { wrappedSetStepFunction } = useScreenSteps();
 
   useEffect(() => {
     if (address) {
@@ -22,32 +21,22 @@ export default function SelectSocialsScreen({ navigation }) {
   }, []);
 
   return (
-    <>
+    <PageContainer>
       <Text style={styles.spaced}>Select Discord, ENS, Twitter...</Text>
       {avatarUri && (
         <Image style={styles.preview} source={{ uri: avatarUri }} />
       )}
       <View style={styles.buttonsContainer}>
         <View>
-          <Button
-            title="Back"
-            onPress={() => navigation.navigate(VIEW_STEPS.SELECT_NFT)}
-          />
+          <Button title="Back" onPress={() => navigation.goBack()} />
         </View>
         <View></View>
       </View>
-    </>
+    </PageContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-  },
   buttonsContainer: {
     flexDirection: "row",
     width: "225px",
