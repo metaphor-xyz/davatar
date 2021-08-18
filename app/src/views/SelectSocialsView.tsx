@@ -5,6 +5,7 @@ import { spacing } from "../constants";
 import Button from "./Button";
 import { snapshot } from '../firebase';
 import { useWallet } from '../WalletProvider';
+import { BASE_URL } from '../helpers';
 
 type Props = {
   onBack?: () => void;
@@ -18,7 +19,7 @@ export default function SelectSocialsView({ onBack }: Props) {
     if (address) {
       return snapshot('avatars', address, doc => {
         const data = doc.data() as any;
-        setAvatarUri(`http://localhost:8082/ipns/${data.ipns}`);
+        setAvatarUri(`${BASE_URL}/ipfs/ipns/${data.ipns}`);
       });
     }
   }, []);

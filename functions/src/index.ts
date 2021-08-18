@@ -5,7 +5,7 @@ import axios from "axios";
 
 admin.initializeApp();
 
-const IPFS_NODE = "http://localhost:8081";
+const IPFS_NODE = process.env.NODE_ENV === "development" ? "http://localhost:8081" : "https://ipfs-node-fa5ujdlota-ue.a.run.app";
 const web3 = new Web3("wss://mainnet.infura.io/ws/v3/e6e57d41c8b2411ea434bf96efe69f08");
 
 const randomString = (length: number): string => {
