@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 export interface Props {
-  title: string;
+  title?: string;
   onPress?: () => void;
   disabled?: boolean;
 }
