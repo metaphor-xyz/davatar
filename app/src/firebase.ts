@@ -24,10 +24,10 @@ export namespace Firebase {
   export const firestore = getFirestore(app);
 
   if (process.env.NODE_ENV === 'development') {
-    connectFunctionsEmulator(functions, 'localhost', 5001);
+    connectFunctionsEmulator(functions, 'localhost', 5002);
     connectAuthEmulator(auth, 'http://localhost:9099');
     connectStorageEmulator(storage, 'localhost', 9199);
-    connectFirestoreEmulator(firestore, 'localhost', 8080);
+    connectFirestoreEmulator(firestore, 'localhost', 8082);
   }
 }
 

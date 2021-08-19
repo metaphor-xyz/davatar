@@ -5,7 +5,6 @@ import { spacing } from "../constants";
 import Button from "../views/Button";
 import { snapshot } from '../firebase';
 import { useWallet } from '../WalletProvider';
-import { BASE_URL } from '../helpers';
 import PageContainer from "../views/PageContainer";
 
 export default function SelectSocialsScreen({ navigation }) {
@@ -16,7 +15,7 @@ export default function SelectSocialsScreen({ navigation }) {
     if (address) {
       return snapshot("avatars", address, (doc) => {
         const data = doc.data() as any;
-        setAvatarUri(`${BASE_URL}/ipfs/ipns/${data.ipns}`);
+        setAvatarUri(`https://gateway.ipfs.io/${data.ipfs}`);
       });
     }
   }, []);

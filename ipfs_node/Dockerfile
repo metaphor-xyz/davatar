@@ -22,5 +22,7 @@ COPY . ./
 
 RUN npm run build
 
+ENV NODE_ENV production
+
 # Run the web service on container startup.
 CMD [ "node", "build/index.js" ]
