@@ -15,7 +15,9 @@ export default function PageContainer({ children }: Props) {
 
 const styles = StyleSheet.create({
   outerContainer: {
+    backgroundColor: "#e8e8ff",
     width: "100%",
+    height: "100%",
     alignItems: "center",
   },
   container: {

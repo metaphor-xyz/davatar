@@ -23,13 +23,14 @@ export default function SelectSocialsScreen({ navigation }) {
 
   return (
     <PageContainer>
-      <Text style={styles.spaced}>Select Discord, ENS, Twitter...</Text>
+      <Text style={styles.headerText}>Select Discord, ENS, Twitter...</Text>
+
       {avatarUri && (
         <Image style={styles.preview} source={{ uri: avatarUri }} />
       )}
       <View style={styles.buttonsContainer}>
         <View>
-          <Button title="Back" onPress={() => navigation.goBack()} />
+          <Button title="Back" onPress={navigation.goBack} />
         </View>
         <View></View>
       </View>
@@ -54,5 +55,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "200px",
     height: "200px",
+  },
+  headerText: {
+    fontSize: 48,
+    fontWeight: "600",
+    paddingTop: spacing(2),
   },
 });

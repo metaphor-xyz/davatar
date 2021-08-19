@@ -7,6 +7,8 @@ export default function AboutScreen() {
   return (
     <PageContainer>
       <View style={styles.container}>
+        <Text style={styles.headerText}>What is DAOvatar?</Text>
+
         <Text style={styles.spaced}>
           Tastes and trends change with every season.
         </Text>
@@ -39,6 +41,11 @@ export default function AboutScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerText: {
+    fontSize: 48,
+    fontWeight: "600",
+    paddingTop: spacing(2),
+  },
   container: {
     flex: 1,
     alignItems: "center",

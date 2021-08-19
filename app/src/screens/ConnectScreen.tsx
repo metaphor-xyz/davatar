@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import ConnectWallet from "../ConnectWallet";
 import { spacing, VIEW_STEPS } from "../constants";
 import { useWallet } from "../WalletProvider";
@@ -37,12 +37,18 @@ export default function ConnectScreen({ navigation }) {
     navigation.navigate(VIEW_STEPS.ERROR);
   }, []);
 
-  if (!authReady) return <Text style={styles.spaced}>Loading...</Text>;
+  if (!authReady)
+    return (
+      <PageContainer>
+        <ActivityIndicator size="large" />
+      </PageContainer>
+    );
 
   return (
     <PageContainer>
-      <Text style={styles.spaced}>Connect your wallet</Text>
-      <View style={styles.spaced}>
+      <Text style={styles.headerText}>Connect your wallet</Text>
+
+      <View style={styles.content}>
         <ConnectWallet
           onConnectSuccess={onConnectSuccess}
           onConnectFail={onConnectFail}
@@ -53,7 +59,15 @@ export default function ConnectScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  spaced: {
+  content: {
+    paddingTop: spacing(2),
+    flex: 1,
+    justifyContent: "center",
+    minHeight: "275px",
+  },
+  headerText: {
+    fontSize: 48,
+    fontWeight: "600",
     paddingTop: spacing(2),
   },
 });

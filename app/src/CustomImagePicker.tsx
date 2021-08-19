@@ -1,17 +1,21 @@
-import React, { useCallback } from 'react';
-import { View, Button, Platform } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useCallback } from "react";
+import { View, Platform } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import Button from "./views/Button";
+import { IconButton } from "react-native-paper";
 
 export interface Props {
   onChange: (uri: Blob) => void;
+  preview?: string | null;
 }
 
-export default function CustomImagePicker({ onChange }) {
+export default function CustomImagePicker({ preview, onChange }) {
   const pick = useCallback(async () => {
-    if (Platform.OS !== 'web') {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Sorry, we need camera roll permissions to make this work!');
+    if (Platform.OS !== "web") {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
       }
     }
 
@@ -43,12 +47,33 @@ export default function CustomImagePicker({ onChange }) {
   }, []);
 
   return (
-    <View>
-      <Button
-        title="Pick"
-        onPress={pick}
-      />
-    </View>
+    <>
+      {preview && (
+        <View
+          style={{
+            paddingTop: "8px",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          <IconButton
+            size={32}
+            icon="delete-forever"
+            onPress={() => onChange(null)}
+            accessibilityLabel="Delete photo"
+            color="#d32f2f"
+          />
+          <IconButton
+            size={32}
+            icon="square-edit-outline"
+            onPress={pick}
+            accessibilityLabel="Change photo"
+            color="#5C59EB"
+          />
+        </View>
+      )}
+      {!preview && <Button title="Choose photo" onPress={pick} />}
+    </>
   );
 }
-
