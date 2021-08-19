@@ -10,7 +10,7 @@ export interface Props {
 export default function Button(props: Props) {
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, props.disabled && styles.disabled]}
       onPress={props.onPress}
       disabled={props.disabled}
       activeOpacity={0.8}
@@ -22,7 +22,9 @@ export default function Button(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: "16px",
+    padding: "12px",
+    paddingRight: "16px",
+    paddingLeft: "16px",
     maxWidth: "330px",
     width: "100%",
     backgroundColor: "#5C59EB",
@@ -30,6 +32,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 16,
+  },
+  disabled: {
+    opacity: 0.8,
   },
   text: {
     color: "#fff",

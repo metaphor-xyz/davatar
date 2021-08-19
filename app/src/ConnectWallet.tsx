@@ -58,9 +58,5 @@ export default function ConnectWallet({
     }
   }, [connector]);
 
-  return (
-    <View style={{ flex: 1 }}>
-      <Button title="Connect Wallet" onPress={connectWallet} />
-    </View>
-  );
+  return <Button title="Connect Wallet" onPress={connectWallet} />;
 }

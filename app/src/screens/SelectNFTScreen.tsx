@@ -41,19 +41,23 @@ export default function SelectNFTScreen({ navigation }) {
 
   return (
     <PageContainer>
-      <Text style={styles.spaced}>Select NFT</Text>
-      <View>
-        {preview && <Image style={styles.preview} source={{ uri: preview }} />}
-      </View>
-      <View>
-        <CustomImagePicker onChange={setAvatar} />
+      <Text style={styles.headerText}>Select NFT</Text>
+      <View style={styles.content}>
+        <View>
+          {preview && (
+            <Image style={styles.preview} source={{ uri: preview }} />
+          )}
+        </View>
+        <View>
+          <CustomImagePicker preview={preview} onChange={setAvatar} />
+        </View>
       </View>
       <View style={styles.buttonsContainer}>
         <View>
-          <Button title="Back" onPress={() => navigation.goBack()} />
+          <Button title="Back" onPress={navigation.goBack} />
         </View>
         <View>
-          <Button title="Next" onPress={upload} />
+          <Button disabled={!preview} title="Next" onPress={upload} />
         </View>
       </View>
     </PageContainer>
@@ -77,12 +81,25 @@ const styles = StyleSheet.create({
     maxWidth: "100%",
     paddingTop: spacing(2),
   },
-  spaced: {
+  headerText: {
+    fontSize: 48,
+    fontWeight: "600",
     paddingTop: spacing(2),
+  },
+  previewContainer: {
+    flex: 1,
+    width: "200px",
+    height: "200px",
   },
   preview: {
     flex: 1,
     width: "200px",
     height: "200px",
+  },
+  content: {
+    paddingTop: spacing(2),
+    flex: 1,
+    justifyContent: "center",
+    minHeight: "275px",
   },
 });

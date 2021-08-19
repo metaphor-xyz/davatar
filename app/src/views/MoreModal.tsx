@@ -1,20 +1,17 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import Button from "./Button";
-
-import { useNavigation } from "@react-navigation/native";
+import CustomModal from "./CustomModal";
 
 export default function MoreModal() {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.centeredView}>
-      <View style={styles.modalView}>
-        <Text>MENU</Text>
-        <Button title="Close" onPress={() => navigation.goBack()} />
-      </View>
-    </View>
+    <CustomModal title="More Menu">
+      <Button title="Close" onPress={navigation.goBack} />
+    </CustomModal>
   );
 }
 
@@ -23,7 +20,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    height: "100%",
+    width: "100%",
   },
   modalView: {
     margin: 20,
