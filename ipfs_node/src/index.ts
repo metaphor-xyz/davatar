@@ -1,9 +1,7 @@
-import IPFS from 'ipfs-core';
-import Gateway from 'ipfs-http-gateway';
+import IPFS from 'ipfs-http-client';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import admin from 'firebase-admin';
-import proxy from 'express-http-proxy';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8081;
 
@@ -13,36 +11,26 @@ admin.initializeApp({
 });
 
 (async function() {
-  const ipfs = await IPFS.create({
-    start: true,
-    repo: './data',
-    EXPERIMENTAL: { ipnsPubsub: true },
-    config: {
-      Addresses: {
-        Gateway: '/ip4/0.0.0.0/tcp/8082',
-      },
-    },
+  const ipfs = IPFS.create({
+    url: process.env.NODE_ENV === 'production' ? 'http://34.72.155.192:5001' : 'http://localhost:5001',
   });
 
-  const gateway = new Gateway(ipfs);
-  await gateway.start();
-
   const updateAvatar = async (address: string, file: any) => {
-    if (!(await ipfs.key.list()).find(k => k.name === address)) {
-      await ipfs.key.gen(address);
+    let key = (await ipfs.key.list()).find(k => k.name === address);
+    if (!key) {
+      key = await ipfs.key.gen(address);
     }
 
     console.log('adding file');
     const ipfsFile = await ipfs.add(file);
     console.log(`added ${ipfsFile.cid}`);
-    const ipns = await ipfs.name.publish(ipfsFile.cid, {
+    console.log(`publishing to ${key.id}`);
+    ipfs.name.publish(ipfsFile.cid, {
       key: address,
-      allowOffline: false,
-      resolve: true,
-    });
-    console.log(ipns);
+      resolve: false,
+    }).then(ipns => console.log(ipns));
 
-    return ipns.name;
+    return { ipns: `ipns/${key.id}`, ipfs: `ipfs/${ipfsFile.cid.toString()}` };
   };
 
   const app = express();
@@ -52,7 +40,6 @@ admin.initializeApp({
   }));
   app.use(express.json());
   app.use(express.urlencoded( { extended: true }));
-  app.use('/ipfs', proxy('http://localhost:8082'));
 
   app.post('/store', async (req, res) => {
     const { address, storageKey } = req.body;
@@ -80,9 +67,9 @@ admin.initializeApp({
         validation: false,
       });
 
-      const ipns = await updateAvatar(address, stream);
+      const hashes = await updateAvatar(address, stream);
 
-      res.status(200).json({ type: 'ipns', hash: ipns });
+      res.status(200).json(hashes);
     } catch (e) {
       console.error(e);
       res.status(500).send('file upload failed!');

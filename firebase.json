@@ -15,10 +15,10 @@
       "port": 9099
     },
     "functions": {
-      "port": 5001
+      "port": 5002
     },
     "firestore": {
-      "port": 8080
+      "port": 8082
     },
     "ui": {
       "enabled": true
@@ -35,13 +35,6 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-      {
-        "source": "/ipfs/**",
-        "run": {
-          "serviceId": "ipfs-node",
-          "region": "us-east1"
-        }
-      },
       {
         "source": "**",
         "destination": "/index.html"
