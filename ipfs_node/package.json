@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node build/index.js"
+    "start": "tsc-watch -w --noClear --onSuccess \"node build/index.js\"",
+    "start:prod": "node build/index.js"
   },
   "author": "",
   "license": "ISC",
