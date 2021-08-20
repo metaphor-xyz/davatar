@@ -1,0 +1,20 @@
+{
+  "name": "daovatar",
+  "workspaces": [
+    "app",
+    "functions",
+    "ipfs_node"
+  ],
+  "scripts": {
+    "start": "concurrently \"npm:start:*\"",
+    "start:app": "npm run start --workspace=app",
+    "start:firebase": "npm run start --workspace=functions",
+    "start:ipfs": "FIREBASE_STORAGE_EMULATOR_HOST=localhost:9199 npm run start --workspace=ipfs_node"
+  },
+  "dependencies": {
+    "concurrently": "^6.2.1"
+  },
+  "devDependencies": {
+    "tsc-watch": "^4.5.0"
+  }
+}
