@@ -2,6 +2,7 @@ import IPFS from 'ipfs-http-client';
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import admin from 'firebase-admin';
+import { spawn } from 'child_process';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8081;
 
@@ -11,6 +12,21 @@ admin.initializeApp({
 });
 
 (async function() {
+  if (process.env.NODE_ENV !== 'production') {
+    // @ts-ignore
+    const { path } = await import('go-ipfs');
+
+    const daemon = spawn(path(), ['daemon'], {
+      env: {
+        'IPFS_PATH': './data',
+      },
+    });
+
+    daemon.stdout.on('data', d => console.log(d.toString()));
+    daemon.stderr.on('data', d => console.error(d.toString()));
+    daemon.on('close', () => console.error('daemon exited'));
+  }
+
   const ipfs = IPFS.create({
     url: process.env.NODE_ENV === 'production' ? 'http://34.72.155.192:5001' : 'http://localhost:5001',
   });
