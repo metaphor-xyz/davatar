@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Image } from 'react-native';
 
-import { spacing } from "../constants";
-import Button from "../views/Button";
-import { snapshot } from '../firebase';
 import { useWallet } from '../WalletProvider';
-import PageContainer from "../views/PageContainer";
+import { spacing } from '../constants';
+import { snapshot } from '../firebase';
+import Button from '../views/Button';
+import PageContainer from '../views/PageContainer';
+import Typography from '../views/Typography';
 
 export default function SelectSocialsScreen({ navigation }) {
   const { address } = useWallet();
@@ -13,20 +14,21 @@ export default function SelectSocialsScreen({ navigation }) {
 
   useEffect(() => {
     if (address) {
-      return snapshot("avatars", address, (doc) => {
+      return snapshot('avatars', address, doc => {
+        // eslint-disable-next-line
         const data = doc.data() as any;
         setAvatarUri(`https://gateway.ipfs.io/${data.ipfs}`);
       });
     }
-  }, []);
+  }, [address]);
 
   return (
     <PageContainer>
-      <Text style={styles.headerText}>Select Discord, ENS, Twitter...</Text>
+      <Typography style={styles.spaced} variant="header">
+        Select Discord, ENS, Twitter...
+      </Typography>
 
-      {avatarUri && (
-        <Image style={styles.preview} source={{ uri: avatarUri }} />
-      )}
+      {avatarUri && <Image style={styles.preview} source={{ uri: avatarUri }} />}
       <View style={styles.buttonsContainer}>
         <View>
           <Button title="Back" onPress={navigation.goBack} />
@@ -39,12 +41,12 @@ export default function SelectSocialsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   buttonsContainer: {
-    flexDirection: "row",
-    width: "225px",
-    maxWidth: "100%",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    alignItems: "center",
+    flexDirection: 'row',
+    width: '225px',
+    maxWidth: '100%',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    alignItems: 'center',
     paddingTop: spacing(2),
   },
   spaced: {
@@ -52,12 +54,7 @@ const styles = StyleSheet.create({
   },
   preview: {
     flex: 1,
-    width: "200px",
-    height: "200px",
-  },
-  headerText: {
-    fontSize: 48,
-    fontWeight: "600",
-    paddingTop: spacing(2),
+    width: '200px',
+    height: '200px',
   },
 });

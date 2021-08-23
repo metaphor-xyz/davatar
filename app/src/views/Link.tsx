@@ -1,5 +1,7 @@
-import React from "react";
-import { Text, StyleSheet } from "react-native";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+
+import Typography from './Typography';
 
 export interface Props {
   title: string;
@@ -9,17 +11,17 @@ export interface Props {
 
 export default function Link(props: Props) {
   return (
-    <Text style={styles.link} onPress={props.onPress}>
+    <Typography style={styles.link} onPress={props.onPress} fontWeight={600}>
       {props.title}
-    </Text>
+    </Typography>
   );
 }
 
 const styles = StyleSheet.create({
   link: {
-    color: "#5C59EB",
-    "&:hover": {
-      textDecoration: "underline",
+    color: '#5C59EB',
+    '&:hover': {
+      textDecoration: 'underline',
     },
   },
 });

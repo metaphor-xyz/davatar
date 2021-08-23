@@ -1,26 +1,19 @@
-import React from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
+import React from 'react';
 
-import { useWallet } from "../WalletProvider";
-import { VIEW_STEPS } from "../constants";
-import ConnectWallet from "../ConnectWallet";
-import Button from "./Button";
+import ConnectWallet from '../ConnectWallet';
+import { useWallet } from '../WalletProvider';
+import { sliceWalletAddress, VIEW_STEPS } from '../constants';
+import Button from './Button';
 
 export default function ConnectWalletButton() {
+  // eslint-disable-next-line
   const navigation: any = useNavigation();
   const { address } = useWallet();
 
   if (!address) return <ConnectWallet />;
 
-  const slicedAddress = address
-    .slice(0, 6)
-    .concat("...")
-    .concat(address.slice(address.length - 4));
+  const slicedAddress = sliceWalletAddress(address);
 
-  return (
-    <Button
-      title={slicedAddress}
-      onPress={() => navigation.navigate(VIEW_STEPS.CONNECT_WALLET_MODAL)}
-    />
-  );
+  return <Button title={slicedAddress} onPress={() => navigation.navigate(VIEW_STEPS.CONNECT_WALLET_MODAL)} />;
 }
