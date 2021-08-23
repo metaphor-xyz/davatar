@@ -8,7 +8,10 @@
     "@react-navigation/stack": "^6.0.7",
     "@walletconnect/web3-provider": "^1.5.4",
     "expo": "~42.0.0",
+    "expo-auth-session": "~3.3.1",
     "expo-image-picker": "~10.2.2",
+    "expo-random": "~11.2.0",
+    "expo-web-browser": "~9.2.0",
     "firebase": "^9.0.0-beta.8",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -18,9 +21,7 @@
     "react-native-screens": "~3.4.0",
     "react-native-web": "^0.13.18",
     "web3": "^1.5.1",
-    "expo-auth-session": "~3.3.1",
-    "expo-web-browser": "~9.2.0",
-    "expo-random": "~11.2.0"
+    "web3modal": "^1.9.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

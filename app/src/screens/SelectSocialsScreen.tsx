@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { spacing } from '../constants';
 import useUser from '../useUser';
 import Button from '../views/Button';
-import ConnectDiscord from '../views/ConnectDiscord';
+import ConnectENS from '../views/ConnectENS';
 import PageContainer from '../views/PageContainer';
 
 export default function SelectSocialsScreen({ navigation }) {
@@ -23,7 +23,7 @@ export default function SelectSocialsScreen({ navigation }) {
 
       {avatarUri && <Image style={styles.preview} source={{ uri: avatarUri }} />}
       <View style={styles.buttonsContainer}>
-        <ConnectDiscord />
+        <ConnectENS />
         <View>
           <Button title="Back" onPress={navigation.goBack} />
         </View>
