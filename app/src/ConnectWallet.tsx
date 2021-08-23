@@ -1,4 +1,3 @@
-import { useWalletConnect } from '@carlosdp/react-native-dapp';
 import React, { useCallback } from 'react';
 
 import { useWallet } from './WalletProvider';
@@ -11,18 +10,9 @@ type Props = {
 };
 
 export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props) {
-  const connector = useWalletConnect();
-  const { wallet: connectedWallet, connect } = useWallet();
+  const { connect } = useWallet();
 
   const connectWallet = useCallback(async () => {
-    // Return if wallet is already connected
-    if (connectedWallet) {
-      if (onConnectSuccess) {
-        onConnectSuccess();
-      }
-      return;
-    }
-
     // Connect the wallet
     try {
       const wallet = await connect();
@@ -43,7 +33,8 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
         signature,
       });
 
-      signInWithCustomToken(result.data as string);
+      await signInWithCustomToken(result.data as string);
+
       if (onConnectSuccess) {
         onConnectSuccess();
       }
@@ -55,7 +46,7 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connector, connect, onConnectFail, connectedWallet, onConnectSuccess]);
+  }, [connect, onConnectFail, onConnectSuccess]);
 
   return <Button title="Connect Wallet" onPress={connectWallet} />;
 }

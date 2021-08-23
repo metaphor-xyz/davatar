@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 
-import { useWallet } from '../WalletProvider';
 import { spacing } from '../constants';
-import { snapshot } from '../firebase';
+import useUser from '../useUser';
 import Button from '../views/Button';
+import ConnectENS from '../views/ConnectENS';
 import PageContainer from '../views/PageContainer';
 import Typography from '../views/Typography';
 
 export default function SelectSocialsScreen({ navigation }) {
-  const { address } = useWallet();
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
+  const { user } = useUser();
 
   useEffect(() => {
-    if (address) {
-      return snapshot('avatars', address, doc => {
-        // eslint-disable-next-line
-        const data = doc.data() as any;
-        setAvatarUri(`https://gateway.ipfs.io/${data.ipfs}`);
-      });
+    if (user) {
+      setAvatarUri(`https://gateway.ipfs.io/${user.ipfs}`);
     }
-  }, [address]);
+  }, [user]);
 
   return (
     <PageContainer>
@@ -30,6 +26,7 @@ export default function SelectSocialsScreen({ navigation }) {
 
       {avatarUri && <Image style={styles.preview} source={{ uri: avatarUri }} />}
       <View style={styles.buttonsContainer}>
+        <ConnectENS />
         <View>
           <Button title="Back" onPress={navigation.goBack} />
         </View>

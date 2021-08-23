@@ -1,50 +1,46 @@
 import { useRoute } from '@react-navigation/native';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import ConnectWallet from '../ConnectWallet';
 import { useWallet } from '../WalletProvider';
 import { spacing, VIEW_STEPS } from '../constants';
-import { onAuthStateChanged } from '../firebase';
+import useUser from '../useUser';
 import Button from '../views/Button';
 import ConnectedWalletBox from '../views/ConnectedWalletBox';
 import PageContainer from '../views/PageContainer';
 import Typography from '../views/Typography';
 
 export default function ConnectScreen({ navigation }) {
-  const [authReady, setAuthReady] = useState(false);
-  // eslint-disable-next-line
-  const [user, setUser] = useState<any | null>(null);
   const { wallet } = useWallet();
   const route = useRoute();
-
-  useEffect(() => {
-    return onAuthStateChanged(u => {
-      setUser(u);
-      setAuthReady(true);
-    });
-  }, [route.name]);
-
-  useEffect(() => {
-    if (!!user && !!wallet && route.name === VIEW_STEPS.CONNECT) {
-      navigation.navigate(VIEW_STEPS.SELECT_NFT);
-    }
-  }, [user, wallet, navigation, route.name]);
+  const { loggedIn, authReady, user } = useUser();
 
   const onConnectSuccess = useCallback(() => {
-    navigation.navigate(VIEW_STEPS.SELECT_NFT);
-  }, [navigation]);
+    if (user && user.currentAvatar) {
+      navigation.navigate(VIEW_STEPS.SELECT_SOCIAL_WEBSITES);
+    } else {
+      navigation.navigate(VIEW_STEPS.SELECT_NFT);
+    }
+  }, [navigation, user]);
+
+  useEffect(() => {
+    if (loggedIn && !!wallet && route.name === VIEW_STEPS.CONNECT) {
+      onConnectSuccess();
+    }
+  }, [loggedIn, user, wallet, navigation, route, onConnectSuccess]);
 
   const onConnectFail = useCallback(() => {
     navigation.navigate(VIEW_STEPS.ERROR);
   }, [navigation]);
 
-  if (!authReady)
+  if (!authReady) {
     return (
       <PageContainer>
         <ActivityIndicator size="large" />
       </PageContainer>
     );
+  }
 
   return (
     <PageContainer>
@@ -65,7 +61,7 @@ export default function ConnectScreen({ navigation }) {
 
       {(!user || !wallet) && (
         <View style={styles.content}>
-          <ConnectWallet onConnectSuccess={onConnectSuccess} onConnectFail={onConnectFail} />
+          <ConnectWallet onConnectFail={onConnectFail} />
         </View>
       )}
     </PageContainer>
@@ -83,7 +79,6 @@ const styles = StyleSheet.create({
   spaced: {
     paddingTop: spacing(2),
   },
-
   continueButton: {
     width: '100%',
     alignItems: 'center',
