@@ -1,27 +1,34 @@
 import { useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import ConnectWallet from '../ConnectWallet';
 import { useWallet } from '../WalletProvider';
 import { spacing, VIEW_STEPS } from '../constants';
 import useUser from '../useUser';
+import Button from '../views/Button';
+import ConnectedWalletBox from '../views/ConnectedWalletBox';
 import PageContainer from '../views/PageContainer';
+import Typography from '../views/Typography';
 
 export default function ConnectScreen({ navigation }) {
   const { wallet } = useWallet();
   const route = useRoute();
   const { loggedIn, authReady, user } = useUser();
 
+  const onConnectSuccess = useCallback(() => {
+    if (user && user.currentAvatar) {
+      navigation.navigate(VIEW_STEPS.SELECT_SOCIAL_WEBSITES);
+    } else {
+      navigation.navigate(VIEW_STEPS.SELECT_NFT);
+    }
+  }, [navigation, user]);
+
   useEffect(() => {
     if (loggedIn && !!wallet && route.name === VIEW_STEPS.CONNECT) {
-      if (user && user.currentAvatar) {
-        navigation.navigate(VIEW_STEPS.SELECT_SOCIAL_WEBSITES);
-      } else {
-        navigation.navigate(VIEW_STEPS.SELECT_NFT);
-      }
+      onConnectSuccess();
     }
-  }, [loggedIn, user, wallet, navigation, route]);
+  }, [loggedIn, user, wallet, navigation, route, onConnectSuccess]);
 
   const onConnectFail = useCallback(() => {
     navigation.navigate(VIEW_STEPS.ERROR);
@@ -37,11 +44,26 @@ export default function ConnectScreen({ navigation }) {
 
   return (
     <PageContainer>
-      <Text style={styles.headerText}>Connect your wallet</Text>
+      <Typography variant="header" style={styles.spaced}>
+        Connect your wallet
+      </Typography>
 
-      <View style={styles.content}>
-        <ConnectWallet onConnectFail={onConnectFail} />
-      </View>
+      {user && wallet && (
+        <>
+          <View style={styles.content}>
+            <ConnectedWalletBox />
+          </View>
+          <View style={styles.continueButton}>
+            <Button fullWidth title="Continue" onPress={onConnectSuccess} />
+          </View>
+        </>
+      )}
+
+      {(!user || !wallet) && (
+        <View style={styles.content}>
+          <ConnectWallet onConnectFail={onConnectFail} />
+        </View>
+      )}
     </PageContainer>
   );
 }
@@ -52,10 +74,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     minHeight: '275px',
+    maxWidth: '100%',
   },
-  headerText: {
-    fontSize: 48,
-    fontWeight: '600',
+  spaced: {
+    paddingTop: spacing(2),
+  },
+  continueButton: {
+    width: '100%',
+    alignItems: 'center',
     paddingTop: spacing(2),
   },
 });

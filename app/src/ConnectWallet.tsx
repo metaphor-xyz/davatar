@@ -13,6 +13,7 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
   const { connect } = useWallet();
 
   const connectWallet = useCallback(async () => {
+    // Connect the wallet
     try {
       const wallet = await connect();
 
@@ -38,10 +39,13 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
         onConnectSuccess();
       }
     } catch (e) {
-      if (onConnectFail) {
-        onConnectFail();
+      if (e.message !== 'User close QRCode Modal' && e.message !== 'User closed modal') {
+        if (onConnectFail) {
+          onConnectFail();
+        }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect, onConnectFail, onConnectSuccess]);
 
   return <Button title="Connect Wallet" onPress={connectWallet} />;
