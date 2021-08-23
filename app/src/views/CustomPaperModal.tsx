@@ -1,28 +1,28 @@
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import React, { ReactChild } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
-import { StyleSheet, View, Pressable, Platform, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Platform, TouchableOpacity } from 'react-native';
+import { Modal, Portal } from 'react-native-paper';
 
 import { spacing } from '../constants';
 import Typography from './Typography';
 
 type Props = {
+  visible: boolean;
+  onClose?: () => void;
   title?: string;
   children: ReactChild | ReactChild[];
 };
 
-export default function CustomModal({ title, children }: Props) {
-  const navigation = useNavigation();
-
+export default function CustomPaperModal({ onClose, visible, title, children }: Props) {
   const escFunction = useCallback(
     e => {
       if (e.keyCode === 27) {
-        navigation.goBack();
+        onClose();
       }
     },
-    [navigation]
+    [onClose]
   );
   useEffect(() => {
     document.addEventListener('keydown', escFunction, false);
@@ -30,31 +30,29 @@ export default function CustomModal({ title, children }: Props) {
   }, [escFunction]);
 
   return (
-    <View style={styles.centeredView}>
-      <Pressable
-        style={{
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0.4)',
-          position: 'absolute',
-        }}
-        onPress={navigation.goBack}
-      />
-
-      <View style={Platform.OS === 'web' ? styles.modalView : styles.mobileModalView}>
-        <View style={styles.headerContainer}>
-          <Typography style={styles.title}>{title}</Typography>
-          <TouchableOpacity onPress={navigation.goBack} activeOpacity={0.8}>
-            <AntDesign name="close" size={24} color="black" />
-          </TouchableOpacity>
+    <Portal>
+      <Modal visible={visible} onDismiss={onClose} contentContainerStyle={styles.modalOuterContainerStyles}>
+        <View style={Platform.OS === 'web' ? styles.modalView : styles.mobileModalView}>
+          <View style={styles.headerContainer}>
+            <Typography style={styles.title}>{title}</Typography>
+            <TouchableOpacity onPress={onClose} activeOpacity={0.8}>
+              <AntDesign name="close" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+          {children}
         </View>
-        {children}
-      </View>
-    </View>
+      </Modal>
+    </Portal>
   );
 }
 
 const styles = StyleSheet.create({
+  modalOuterContainerStyles: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: 'initial',
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',

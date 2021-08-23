@@ -1,20 +1,23 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons';
+import React from 'react';
+import { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { useNavigation } from "@react-navigation/native";
-import { spacing, VIEW_STEPS } from "../constants";
+import { spacing } from '../constants';
+import CustomPaperModal from './CustomPaperModal';
 
 export default function MoreButton() {
-  const navigation: any = useNavigation();
+  const [visible, setVisible] = useState(false);
+
   return (
-    <TouchableOpacity
-      style={[styles.container]}
-      onPress={() => navigation.navigate(VIEW_STEPS.MORE_MODAL)}
-      activeOpacity={0.8}
-    >
-      <MaterialIcons name="more-horiz" size={24} color="white" />
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity style={[styles.container]} onPress={() => setVisible(true)} activeOpacity={0.8}>
+        <MaterialIcons name="more-horiz" size={24} color="white" />
+      </TouchableOpacity>
+      <CustomPaperModal visible={visible} onClose={() => setVisible(false)} title="More">
+        <Text>MY CONTENT</Text>
+      </CustomPaperModal>
+    </>
   );
 }
 
@@ -23,10 +26,10 @@ const styles = StyleSheet.create({
     padding: spacing(1),
     paddingRight: spacing(2),
     paddingLeft: spacing(2),
-    backgroundColor: "#5C59EB",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#5C59EB',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 16,
   },
 });

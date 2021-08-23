@@ -1,12 +1,13 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import React, { useState, useCallback, useEffect } from 'react';
+import { StyleSheet, View, Image } from 'react-native';
 
-import { spacing, VIEW_STEPS } from "../constants";
-import Button from "../views/Button";
-import CustomImagePicker from "../CustomImagePicker";
-import { useWallet } from "../WalletProvider";
-import { httpsCallable, storageRef, uploadBytes } from "../firebase";
-import PageContainer from "../views/PageContainer";
+import CustomImagePicker from '../CustomImagePicker';
+import { useWallet } from '../WalletProvider';
+import { spacing, VIEW_STEPS } from '../constants';
+import { httpsCallable, storageRef, uploadBytes } from '../firebase';
+import Button from '../views/Button';
+import PageContainer from '../views/PageContainer';
+import Typography from '../views/Typography';
 
 export default function SelectNFTScreen({ navigation }) {
   const [avatar, setAvatar] = useState<Blob | null>(null);
@@ -15,7 +16,7 @@ export default function SelectNFTScreen({ navigation }) {
 
   const upload = useCallback(async () => {
     if (wallet) {
-      const avatarId = await httpsCallable("createAvatar")();
+      const avatarId = await httpsCallable('createAvatar')();
 
       const accounts = await wallet.eth.getAccounts();
       const address = accounts[0];
@@ -23,11 +24,11 @@ export default function SelectNFTScreen({ navigation }) {
       const ref = storageRef(`${address}/${avatarId.data}`);
       await uploadBytes(ref, avatar);
 
-      await httpsCallable("storeIpfs")({ address, avatarId: avatarId.data });
+      await httpsCallable('storeIpfs')({ address, avatarId: avatarId.data });
 
       navigation.navigate(VIEW_STEPS.SELECT_SOCIAL_WEBSITES);
     }
-  }, [avatar]);
+  }, [wallet, avatar, navigation]);
 
   useEffect(() => {
     if (avatar) {
@@ -41,22 +42,22 @@ export default function SelectNFTScreen({ navigation }) {
 
   return (
     <PageContainer>
-      <Text style={styles.headerText}>Select NFT</Text>
+      <Typography style={styles.spaced} variant="header">
+        Select NFT
+      </Typography>
+
       <View style={styles.content}>
-        <View>
-          {preview && (
-            <Image style={styles.preview} source={{ uri: preview }} />
-          )}
-        </View>
+        <View>{preview && <Image style={styles.preview} source={{ uri: preview }} />}</View>
         <View>
           <CustomImagePicker preview={preview} onChange={setAvatar} />
         </View>
       </View>
+
       <View style={styles.buttonsContainer}>
-        <View>
+        <View style={{ flexGrow: 1, marginRight: '6px' }}>
           <Button title="Back" onPress={navigation.goBack} />
         </View>
-        <View>
+        <View style={{ flexGrow: 1, marginLeft: '6px' }}>
           <Button disabled={!preview} title="Next" onPress={upload} />
         </View>
       </View>
@@ -68,38 +69,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
   buttonsContainer: {
-    flexDirection: "row",
-    width: "225px",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    alignItems: "center",
-    maxWidth: "100%",
+    flexDirection: 'row',
+    width: '225px',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    maxWidth: '100%',
     paddingTop: spacing(2),
   },
-  headerText: {
-    fontSize: 48,
-    fontWeight: "600",
+  spaced: {
     paddingTop: spacing(2),
   },
   previewContainer: {
     flex: 1,
-    width: "200px",
-    height: "200px",
+    width: '200px',
+    height: '200px',
   },
   preview: {
     flex: 1,
-    width: "200px",
-    height: "200px",
+    width: '200px',
+    height: '200px',
   },
   content: {
     paddingTop: spacing(2),
     flex: 1,
-    justifyContent: "center",
-    minHeight: "275px",
+    justifyContent: 'center',
+    minHeight: '275px',
   },
 });

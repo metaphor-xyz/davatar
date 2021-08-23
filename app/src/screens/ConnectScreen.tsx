@@ -1,41 +1,43 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import ConnectWallet from "../ConnectWallet";
-import { spacing, VIEW_STEPS } from "../constants";
-import { useWallet } from "../WalletProvider";
-import { onAuthStateChanged } from "../firebase";
-import PageContainer from "../views/PageContainer";
-import { useRoute } from "@react-navigation/native";
+import { useRoute } from '@react-navigation/native';
+import React, { useCallback, useState, useEffect } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+
+import ConnectWallet from '../ConnectWallet';
+import { useWallet } from '../WalletProvider';
+import { spacing, VIEW_STEPS } from '../constants';
+import { onAuthStateChanged } from '../firebase';
+import Button from '../views/Button';
+import ConnectedWalletBox from '../views/ConnectedWalletBox';
+import PageContainer from '../views/PageContainer';
+import Typography from '../views/Typography';
 
 export default function ConnectScreen({ navigation }) {
   const [authReady, setAuthReady] = useState(false);
+  // eslint-disable-next-line
   const [user, setUser] = useState<any | null>(null);
   const { wallet } = useWallet();
   const route = useRoute();
 
   useEffect(() => {
-    return onAuthStateChanged((u) => {
+    return onAuthStateChanged(u => {
       setUser(u);
       setAuthReady(true);
     });
   }, [route.name]);
 
   useEffect(() => {
-    console.log("user: ", user);
     if (!!user && !!wallet && route.name === VIEW_STEPS.CONNECT) {
       navigation.navigate(VIEW_STEPS.SELECT_NFT);
     }
-  }, [user, wallet]);
+  }, [user, wallet, navigation, route.name]);
 
   const onConnectSuccess = useCallback(() => {
-    console.log("Wallet connection success!");
     navigation.navigate(VIEW_STEPS.SELECT_NFT);
-  }, []);
+  }, [navigation]);
 
   const onConnectFail = useCallback(() => {
-    console.log("Wallet connection failed!");
     navigation.navigate(VIEW_STEPS.ERROR);
-  }, []);
+  }, [navigation]);
 
   if (!authReady)
     return (
@@ -46,14 +48,26 @@ export default function ConnectScreen({ navigation }) {
 
   return (
     <PageContainer>
-      <Text style={styles.headerText}>Connect your wallet</Text>
+      <Typography variant="header" style={styles.spaced}>
+        Connect your wallet
+      </Typography>
 
-      <View style={styles.content}>
-        <ConnectWallet
-          onConnectSuccess={onConnectSuccess}
-          onConnectFail={onConnectFail}
-        />
-      </View>
+      {user && wallet && (
+        <>
+          <View style={styles.content}>
+            <ConnectedWalletBox />
+          </View>
+          <View style={styles.continueButton}>
+            <Button fullWidth title="Continue" onPress={onConnectSuccess} />
+          </View>
+        </>
+      )}
+
+      {(!user || !wallet) && (
+        <View style={styles.content}>
+          <ConnectWallet onConnectSuccess={onConnectSuccess} onConnectFail={onConnectFail} />
+        </View>
+      )}
     </PageContainer>
   );
 }
@@ -62,12 +76,17 @@ const styles = StyleSheet.create({
   content: {
     paddingTop: spacing(2),
     flex: 1,
-    justifyContent: "center",
-    minHeight: "275px",
+    justifyContent: 'center',
+    minHeight: '275px',
+    maxWidth: '100%',
   },
-  headerText: {
-    fontSize: 48,
-    fontWeight: "600",
+  spaced: {
+    paddingTop: spacing(2),
+  },
+
+  continueButton: {
+    width: '100%',
+    alignItems: 'center',
     paddingTop: spacing(2),
   },
 });
