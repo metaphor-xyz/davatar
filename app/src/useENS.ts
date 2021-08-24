@@ -12,7 +12,7 @@ export default function useENS() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const provider = wallet.currentProvider as any;
       const ens = new ENS({ provider, ensAddress: getEnsAddress(provider.chainId) });
-      ens.getName(address).then((ensName: { name: string } | null) => setName(ensName?.name));
+      ens.getName(address).then((ensName: { name: string } | null) => setName(ensName?.name || null));
     }
   }, [wallet, address]);
 
