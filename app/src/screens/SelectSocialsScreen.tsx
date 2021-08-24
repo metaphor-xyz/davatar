@@ -14,8 +14,8 @@ export default function SelectSocialsScreen({ navigation }: StackScreenProps<Rec
   const { user } = useUser();
 
   useEffect(() => {
-    if (user) {
-      setAvatarUri(`https://gateway.ipfs.io/${user.ipfs}`);
+    if (user && user.avatarPreviewURL) {
+      setAvatarUri(user.avatarPreviewURL);
     }
   }, [user]);
 

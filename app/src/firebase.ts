@@ -17,7 +17,7 @@ import {
   DocumentSnapshot,
 } from 'firebase/firestore';
 import { getFunctions, connectFunctionsEmulator, httpsCallable as callable } from 'firebase/functions';
-import { getStorage, connectStorageEmulator, ref, uploadBytes as upload } from 'firebase/storage';
+import { getStorage, connectStorageEmulator, ref } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAm2FjysC_pxJpqwNbUsDu9icIg_H_SUJs',
@@ -53,7 +53,7 @@ export const storageRef = (path?: string) => ref(Firebase.storage, path);
 export const onAuthStateChanged = (nextOrObserver: NextOrObserver<User>) =>
   onAuthChanged(Firebase.auth, nextOrObserver);
 export { UserInfo } from 'firebase/auth';
-export const uploadBytes = upload;
+export { uploadBytes, getDownloadURL } from 'firebase/storage';
 export const collection = (name: string) => firestoreCollection(Firebase.firestore, name);
 export const doc = (path: string) => getDoc(firestoreDoc(Firebase.firestore, path));
 export const snapshot = <T>(collectionName: string, path: string, next: (_snap: DocumentSnapshot<T>) => void) =>
