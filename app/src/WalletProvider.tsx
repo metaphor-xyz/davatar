@@ -2,9 +2,14 @@ import { withWalletConnect, useWalletConnect } from '@carlosdp/react-native-dapp
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import { Platform } from 'react-native';
+import { Platform, View, Text, StyleSheet } from 'react-native';
+import { ActivityIndicator, Avatar } from 'react-native-paper';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
+
+import { spacing } from './constants';
+import { logout } from './firebase';
+import CustomPaperModal from './views/CustomPaperModal';
 
 export interface OpenSeaNFT {
   id: number;
@@ -18,10 +23,12 @@ export interface OpenSeaNFT {
 export interface Context {
   wallet: Web3 | null;
   address: string | null;
+  walletName: string | null;
   connect: () => Promise<Web3 | null>;
   disconnect: () => void;
   connecting: boolean;
   nfts: OpenSeaNFT[];
+  signMessage: (_message: string, _wallet?: Web3) => Promise<string>;
   loadingWallet: boolean;
   loadingNfts: boolean;
 }
@@ -37,6 +44,9 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   const connector = useWalletConnect();
   const [connecting, setConnecting] = useState(false);
   const [nfts, setNfts] = useState([]);
+  const [walletName, setWalletName] = useState<string | null>(null);
+  const [isWalletConnect, setIsWalletConnect] = useState(false);
+  const [signingExplanationOpen, setSigningExplanationOpen] = useState(false);
   const [loadingNfts, setLoadingNfts] = useState(false);
 
   useEffect(() => {
@@ -65,6 +75,9 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
         if (web3Modal) {
           const provider = await web3Modal.connect();
           newWallet = new Web3(provider);
+          if (provider.isMetaMask) {
+            setWalletName('MetaMask');
+          }
         }
       } else {
         if (!connector.connected) {
@@ -76,6 +89,9 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
         });
 
         await provider.enable();
+
+        setWalletName(provider.walletMeta?.name || null);
+        setIsWalletConnect(true);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         newWallet = new Web3(provider as any);
@@ -111,9 +127,18 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   }, [connector]);
 
   const disconnect = useCallback(() => {
-    connector.killSession();
+    if (Platform.OS === 'web') {
+      if (web3Modal) {
+        web3Modal.clearCachedProvider();
+      }
+    } else {
+      connector.killSession();
+    }
     setWallet(null);
     setAddress(null);
+    setWalletName(null);
+    setIsWalletConnect(false);
+    logout();
   }, [connector]);
 
   useEffect(() => {
@@ -132,11 +157,57 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
     }
   }, [wallet, connecting, connect, connector]);
 
+  const signMessage = useCallback(
+    async (message: string, overrideWallet?: Web3) => {
+      const localWallet = overrideWallet || wallet;
+      if (!localWallet) {
+        throw new Error('wallet not connected');
+      }
+
+      const accounts = await localWallet.eth.getAccounts();
+      setSigningExplanationOpen(true);
+      try {
+        const signature = await localWallet.eth.personal.sign(message, accounts[0], 'password');
+
+        return signature;
+      } finally {
+        setSigningExplanationOpen(false);
+      }
+    },
+    [wallet]
+  );
+
   return (
     <WalletContext.Provider
-      value={{ wallet, address, connect, disconnect, connecting, nfts, loadingWallet, loadingNfts }}
+      value={{
+        wallet,
+        address,
+        connect,
+        disconnect,
+        connecting,
+        nfts,
+        signMessage,
+        walletName,
+        loadingWallet,
+        loadingNfts,
+      }}
     >
       {props.children}
+      <CustomPaperModal visible={signingExplanationOpen}>
+        <View style={styles.container}>
+          <Text style={styles.infoText}>
+            Please sign the message we just sent to your <Text style={styles.walletName}>{walletName}</Text> wallet in
+            order to login!
+          </Text>
+          {!isWalletConnect && <ActivityIndicator size="large" />}
+          {isWalletConnect && (
+            <View style={styles.phoneAddition}>
+              <Avatar.Icon size={72} icon="cellphone" />
+              <Text style={styles.phoneText}>Check your phone</Text>
+            </View>
+          )}
+        </View>
+      </CustomPaperModal>
     </WalletContext.Provider>
   );
 }
@@ -158,3 +229,27 @@ export function useWallet() {
 
   return context;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: spacing(1),
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  infoText: {
+    fontSize: 18,
+    marginBottom: '20px',
+  },
+  walletName: {
+    fontWeight: '600',
+  },
+  phoneAddition: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  phoneText: {
+    fontSize: 18,
+    marginTop: '20px',
+    fontWeight: '500',
+  },
+});

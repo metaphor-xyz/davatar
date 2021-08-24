@@ -35,9 +35,11 @@ export default function CustomPaperModal({ onClose, visible, title, children }: 
         <View style={Platform.OS === 'web' ? styles.modalView : styles.mobileModalView}>
           <View style={styles.headerContainer}>
             <Typography style={styles.title}>{title}</Typography>
-            <TouchableOpacity onPress={onClose} activeOpacity={0.8}>
-              <AntDesign name="close" size={24} color="black" />
-            </TouchableOpacity>
+            {onClose && (
+              <TouchableOpacity onPress={onClose} activeOpacity={0.8}>
+                <AntDesign name="close" size={24} color="black" />
+              </TouchableOpacity>
+            )}
           </View>
           {children}
         </View>

@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props) {
-  const { connect } = useWallet();
+  const { connect, signMessage } = useWallet();
 
   const connectWallet = useCallback(async () => {
     // Connect the wallet
@@ -26,7 +26,7 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
 
       const challenge = await httpsCallable('connectWallet')({ address });
 
-      const signature = await wallet.eth.personal.sign(challenge.data as string, address, 'password');
+      const signature = await signMessage(challenge.data as string, wallet);
 
       const result = await httpsCallable('connectWallet')({
         address,
@@ -48,5 +48,9 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect, onConnectFail, onConnectSuccess]);
 
-  return <Button title="Connect Wallet" onPress={connectWallet} />;
+  return (
+    <>
+      <Button title="Connect Wallet" onPress={connectWallet} />
+    </>
+  );
 }
