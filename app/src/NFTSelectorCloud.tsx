@@ -4,8 +4,8 @@ import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { useWallet } from './WalletProvider';
 
 export interface Props {
-  selectedNFTUrl?: string;
-  setSelectedNFTUrl: (_selectedNFTId?: string) => void;
+  selectedNFTUrl?: string | null;
+  setSelectedNFTUrl: (_selectedNFTId: string | null) => void;
   uploadImageComponent?: ReactChild;
 }
 

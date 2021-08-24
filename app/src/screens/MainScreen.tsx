@@ -12,9 +12,9 @@ import SelectNFTSection from './SelectNFTSection';
 
 export default function MainScreen() {
   const { wallet } = useWallet();
-  const { authReady, user } = useUser();
+  const { loading, user } = useUser();
 
-  if (!authReady) {
+  if (!loading) {
     return (
       <PageContainer>
         <Typography variant="header" style={styles.spaced}>

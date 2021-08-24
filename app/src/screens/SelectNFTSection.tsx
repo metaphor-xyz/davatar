@@ -27,7 +27,7 @@ export default function SelectNFTSection() {
   }, [user]);
 
   const upload = useCallback(async () => {
-    if (wallet) {
+    if (wallet && avatar) {
       const avatarId = await httpsCallable('createAvatar')();
 
       const accounts = await wallet.eth.getAccounts();
@@ -51,13 +51,15 @@ export default function SelectNFTSection() {
     }
   }, [avatar]);
 
+  const avatarPreview = preview || avatarUri;
+
   return (
     <>
       <View style={styles.spaced}>
         <View>
           <View style={styles.previewContainer}>
             {!preview && !avatarUri && <View style={styles.previewPlaceholder} />}
-            {(preview || avatarUri) && <Image style={styles.preview} source={{ uri: preview || avatarUri }} />}
+            {avatarPreview && <Image style={styles.preview} source={{ uri: avatarPreview }} />}
 
             <ENSDisplay />
           </View>

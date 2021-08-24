@@ -9,9 +9,9 @@ import PageContainer from '../views/PageContainer';
 
 export default function ConnectSection() {
   const { wallet } = useWallet();
-  const { authReady, user } = useUser();
+  const { loading, user } = useUser();
 
-  if (!authReady) {
+  if (!loading) {
     return (
       <PageContainer>
         <ActivityIndicator size="large" />
