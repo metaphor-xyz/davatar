@@ -1,15 +1,11 @@
 {
   "name": "daovatar",
-  "workspaces": [
-    "app",
-    "functions",
-    "ipfs_node"
-  ],
   "scripts": {
+    "postinstall": "(cd app && npm install); (cd functions && npm install); (cd ipfs_node && npm install)",
     "start": "concurrently \"npm:start:*\"",
-    "start:app": "npm run start --workspace=app",
-    "start:firebase": "npm run start --workspace=functions",
-    "start:ipfs": "FIREBASE_STORAGE_EMULATOR_HOST=localhost:9199 npm run start --workspace=ipfs_node"
+    "start:app": "cd app && npm start",
+    "start:firebase": "cd functions && npm start",
+    "start:ipfs": "cd ipfs_node && FIREBASE_STORAGE_EMULATOR_HOST=localhost:9199 npm start"
   },
   "dependencies": {
     "concurrently": "^6.2.1"
