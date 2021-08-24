@@ -6,6 +6,7 @@ import {
   onAuthStateChanged as onAuthChanged,
   NextOrObserver,
   User,
+  signOut,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -49,6 +50,7 @@ export namespace Firebase {
 
 export const httpsCallable = (name: string) => callable(Firebase.functions, name);
 export const signInWithCustomToken = (token: string) => signIn(Firebase.auth, token);
+export const logout = () => signOut(Firebase.auth);
 export const storageRef = (path?: string) => ref(Firebase.storage, path);
 export const onAuthStateChanged = (nextOrObserver: NextOrObserver<User>) =>
   onAuthChanged(Firebase.auth, nextOrObserver);
