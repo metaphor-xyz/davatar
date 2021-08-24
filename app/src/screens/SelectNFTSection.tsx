@@ -9,13 +9,14 @@ import { httpsCallable, storageRef, uploadBytes } from '../firebase';
 import useENS from '../useENS';
 import useUser from '../useUser';
 import ENSDisplay from '../views/ENSDisplay';
+import Jazzicon from '../views/Jazzicon';
 import SaveENS from '../views/SaveENS';
 import Typography from '../views/Typography';
 
 export default function SelectNFTSection() {
   const [avatar, setAvatar] = useState<Blob | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const { wallet } = useWallet();
+  const { address } = useWallet();
   const { user } = useUser();
   const { name } = useENS();
 
@@ -27,18 +28,15 @@ export default function SelectNFTSection() {
   }, [user]);
 
   const upload = useCallback(async () => {
-    if (wallet && avatar) {
+    if (address && avatar) {
       const avatarId = await httpsCallable('createAvatar')();
-
-      const accounts = await wallet.eth.getAccounts();
-      const address = accounts[0];
 
       const ref = storageRef(`${address}/${avatarId.data}`);
       await uploadBytes(ref, avatar);
 
       await httpsCallable('storeIpfs')({ address, avatarId: avatarId.data });
     }
-  }, [wallet, avatar]);
+  }, [address, avatar]);
 
   useEffect(() => {
     // Set Avatar if Image is Uploaded
@@ -58,7 +56,9 @@ export default function SelectNFTSection() {
       <View style={styles.spaced}>
         <View>
           <View style={styles.previewContainer}>
-            {!preview && !avatarUri && <View style={styles.previewPlaceholder} />}
+            {!preview && !avatarUri && address && (
+              <Jazzicon address={address} size={200} style={styles.previewPlaceholder} />
+            )}
             {avatarPreview && <Image style={styles.preview} source={{ uri: avatarPreview }} />}
 
             <ENSDisplay />
@@ -85,7 +85,7 @@ export default function SelectNFTSection() {
 const styles = StyleSheet.create({
   spaced: {
     fontSize: 18,
-    paddingTop: spacing(2),
+    paddingTop: spacing(3),
     width: '100%',
   },
   previewContainer: {
@@ -101,7 +101,5 @@ const styles = StyleSheet.create({
   previewPlaceholder: {
     width: '200px',
     height: '200px',
-    borderRadius: 100,
-    backgroundColor: 'gray',
   },
 });
