@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactChild } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import Typography from './Typography';
@@ -10,9 +10,10 @@ export interface Props {
   size?: string;
   color?: string;
   fullWidth?: boolean;
+  preTextComponent?: ReactChild | ReactChild[];
 }
 
-export default function Button({ title, onPress, disabled, size, fullWidth, color }: Props) {
+export default function Button({ preTextComponent, title, onPress, disabled, size, fullWidth, color }: Props) {
   return (
     <TouchableOpacity
       style={[
@@ -26,6 +27,7 @@ export default function Button({ title, onPress, disabled, size, fullWidth, colo
       disabled={disabled}
       activeOpacity={0.8}
     >
+      {preTextComponent}
       <Typography style={[styles.text, size === 'sm' && styles.textSM]}>{title}</Typography>
     </TouchableOpacity>
   );
@@ -42,6 +44,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 16,
+    flexDirection: 'row',
   },
   containerSM: {
     height: '34px',

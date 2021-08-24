@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
+    height: '100%',
     maxWidth: '750px',
     alignItems: 'center',
     paddingRight: '32px',

@@ -1,15 +1,21 @@
-import React from 'react';
+import { StackScreenProps } from '@react-navigation/stack';
+import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { spacing } from '../constants';
+import { spacing, VIEW_STEPS } from '../constants';
 import ConnectedWalletBox from './ConnectedWalletBox';
 import CustomModal from './CustomModal';
 
-export default function AccountModal() {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function AccountModal({ navigation }: StackScreenProps<Record<string, any>>) {
+  const onDisconnect = useCallback(() => {
+    navigation.navigate(VIEW_STEPS.CONNECT);
+  }, [navigation]);
+
   return (
     <CustomModal title="Account">
       <View style={styles.innerContainer}>
-        <ConnectedWalletBox />
+        <ConnectedWalletBox onDisconnect={onDisconnect} />
       </View>
     </CustomModal>
   );

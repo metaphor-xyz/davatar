@@ -1,10 +1,11 @@
 import React from 'react';
 import { useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 
 import { useWallet } from '../WalletProvider';
 import { sliceWalletAddress, spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
+import useUser from '../useUser';
 import Button from './Button';
 import Typography from './Typography';
 
@@ -15,6 +16,7 @@ type Props = {
 export default function ConnectedWalletBox({ onDisconnect }: Props) {
   const { address, disconnect } = useWallet();
   const isMoWeb = useIsMoWeb();
+  const { user } = useUser();
 
   const slicedAddress = sliceWalletAddress(address || '');
   const provider = '<Metamask>'; // TODO : Upadate with provider
@@ -26,14 +28,17 @@ export default function ConnectedWalletBox({ onDisconnect }: Props) {
     }
   }, [disconnect, onDisconnect]);
 
-  if (!address) return null;
+  if (!address || !user) return null;
 
   return (
     <View style={styles.innerContainer}>
       <View style={[styles.addressContainer, isMoWeb && styles.addressContainerXS]}>
         <View>
           <Typography style={styles.providerText}>Connected with {provider}</Typography>
-          <Typography style={[styles.accountText]}>{slicedAddress}</Typography>
+          <View style={styles.avatarAndAccountText}>
+            {user.avatarPreviewURL && <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} />}
+            <Typography style={[styles.accountText]}>{slicedAddress}</Typography>
+          </View>
         </View>
         <View style={styles.button}>
           <Button color="#d32f2f" size="sm" title="Disconnect" onPress={handleDisconnect} />
@@ -71,10 +76,22 @@ const styles = StyleSheet.create({
   button: {
     paddingBottom: spacing(1),
   },
-  accountText: {
+  avatarAndAccountText: {
     paddingTop: spacing(1),
+    paddingBottom: spacing(2),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  avatarImage: {
+    height: '20px',
+    width: '20px',
+    borderRadius: 50,
+    marginRight: '8px',
+    backgroundColor: 'blue',
+  },
+  accountText: {
     fontSize: 18,
     fontWeight: '500',
-    paddingBottom: spacing(2),
   },
 });
