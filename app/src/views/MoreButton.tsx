@@ -23,6 +23,7 @@ export default function MoreButton() {
 
 const styles = StyleSheet.create({
   container: {
+    width: '56px',
     padding: spacing(1),
     paddingRight: spacing(2),
     paddingLeft: spacing(2),

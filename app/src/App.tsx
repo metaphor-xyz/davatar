@@ -10,16 +10,17 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { registerRootComponent } from 'expo';
 import React from 'react';
+import { View } from 'react-native';
 import { ActivityIndicator, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 import WalletProvider from './WalletProvider';
 import { VIEW_STEPS } from './constants';
 import AboutScreen from './screens/AboutScreen';
-import ConnectScreen from './screens/ConnectScreen';
 import ErrorScreen from './screens/ErrorScreen';
-import SelectNFTScreen from './screens/SelectNFTScreen';
-import SelectSocialsScreen from './screens/SelectSocialsScreen';
+import MainScreen from './screens/MainScreen';
+import SuccessScreen from './screens/SuccessScreen';
 import AccountModal from './views/AccountModal';
+import ConnectSocialsModal from './views/ConnectSocialsModal';
 import MoreModal from './views/MoreModal';
 import PageContainer from './views/PageContainer';
 import TopNav from './views/TopNav';
@@ -56,7 +57,9 @@ function Navigation() {
   if (!fontsLoaded) {
     return (
       <PageContainer>
-        <ActivityIndicator size="large" />
+        <View style={{ height: '100%', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" />
+        </View>
       </PageContainer>
     );
   }
@@ -69,11 +72,10 @@ function Navigation() {
             header: () => <TopNav />,
           }}
         >
-          <Stack.Screen name={VIEW_STEPS.CONNECT} component={ConnectScreen} />
+          <Stack.Screen name={VIEW_STEPS.CONNECT} component={MainScreen} />
           <Stack.Screen name={VIEW_STEPS.ABOUT} component={AboutScreen} />
           <Stack.Screen name={VIEW_STEPS.ERROR} component={ErrorScreen} />
-          <Stack.Screen name={VIEW_STEPS.SELECT_NFT} component={SelectNFTScreen} />
-          <Stack.Screen name={VIEW_STEPS.SELECT_SOCIAL_WEBSITES} component={SelectSocialsScreen} />
+          <Stack.Screen name={VIEW_STEPS.SUCCESS_SCREEN} component={SuccessScreen} />
         </Stack.Group>
         <Stack.Group
           screenOptions={{
@@ -82,6 +84,7 @@ function Navigation() {
           }}
         >
           <Stack.Screen name={VIEW_STEPS.MORE_MODAL} component={MoreModal} />
+          <Stack.Screen name={VIEW_STEPS.SELECT_SOCIALS_MODAL} component={ConnectSocialsModal} />
           <Stack.Screen name={VIEW_STEPS.CONNECT_WALLET_MODAL} component={AccountModal} />
         </Stack.Group>
       </Stack.Navigator>

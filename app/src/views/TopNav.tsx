@@ -1,14 +1,15 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import { useNavigation, useRoute } from '@react-navigation/native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import { spacing, VIEW_STEPS } from "../constants";
-import Link from "./Link";
-import MoreButton from "./MoreButton";
-import PageContainer from "./PageContainer";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import ConnectWalletButton from "./ConnectWalletButton";
+import { spacing, VIEW_STEPS } from '../constants';
+import ConnectWalletButton from './ConnectWalletButton';
+import Link from './Link';
+import MoreButton from './MoreButton';
+import PageContainer from './PageContainer';
 
 export default function TopNav() {
+  // eslint-disable-next-line
   const navigation: any = useNavigation();
   const route = useRoute();
   const step = route.name;
@@ -17,9 +18,9 @@ export default function TopNav() {
     <PageContainer>
       <View style={styles.topNav}>
         <Link
-          title={step === VIEW_STEPS.ABOUT ? "Back" : "About"}
+          title={step === VIEW_STEPS.ABOUT || step === VIEW_STEPS.SUCCESS_SCREEN ? 'Back' : 'About'}
           onPress={
-            step === VIEW_STEPS.ABOUT
+            step === VIEW_STEPS.ABOUT || step === VIEW_STEPS.SUCCESS_SCREEN
               ? navigation.goBack
               : () => navigation.navigate(VIEW_STEPS.ABOUT)
           }
@@ -40,13 +41,13 @@ const styles = StyleSheet.create({
     paddingRight: spacing(1),
   },
   buttonsContainers: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   topNav: {
     paddingTop: spacing(3),
     paddingBottom: spacing(3),
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
