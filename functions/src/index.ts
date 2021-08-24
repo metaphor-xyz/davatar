@@ -35,6 +35,10 @@ export const connectWallet = functions.https.onCall(async data => {
 
   const token = await admin.auth().createCustomToken(address);
 
+  if (!(await admin.firestore().collection('users').doc(address).get()).exists) {
+    await admin.firestore().collection('users').doc(address).set({ avatars: [] });
+  }
+
   return token;
 });
 
@@ -45,19 +49,19 @@ export const createAvatar = functions.https.onCall(async (_data, context) => {
   }
 
   const user = await admin.firestore().collection('users').doc(context.auth.uid).get();
+  const userData = user.data();
 
-  const avatarId = randomString(32);
-  // eslint-disable-next-line
-  let avatarData: any = {
-    avatars: [avatarId],
-  };
-
-  if (user.exists) {
-    avatarData = user.data();
-    avatarData.avatars.push(avatarId);
+  if (!user.exists || !userData) {
+    throw new Error('user does not exist');
   }
 
-  await admin.firestore().collection('users').doc(context.auth.uid).set(avatarData, { merge: true });
+  const avatarId = randomString(32);
+
+  await admin
+    .firestore()
+    .collection('users')
+    .doc(context.auth.uid)
+    .set({ avatars: [...userData.avatars, avatarId] }, { merge: true });
 
   return avatarId;
 });
