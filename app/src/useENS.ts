@@ -1,3 +1,4 @@
+// @ts-ignore
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import { useCallback, useEffect, useState } from 'react';
 

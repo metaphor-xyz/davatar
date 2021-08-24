@@ -57,4 +57,6 @@ export const uploadBytes = upload;
 export const collection = (name: string) => firestoreCollection(Firebase.firestore, name);
 export const doc = (path: string) => getDoc(firestoreDoc(Firebase.firestore, path));
 export const snapshot = <T>(collectionName: string, path: string, next: (_snap: DocumentSnapshot<T>) => void) =>
+  // @ts-ignore
+  // carlos: this complains about an overload that definitely exists...
   onSnapshot(firestoreDoc(Firebase.firestore, collectionName, path), { next });

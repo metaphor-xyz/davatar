@@ -18,7 +18,7 @@ type Props = {
 export default function CustomPaperModal({ onClose, visible, title, children }: Props) {
   const escFunction = useCallback(
     e => {
-      if (e.keyCode === 27) {
+      if (e.keyCode === 27 && onClose) {
         onClose();
       }
     },

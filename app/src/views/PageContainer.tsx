@@ -1,13 +1,9 @@
-import React, { ReactChild } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import useIsMoWeb from '../useIsMoWeb';
 
-type Props = {
-  children?: ReactChild | ReactChild[];
-};
-
-export default function PageContainer({ children }: Props) {
+export default function PageContainer({ children }: React.PropsWithChildren<Record<string, unknown>>) {
   const isMoWeb = useIsMoWeb();
 
   return (

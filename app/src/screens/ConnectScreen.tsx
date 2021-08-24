@@ -1,4 +1,5 @@
 import { useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
@@ -11,7 +12,8 @@ import ConnectedWalletBox from '../views/ConnectedWalletBox';
 import PageContainer from '../views/PageContainer';
 import Typography from '../views/Typography';
 
-export default function ConnectScreen({ navigation }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function ConnectScreen({ navigation }: StackScreenProps<Record<string, any>>) {
   const { wallet } = useWallet();
   const route = useRoute();
   const { loggedIn, authReady, user } = useUser();

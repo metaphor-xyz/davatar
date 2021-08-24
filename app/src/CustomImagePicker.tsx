@@ -1,21 +1,21 @@
-import React, { useCallback } from "react";
-import { View, Platform } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import Button from "./views/Button";
-import { IconButton } from "react-native-paper";
+import * as ImagePicker from 'expo-image-picker';
+import React, { useCallback } from 'react';
+import { View, Platform } from 'react-native';
+import { IconButton } from 'react-native-paper';
+
+import Button from './views/Button';
 
 export interface Props {
-  onChange: (uri: Blob) => void;
+  onChange: (_uri: Blob | null) => void;
   preview?: string | null;
 }
 
-export default function CustomImagePicker({ preview, onChange }) {
+export default function CustomImagePicker({ preview, onChange }: Props) {
   const pick = useCallback(async () => {
-    if (Platform.OS !== "web") {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
       }
     }
 
@@ -27,34 +27,33 @@ export default function CustomImagePicker({ preview, onChange }) {
     });
 
     if (!result.cancelled) {
-      const blob = await new Promise((resolve, reject) => {
+      const blob = await new Promise<Blob>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
           resolve(xhr.response);
         };
         xhr.onerror = function (e) {
-          console.log(e);
-          reject(new TypeError("Local image fetch failed"));
+          reject(new TypeError(`Local image fetch failed: ${e}`));
         };
-        xhr.responseType = "blob";
+        xhr.responseType = 'blob';
         // @ts-ignore
-        xhr.open("GET", result.uri, true);
+        xhr.open('GET', result.uri, true);
         xhr.send(null);
       });
 
       onChange(blob);
     }
-  }, []);
+  }, [onChange]);
 
   return (
     <>
       {preview && (
         <View
           style={{
-            paddingTop: "8px",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: "100%",
+            paddingTop: '8px',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
           }}
         >
           <IconButton

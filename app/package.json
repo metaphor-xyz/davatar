@@ -33,7 +33,7 @@
     "typescript": "~4.0.0"
   },
   "scripts": {
-    "start": "expo start:web",
+    "start": "tsc-watch -w --noClear --onFirstSuccess \"expo start:web\"",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",

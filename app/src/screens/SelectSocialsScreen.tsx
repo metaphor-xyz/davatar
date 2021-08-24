@@ -1,3 +1,4 @@
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 
@@ -8,7 +9,7 @@ import ConnectENS from '../views/ConnectENS';
 import PageContainer from '../views/PageContainer';
 import Typography from '../views/Typography';
 
-export default function SelectSocialsScreen({ navigation }) {
+export default function SelectSocialsScreen({ navigation }: StackScreenProps<Record<string, never>>) {
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const { user } = useUser();
 

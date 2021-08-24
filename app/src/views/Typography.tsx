@@ -19,7 +19,7 @@ export default function Typography(props: Props) {
       {...props}
       style={[
         props.variant && styles[`${props.variant}${isMoWeb ? 'XS' : ''}`],
-        styles[props.fontWeight || 400],
+        styles[props.fontWeight?.toString() || '400'],
         props.style,
       ]}
     >
@@ -28,20 +28,20 @@ export default function Typography(props: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  200: {
+const styles = StyleSheet.create<StyleSheet.NamedStyles<Record<string, StyleSheet>>>({
+  '200': {
     fontFamily: 'Inter_200ExtraLight',
   },
-  300: {
+  '300': {
     fontFamily: 'Inter_300Light',
   },
-  400: {
+  '400': {
     fontFamily: 'Inter_400Regular',
   },
-  500: {
+  '500': {
     fontFamily: 'Inter_500Medium',
   },
-  600: {
+  '600': {
     fontFamily: 'Inter_600SemiBold',
   },
   header: {
