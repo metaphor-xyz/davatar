@@ -38,7 +38,7 @@ export default function ConnectDiscord() {
   }, [user]);
 
   useEffect(() => {
-    if (response && response.type === 'success') {
+    if (request && response && response.type === 'success') {
       const { code } = response.params;
 
       httpsCallable('authDiscord')({ code, verifier: request.codeVerifier });

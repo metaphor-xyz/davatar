@@ -20,7 +20,7 @@ export default function Button({ title, onPress, disabled, size, fullWidth, colo
         size === 'sm' && styles.containerSM,
         disabled && styles.disabled,
         fullWidth && styles.fullWidth,
-        color && { backgroundColor: color },
+        color ? { backgroundColor: color } : {},
       ]}
       onPress={onPress}
       disabled={disabled}

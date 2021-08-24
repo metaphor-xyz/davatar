@@ -1,3 +1,4 @@
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 
@@ -9,13 +10,14 @@ import Button from '../views/Button';
 import PageContainer from '../views/PageContainer';
 import Typography from '../views/Typography';
 
-export default function SelectNFTScreen({ navigation }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function SelectNFTScreen({ navigation }: StackScreenProps<Record<string, any>>) {
   const [avatar, setAvatar] = useState<Blob | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const { wallet } = useWallet();
 
   const upload = useCallback(async () => {
-    if (wallet) {
+    if (wallet && avatar) {
       const avatarId = await httpsCallable('createAvatar')();
 
       const accounts = await wallet.eth.getAccounts();

@@ -12,8 +12,9 @@ export default function ConnectENS() {
 
   useEffect(() => {
     if (user && user.ipns) {
+      const ipns = user.ipns;
       getAvatar().then(url => {
-        setConnected(url && url === `ipns://${user.ipns.replaceAll('ipns/', '')}`);
+        setConnected(url && url === `ipns://${ipns.replaceAll('ipns/', '')}`);
       });
     }
   }, [getAvatar, user]);

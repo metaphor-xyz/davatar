@@ -16,7 +16,7 @@ export default function ConnectedWalletBox({ onDisconnect }: Props) {
   const { address, disconnect } = useWallet();
   const isMoWeb = useIsMoWeb();
 
-  const slicedAddress = sliceWalletAddress(address);
+  const slicedAddress = sliceWalletAddress(address || '');
   const provider = '<Metamask>'; // TODO : Upadate with provider
 
   const handleDisconnect = useCallback(() => {
