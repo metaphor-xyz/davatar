@@ -50,4 +50,12 @@ const styles = StyleSheet.create<StyleSheet.NamedStyles<Record<string, StyleShee
   headerXS: {
     fontSize: 40,
   },
+  caption: {
+    fontSize: 14,
+    opacity: 0.8,
+  },
+  captionXS: {
+    fontSize: 14,
+    opacity: 0.8,
+  },
 });

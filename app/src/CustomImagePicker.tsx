@@ -1,16 +1,18 @@
+import { Feather } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { View, Platform } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { StyleSheet, Platform, TouchableOpacity } from 'react-native';
 
-import Button from './views/Button';
+import { useWallet } from './WalletProvider';
+import { spacing } from './constants';
+import Typography from './views/Typography';
 
 export interface Props {
   onChange: (_uri: Blob | null) => void;
-  preview?: string | null;
 }
 
-export default function CustomImagePicker({ preview, onChange }: Props) {
+export default function CustomImagePicker({ onChange }: Props) {
+  const { nfts } = useWallet();
   const pick = useCallback(async () => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -32,8 +34,8 @@ export default function CustomImagePicker({ preview, onChange }: Props) {
         xhr.onload = function () {
           resolve(xhr.response);
         };
-        xhr.onerror = function (e) {
-          reject(new TypeError(`Local image fetch failed: ${e}`));
+        xhr.onerror = function (_e) {
+          reject(new TypeError('Local image fetch failed'));
         };
         xhr.responseType = 'blob';
         // @ts-ignore
@@ -46,33 +48,48 @@ export default function CustomImagePicker({ preview, onChange }: Props) {
   }, [onChange]);
 
   return (
-    <>
-      {preview && (
-        <View
-          style={{
-            paddingTop: '8px',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}
-        >
-          <IconButton
-            size={32}
-            icon="delete-forever"
-            onPress={() => onChange(null)}
-            accessibilityLabel="Delete photo"
-            color="#d32f2f"
-          />
-          <IconButton
-            size={32}
-            icon="square-edit-outline"
-            onPress={pick}
-            accessibilityLabel="Change photo"
-            color="#5C59EB"
-          />
-        </View>
+    <TouchableOpacity
+      accessibilityLabel="Upload photo"
+      style={[styles.container, nfts.length === 0 && styles.containerWithText]}
+      onPress={pick}
+      activeOpacity={0.8}
+    >
+      {nfts?.length === 0 && (
+        <Typography style={styles.text} fontWeight={600}>
+          Upload image
+        </Typography>
       )}
-      {!preview && <Button title="Choose photo" onPress={pick} />}
-    </>
+      <Feather name="upload" size={24} color="white" />
+    </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    margin: 4,
+    marginBottom: 16,
+    marginRight: 16,
+    height: '75px',
+    width: '75px',
+    borderRadius: 50,
+    flexDirection: 'row',
+
+    padding: spacing(1),
+    paddingRight: spacing(2),
+    paddingLeft: spacing(2),
+    backgroundColor: '#5C59EB',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerWithText: {
+    width: 'initial',
+    paddingRight: spacing(3),
+    paddingLeft: spacing(3),
+  },
+  text: {
+    fontSize: 18,
+    paddingRight: spacing(1),
+    color: '#fff',
+  },
+});
