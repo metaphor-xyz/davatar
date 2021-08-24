@@ -13,13 +13,13 @@ export interface Context {
   disconnect: () => void;
 }
 
-const WalletContext = createContext<Context>(null);
+const WalletContext = createContext<Context>(null!);
 
 let web3Modal: Web3Modal | null = null;
 
 function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
-  const [wallet, setWallet] = useState(null);
-  const [address, setAddress] = useState(null);
+  const [wallet, setWallet] = useState<Web3 | null>(null);
+  const [address, setAddress] = useState<string | null>(null);
   const connector = useWalletConnect();
 
   useEffect(() => {
@@ -42,8 +42,10 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
     let newWallet: Web3 | null = null;
 
     if (Platform.OS === 'web') {
-      const provider = await web3Modal.connect();
-      newWallet = new Web3(provider);
+      if (web3Modal) {
+        const provider = await web3Modal.connect();
+        newWallet = new Web3(provider);
+      }
     } else {
       if (!connector.connected) {
         await connector.connect();
