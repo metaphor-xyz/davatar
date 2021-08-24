@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 
-import { onAuthStateChanged, snapshot, UserInfo } from './firebase';
+import { onAuthStateChanged, snapshot, UserInfo, storageRef, getDownloadURL } from './firebase';
 
 export interface User {
   currentAvatar?: string | null;
+  avatarPreviewURL?: string | null;
   ipfs?: string | null;
   ipns?: string | null;
   discordConnected?: string | null;
@@ -23,8 +24,13 @@ export default function useUser() {
 
   useEffect(() => {
     if (authUser) {
-      return snapshot('users', authUser.uid, doc => {
+      return snapshot('users', authUser.uid, async doc => {
         const data = doc.data() as User;
+
+        if (data.currentAvatar) {
+          const url = await getDownloadURL(storageRef(`${authUser.uid}/${data.currentAvatar}`));
+          data.avatarPreviewURL = url;
+        }
 
         setUser(data);
       });
