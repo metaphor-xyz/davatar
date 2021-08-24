@@ -23,8 +23,10 @@ export default function SaveENS({ disabled, onSave }: Props) {
   useEffect(() => {
     // Check if the user has previously been to our site
     if (user && user.ipns) {
+      const ipns = user.ipns;
+
       getAvatar().then(url => {
-        setConnected(url && url === `ipns://${user.ipns.replaceAll('ipns/', '')}`);
+        setConnected(url && url === `ipns://${ipns.replaceAll('ipns/', '')}`);
       });
     }
   }, [getAvatar, user]);
