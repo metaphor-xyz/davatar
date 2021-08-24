@@ -22,6 +22,8 @@ export interface Context {
   disconnect: () => void;
   connecting: boolean;
   nfts: OpenSeaNFT[];
+  loadingWallet: boolean;
+  loadingNfts: boolean;
 }
 
 const WalletContext = createContext<Context>(null!);
@@ -30,10 +32,12 @@ let web3Modal: Web3Modal | null = null;
 
 function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   const [wallet, setWallet] = useState<Web3 | null>(null);
+  const [loadingWallet, setLoadingWallet] = useState(false);
   const [address, setAddress] = useState<string | null>(null);
   const connector = useWalletConnect();
   const [connecting, setConnecting] = useState(false);
   const [nfts, setNfts] = useState([]);
+  const [loadingNfts, setLoadingNfts] = useState(false);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -85,13 +89,15 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
         }
 
         // Load NFT information from OpenSea
+        setLoadingNfts(true);
         fetch(`https://api.opensea.io/api/v1/assets?owner=${accounts[0]}&order_direction=desc&offset=0&limit=50`)
           .then(res => res.json())
           .then(data => {
             if (data && data.assets) {
               setNfts(data.assets);
             }
-          });
+          })
+          .finally(() => setLoadingNfts(false));
 
         setAddress(accounts[0]);
         setWallet(newWallet);
@@ -99,6 +105,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
 
       return newWallet;
     } finally {
+      setLoadingWallet(false);
       setConnecting(false);
     }
   }, [connector]);
@@ -113,10 +120,12 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
     if (!wallet && !connecting) {
       if (Platform.OS === 'web' && web3Modal) {
         if (web3Modal.cachedProvider) {
+          setLoadingWallet(true);
           connect();
         }
       } else {
         if (connector.connected) {
+          setLoadingWallet(true);
           connect();
         }
       }
@@ -124,7 +133,9 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   }, [wallet, connecting, connect, connector]);
 
   return (
-    <WalletContext.Provider value={{ wallet, address, connect, disconnect, connecting, nfts }}>
+    <WalletContext.Provider
+      value={{ wallet, address, connect, disconnect, connecting, nfts, loadingWallet, loadingNfts }}
+    >
       {props.children}
     </WalletContext.Provider>
   );

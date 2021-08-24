@@ -16,7 +16,7 @@ import Typography from '../views/Typography';
 export default function ConnectScreen({ navigation }: StackScreenProps<Record<string, any>>) {
   const { wallet } = useWallet();
   const route = useRoute();
-  const { loggedIn, authReady, user } = useUser();
+  const { loggedIn, loading: authLoading, user } = useUser();
 
   const onConnectSuccess = useCallback(() => {
     if (user && user.currentAvatar) {
@@ -36,7 +36,7 @@ export default function ConnectScreen({ navigation }: StackScreenProps<Record<st
     navigation.navigate(VIEW_STEPS.ERROR);
   }, [navigation]);
 
-  if (!authReady) {
+  if (!authLoading) {
     return (
       <PageContainer>
         <ActivityIndicator size="large" />
