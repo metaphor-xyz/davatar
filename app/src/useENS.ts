@@ -8,10 +8,12 @@ export default function useENS() {
   const [name, setName] = useState<string | null>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const provider = wallet.currentProvider as any;
-    const ens = new ENS({ provider, ensAddress: getEnsAddress(provider.chainId) });
-    ens.getName(address).then((ensName: { name: string } | null) => setName(ensName?.name));
+    if (wallet) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const provider = wallet.currentProvider as any;
+      const ens = new ENS({ provider, ensAddress: getEnsAddress(provider.chainId) });
+      ens.getName(address).then((ensName: { name: string } | null) => setName(ensName?.name));
+    }
   }, [wallet, address]);
 
   const setAvatar = useCallback(
