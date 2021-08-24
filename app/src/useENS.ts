@@ -7,13 +7,18 @@ import { useWallet } from './WalletProvider';
 export default function useENS() {
   const { wallet, address } = useWallet();
   const [name, setName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (wallet) {
+      setLoading(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const provider = wallet.currentProvider as any;
       const ens = new ENS({ provider, ensAddress: getEnsAddress(provider.chainId) });
-      ens.getName(address).then((ensName: { name: string } | null) => setName(ensName?.name || null));
+      ens
+        .getName(address)
+        .then((ensName: { name: string } | null) => setName(ensName?.name || null))
+        .finally(() => setLoading(false));
     }
   }, [wallet, address]);
 
@@ -40,5 +45,5 @@ export default function useENS() {
     }
   }, [wallet, name]);
 
-  return { name, setAvatar, getAvatar };
+  return { name, setAvatar, getAvatar, loading };
 }
