@@ -1,29 +1,42 @@
-import React, { ReactChild } from 'react';
+import React, { ReactChild, useCallback } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 
 import { useWallet } from './WalletProvider';
 
 export interface Props {
-  selectedNFTUrl?: string | null;
-  setSelectedNFTUrl: (_selectedNFTId: string | null) => void;
+  selectedIndex?: number | null;
+  onSelect?: (_blob: Blob, _index: number) => void;
   uploadImageComponent?: ReactChild;
 }
 
-export default function NFTSelectorCloud({ selectedNFTUrl, setSelectedNFTUrl, uploadImageComponent }: Props) {
+export default function NFTSelectorCloud({ selectedIndex, onSelect, uploadImageComponent }: Props) {
   const { nfts } = useWallet();
+
+  const setSelected = useCallback(
+    (index: number) => {
+      return async () => {
+        if (onSelect) {
+          const nft = nfts[index];
+          const blob = await fetch(nft.image_url).then(r => r.blob());
+          onSelect(blob, index);
+        }
+      };
+    },
+    [nfts, onSelect]
+  );
 
   return (
     <View>
       <View style={styles.NFTContainerRow}>
-        {nfts.map(nft => (
+        {nfts.map((nft, i) => (
           <TouchableOpacity
             key={nft.id}
             style={[styles.NFTImageContainer]}
-            onPress={() => setSelectedNFTUrl(nft.image_url)}
+            onPress={setSelected(i)}
             activeOpacity={0.8}
           >
             <Image
-              style={[styles.NFTImage, selectedNFTUrl === nft.image_url && styles.selectedNFTImage]}
+              style={[styles.NFTImage, selectedIndex === i && styles.selectedNFTImage]}
               source={{ uri: nft.image_thumbnail_url }}
             />
           </TouchableOpacity>
