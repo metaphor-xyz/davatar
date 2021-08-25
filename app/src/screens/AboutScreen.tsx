@@ -1,5 +1,5 @@
 import { Fontisto, AntDesign } from '@expo/vector-icons';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View, Platform, Linking } from 'react-native';
 
 import { spacing } from '../constants';
@@ -13,7 +13,7 @@ import Typography from '../views/Typography';
 export default function AboutScreen() {
   const isMoWeb = useIsMoWeb();
 
-  const onJoinDiscord = async () => {
+  const onJoinDiscord = useCallback(async () => {
     const url = 'https://discord.gg/DRWXxhcn58';
 
     if (Platform.OS === 'web') {
@@ -23,7 +23,7 @@ export default function AboutScreen() {
         await Linking.openURL(url);
       }
     }
-  };
+  }, []);
 
   return (
     <>
@@ -78,7 +78,7 @@ export default function AboutScreen() {
             </Typography>
 
             <Typography style={styles.spaced}>
-              Have ideas or feedback for Davatar or future products in this space?{' '}
+              Have ideas or feedback for davatar or future products in this space?{' '}
               <Link onPress={onJoinDiscord} title="Join our Discord" />
             </Typography>
           </View>

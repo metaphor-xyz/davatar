@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCallback } from 'react';
 import { View, StyleSheet, Linking, Platform } from 'react-native';
 
 import { useENS } from '../ENSProvider';
@@ -9,7 +10,7 @@ import Typography from './Typography';
 export default function ENSDisplay() {
   const { name } = useENS();
 
-  const onPress = async () => {
+  const onPress = useCallback(async () => {
     const url = 'https://app.ens.domains/';
 
     if (Platform.OS === 'web') {
@@ -19,7 +20,7 @@ export default function ENSDisplay() {
         await Linking.openURL(url);
       }
     }
-  };
+  }, []);
 
   return (
     <>

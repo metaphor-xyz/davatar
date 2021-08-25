@@ -10,6 +10,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { registerRootComponent } from 'expo';
 import React from 'react';
+import { useCallback } from 'react';
 import { View } from 'react-native';
 import { ActivityIndicator, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
@@ -66,6 +67,10 @@ function App() {
 }
 
 function Navigation() {
+  const headerFunc = useCallback(() => {
+    return <TopNav />;
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -75,7 +80,7 @@ function Navigation() {
       >
         <Stack.Group
           screenOptions={{
-            header: () => <TopNav />,
+            header: headerFunc,
           }}
         >
           <Stack.Screen name={VIEW_STEPS.CONNECT} component={MainScreen} />

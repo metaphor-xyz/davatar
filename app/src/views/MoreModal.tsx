@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Platform, View, Linking, Pressable } from 'react-native';
 import { List } from 'react-native-paper';
 import { Portal } from 'react-native-paper';
@@ -15,7 +15,7 @@ export default function MoreModal({ onClose }: Props) {
   // eslint-disable-next-line
   const navigation: any = useNavigation();
 
-  const onJoinDiscord = async () => {
+  const onJoinDiscord = useCallback(async () => {
     const url = 'https://discord.gg/DRWXxhcn58';
 
     if (Platform.OS === 'web') {
@@ -25,7 +25,20 @@ export default function MoreModal({ onClose }: Props) {
         await Linking.openURL(url);
       }
     }
-  };
+  }, []);
+
+  const onGoToAbout = useCallback(() => {
+    onClose();
+    navigation.navigate(VIEW_STEPS.ABOUT);
+  }, [onClose, navigation]);
+
+  const getInfoIcon = useCallback(() => {
+    return <List.Icon icon="information" />;
+  }, []);
+
+  const getDiscordIcon = useCallback(() => {
+    return <List.Icon color="#000" icon="discord" />;
+  }, []);
 
   return (
     <>
@@ -45,16 +58,13 @@ export default function MoreModal({ onClose }: Props) {
             <List.Item
               style={styles.listItem}
               title={<Typography style={styles.listItemText}>About</Typography>}
-              left={() => <List.Icon icon="information" />}
-              onPress={() => {
-                onClose();
-                navigation.navigate(VIEW_STEPS.ABOUT);
-              }}
+              left={getInfoIcon}
+              onPress={onGoToAbout}
             />
             <List.Item
               style={styles.listItem}
               title={<Typography style={styles.listItemText}>Join Discord</Typography>}
-              left={() => <List.Icon color="#000" icon="discord" />}
+              left={getDiscordIcon}
               onPress={onJoinDiscord}
             />
           </List.Section>
