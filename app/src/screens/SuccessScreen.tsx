@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCallback } from 'react';
 import { StyleSheet, View, Image, Platform, Linking } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
@@ -12,7 +13,7 @@ import Typography from '../views/Typography';
 export default function SuccessScreen() {
   const { loading, user } = useUser();
 
-  const onJoinDiscord = async () => {
+  const onJoinDiscord = useCallback(async () => {
     const url = 'https://discord.gg/DRWXxhcn58';
 
     if (Platform.OS === 'web') {
@@ -22,7 +23,7 @@ export default function SuccessScreen() {
         await Linking.openURL(url);
       }
     }
-  };
+  }, []);
 
   if (loading)
     return (

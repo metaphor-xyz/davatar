@@ -22,12 +22,10 @@ export default function SaveENS({ disabled, onSave }: Props) {
     <View style={styles.container}>
       <Button disabled={disabled} title="Save new avatar" onPress={onClick} />
 
-      {!disabled && (
+      {!disabled && !connected && (
         <View style={styles.spaced}>
-          <Typography>
-            {connected
-              ? 'Welcome back! You will not be charged a gas fee!'
-              : 'You will be charged a one-time gas fee. All subsequent updates are free!'}
+          <Typography style={{ color: '#d32f2f' }}>
+            You will be charged a one-time gas fee. All subsequent updates are free!
           </Typography>
         </View>
       )}

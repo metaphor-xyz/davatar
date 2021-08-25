@@ -1,8 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
+import { useCallback } from 'react';
 import { StyleSheet, Image } from 'react-native';
 
-import ConnectWallet from '../ConnectWallet';
 import { useENS } from '../ENSProvider';
 import { useWallet } from '../WalletProvider';
 import { sliceWalletAddress, VIEW_STEPS } from '../constants';
@@ -17,14 +17,18 @@ export default function ConnectWalletButton() {
   const { user } = useUser();
   const { name } = useENS();
 
-  if (!address || !user) return <ConnectWallet />;
+  const onPress = useCallback(() => {
+    navigation.navigate(VIEW_STEPS.CONNECT_WALLET_MODAL);
+  }, [navigation]);
+
+  if (!address || !user) return null;
 
   const slicedAddress = sliceWalletAddress(address);
 
   return (
     <Button
       title={name || slicedAddress}
-      onPress={() => navigation.navigate(VIEW_STEPS.CONNECT_WALLET_MODAL)}
+      onPress={onPress}
       preTextComponent={
         user.avatarPreviewURL ? (
           <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} />

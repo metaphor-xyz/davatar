@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingTop: 16,
+    paddingTop: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -25,6 +25,11 @@ export default function SelectNFTSection() {
   const [nftIndex, setNftIndex] = useState<number | null>(null);
   const [inProgress, setInProgress] = useState(false);
 
+  const setUploadedPhotoAvatar = useCallback((newAvatar: Blob | null) => {
+    setNftIndex(null);
+    setAvatar(newAvatar);
+  }, []);
+
   const upload = useCallback(async () => {
     if (address && avatar) {
       setInProgress(true);
@@ -73,13 +78,11 @@ export default function SelectNFTSection() {
   return (
     <>
       <View style={styles.spaced}>
-        <View>
-          <View style={styles.previewContainer}>
-            {!avatarPreview && address && <Jazzicon address={address} size={200} style={styles.previewPlaceholder} />}
-            {avatarPreview && <Image style={styles.preview} source={{ uri: avatarPreview }} />}
+        <View style={styles.previewContainer}>
+          {!avatarPreview && address && <Jazzicon address={address} size={200} style={styles.previewPlaceholder} />}
+          {avatarPreview && <Image style={styles.preview} source={{ uri: avatarPreview }} />}
 
-            <ENSDisplay />
-          </View>
+          <ENSDisplay />
 
           {name && (
             <View style={styles.spaced}>
@@ -87,7 +90,7 @@ export default function SelectNFTSection() {
               <NFTSelectorCloud
                 selectedIndex={nftIndex}
                 onSelect={setNft}
-                uploadImageComponent={<CustomImagePicker onChange={setAvatar} />}
+                uploadImageComponent={<CustomImagePicker onChange={setUploadedPhotoAvatar} />}
               />
             </View>
           )}
@@ -102,12 +105,13 @@ export default function SelectNFTSection() {
 const styles = StyleSheet.create({
   spaced: {
     fontSize: 18,
-    paddingTop: spacing(3),
+    paddingTop: spacing(4),
     width: '100%',
   },
   previewContainer: {
     width: '100%',
     alignItems: 'center',
+    textAlign: 'center',
   },
   preview: {
     flex: 1,
