@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Linking, Platform } from 'react-native';
 
+import { useENS } from '../ENSProvider';
 import { spacing } from '../constants';
-import useENS from '../useENS';
 import Button from './Button';
 import Typography from './Typography';
 

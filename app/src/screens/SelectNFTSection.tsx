@@ -3,11 +3,11 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 
 import CustomImagePicker from '../CustomImagePicker';
+import { useENS } from '../ENSProvider';
 import NFTSelectorCloud from '../NFTSelectorCloud';
 import { useWallet } from '../WalletProvider';
 import { spacing, VIEW_STEPS } from '../constants';
 import { httpsCallable, storageRef, uploadBytes } from '../firebase';
-import useENS from '../useENS';
 import useUser from '../useUser';
 import ENSDisplay from '../views/ENSDisplay';
 import Jazzicon from '../views/Jazzicon';
