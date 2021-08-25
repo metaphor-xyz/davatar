@@ -76,7 +76,7 @@ export default function SelectNFTSection() {
           )}
         </View>
 
-        <SaveENS disabled={!preview} onSave={upload} />
+        {name && <SaveENS disabled={!preview} onSave={upload} />}
       </View>
     </>
   );

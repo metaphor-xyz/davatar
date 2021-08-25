@@ -3,12 +3,18 @@ import { StyleSheet, View } from 'react-native';
 
 import useIsMoWeb from '../useIsMoWeb';
 
-export default function PageContainer({ children }: React.PropsWithChildren<Record<string, unknown>>) {
+type Props = {
+  noMaxWidth?: boolean;
+} & React.PropsWithChildren<Record<string, unknown>>;
+
+export default function PageContainer({ noMaxWidth, children }: Props) {
   const isMoWeb = useIsMoWeb();
 
   return (
     <View style={styles.outerContainer}>
-      <View style={[styles.container, isMoWeb && styles.containerXS]}>{children}</View>
+      <View style={[styles.container, isMoWeb && styles.containerXS, noMaxWidth && styles.containerNoMaxWidth]}>
+        {children}
+      </View>
     </View>
   );
 }
@@ -27,6 +33,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingRight: '32px',
     paddingLeft: '32px',
+  },
+  containerNoMaxWidth: {
+    maxWidth: 'initial',
   },
   containerXS: {
     paddingRight: '24px',

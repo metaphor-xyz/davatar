@@ -13,7 +13,7 @@ export default function AccountModal({ navigation }: StackScreenProps<Record<str
   }, [navigation]);
 
   return (
-    <CustomModal title="Account">
+    <CustomModal title="Connected Wallet">
       <View style={styles.innerContainer}>
         <ConnectedWalletBox onDisconnect={onDisconnect} />
       </View>

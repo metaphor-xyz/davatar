@@ -2,12 +2,15 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { spacing } from '../constants';
+import BackRow from '../views/BackRow';
 import PageContainer from '../views/PageContainer';
 import Typography from '../views/Typography';
 
 export default function AboutScreen() {
   return (
     <PageContainer>
+      <BackRow />
+
       <View style={styles.container}>
         <Typography style={styles.spaced} variant="header">
           What is DAOvatar?

@@ -11,7 +11,7 @@ export default function ConnectSection() {
   const { wallet } = useWallet();
   const { loading, user } = useUser();
 
-  if (!loading) {
+  if (loading) {
     return (
       <PageContainer>
         <ActivityIndicator size="large" />

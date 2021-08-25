@@ -18,8 +18,8 @@ export default function ConnectSocialsModal() {
   }, []);
 
   return (
-    <CustomModal title="Connect Socials">
-      <Typography>Want to connect other socials?</Typography>
+    <CustomModal>
+      <Typography style={styles.text}>Want to update your Twitter profile photo too?</Typography>
 
       <View style={styles.spaced}>
         <Button
@@ -29,7 +29,7 @@ export default function ConnectSocialsModal() {
         />
       </View>
 
-      <View style={styles.spaced}>
+      <View style={styles.doneButton}>
         <Button title="Done" onPress={navigation.goBack} />
       </View>
     </CustomModal>
@@ -40,4 +40,12 @@ const styles = StyleSheet.create({
   spaced: {
     paddingTop: spacing(2),
   },
+  doneButton: {
+    alignSelf: 'flex-end',
+    paddingTop: spacing(4),
+  },
+  text: {
+    fontSize: 18,
+  },
+  content: { justifyContent: 'space-between' },
 });

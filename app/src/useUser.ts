@@ -11,14 +11,14 @@ export interface User {
 }
 
 export default function useUser() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [authUser, setAuthUser] = useState<UserInfo | null>(null);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     return onAuthStateChanged(u => {
       setAuthUser(u);
-      setLoading(true);
+      setLoading(false);
     });
   }, []);
 

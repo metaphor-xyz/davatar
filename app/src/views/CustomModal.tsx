@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
   },
   modalView: {
     minWidth: '275px',
-    height: '275px',
     maxWidth: '100%',
     maxHeight: '100%',
     backgroundColor: 'white',

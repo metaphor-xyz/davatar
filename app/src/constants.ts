@@ -6,9 +6,9 @@ export const VIEW_STEPS = {
   ERROR: 'ERROR',
 
   // Modals
-  MORE_MODAL: 'MORE_MODAL',
   CONNECT_WALLET_MODAL: 'CONNECT_WALLET_MODAL',
   SUCCESS_SCREEN: 'SUCCESS_SCREEN',
+  DONATION_MODAL: 'DONATION_MODAL',
 };
 
 export function spacing(multiple: number) {

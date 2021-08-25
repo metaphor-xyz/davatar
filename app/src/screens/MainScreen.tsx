@@ -14,29 +14,25 @@ export default function MainScreen() {
   const { wallet } = useWallet();
   const { loading, user } = useUser();
 
-  if (!loading) {
-    return (
-      <PageContainer>
-        <Typography variant="header" style={styles.spaced}>
-          Davatar
-        </Typography>
-
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" />
-        </View>
-      </PageContainer>
-    );
-  }
-
   return (
     <PageContainer>
       <Typography variant="header" style={styles.spaced}>
         Davatar
       </Typography>
 
-      <ConnectSection />
+      {loading && (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      )}
 
-      {wallet && user && <SelectNFTSection />}
+      {!loading && (
+        <>
+          <ConnectSection />
+
+          {wallet && user && <SelectNFTSection />}
+        </>
+      )}
     </PageContainer>
   );
 }
