@@ -5,14 +5,17 @@ import { StyleSheet, Image } from 'react-native';
 import ConnectWallet from '../ConnectWallet';
 import { useWallet } from '../WalletProvider';
 import { sliceWalletAddress, VIEW_STEPS } from '../constants';
+import useENS from '../useENS';
 import useUser from '../useUser';
 import Button from './Button';
+import Jazzicon from './Jazzicon';
 
 export default function ConnectWalletButton() {
   // eslint-disable-next-line
   const navigation: any = useNavigation();
   const { address } = useWallet();
   const { user } = useUser();
+  const { name } = useENS();
 
   if (!address || !user) return <ConnectWallet />;
 
@@ -20,10 +23,14 @@ export default function ConnectWalletButton() {
 
   return (
     <Button
-      title={slicedAddress}
+      title={name || slicedAddress}
       onPress={() => navigation.navigate(VIEW_STEPS.CONNECT_WALLET_MODAL)}
       preTextComponent={
-        user.avatarPreviewURL ? <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} /> : undefined
+        user.avatarPreviewURL ? (
+          <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} />
+        ) : (
+          <Jazzicon address={address} size={20} style={styles.avatarImage} />
+        )
       }
     />
   );

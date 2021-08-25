@@ -21,7 +21,7 @@ import MainScreen from './screens/MainScreen';
 import SuccessScreen from './screens/SuccessScreen';
 import AccountModal from './views/AccountModal';
 import ConnectSocialsModal from './views/ConnectSocialsModal';
-import MoreModal from './views/MoreModal';
+import DonateModal from './views/DonateModal';
 import PageContainer from './views/PageContainer';
 import TopNav from './views/TopNav';
 
@@ -36,16 +36,6 @@ const theme = {
 };
 
 function App() {
-  return (
-    <PaperProvider theme={theme}>
-      <WalletProvider>
-        <Navigation />
-      </WalletProvider>
-    </PaperProvider>
-  );
-}
-
-function Navigation() {
   const [fontsLoaded] = useFonts({
     Inter_200ExtraLight,
     Inter_300Light,
@@ -65,8 +55,22 @@ function Navigation() {
   }
 
   return (
+    <PaperProvider theme={theme}>
+      <WalletProvider>
+        <Navigation />
+      </WalletProvider>
+    </PaperProvider>
+  );
+}
+
+function Navigation() {
+  return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          title: 'Davatar',
+        }}
+      >
         <Stack.Group
           screenOptions={{
             header: () => <TopNav />,
@@ -83,9 +87,9 @@ function Navigation() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name={VIEW_STEPS.MORE_MODAL} component={MoreModal} />
           <Stack.Screen name={VIEW_STEPS.SELECT_SOCIALS_MODAL} component={ConnectSocialsModal} />
           <Stack.Screen name={VIEW_STEPS.CONNECT_WALLET_MODAL} component={AccountModal} />
+          <Stack.Screen name={VIEW_STEPS.DONATION_MODAL} component={DonateModal} />
         </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>

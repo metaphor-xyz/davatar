@@ -1,22 +1,31 @@
 import { MaterialIcons } from '@expo/vector-icons';
+import '@react-navigation/native';
 import React from 'react';
+import { useCallback } from 'react';
 import { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import { spacing } from '../constants';
-import CustomPaperModal from './CustomPaperModal';
+import MoreModal from './MoreModal';
 
 export default function MoreButton() {
   const [visible, setVisible] = useState(false);
 
+  const onClose = useCallback(() => {
+    setVisible(false);
+  }, []);
+
+  const onToggleOpen = useCallback(() => {
+    setVisible(prevVisible => !prevVisible);
+  }, []);
+
   return (
     <>
-      <TouchableOpacity style={[styles.container]} onPress={() => setVisible(true)} activeOpacity={0.8}>
+      <TouchableOpacity style={[styles.container]} onPress={onToggleOpen} activeOpacity={0.8}>
         <MaterialIcons name="more-horiz" size={24} color="white" />
       </TouchableOpacity>
-      <CustomPaperModal visible={visible} onClose={() => setVisible(false)} title="More">
-        <Text>MY CONTENT</Text>
-      </CustomPaperModal>
+
+      {visible && <MoreModal onClose={onClose} />}
     </>
   );
 }

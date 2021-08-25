@@ -19,6 +19,7 @@ export default function Link(props: Props) {
 
 const styles = StyleSheet.create({
   link: {
+    fontSize: 16,
     color: '#5C59EB',
     '&:hover': {
       textDecoration: 'underline',

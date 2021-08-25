@@ -7,6 +7,7 @@ import { sliceWalletAddress, spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
 import Button from './Button';
+import Jazzicon from './Jazzicon';
 import Typography from './Typography';
 
 type Props = {
@@ -14,12 +15,11 @@ type Props = {
 };
 
 export default function ConnectedWalletBox({ onDisconnect }: Props) {
-  const { address, disconnect } = useWallet();
+  const { address, disconnect, walletName } = useWallet();
   const isMoWeb = useIsMoWeb();
   const { user } = useUser();
 
   const slicedAddress = sliceWalletAddress(address || '');
-  const provider = '<Metamask>'; // TODO : Upadate with provider
 
   const handleDisconnect = useCallback(() => {
     disconnect();
@@ -34,9 +34,16 @@ export default function ConnectedWalletBox({ onDisconnect }: Props) {
     <View style={styles.innerContainer}>
       <View style={[styles.addressContainer, isMoWeb && styles.addressContainerXS]}>
         <View>
-          <Typography style={styles.providerText}>Connected with {provider}</Typography>
+          <Typography style={styles.providerText}>
+            <>Connected with {walletName}</>
+          </Typography>
           <View style={styles.avatarAndAccountText}>
-            {user.avatarPreviewURL && <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} />}
+            {user.avatarPreviewURL ? (
+              <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} />
+            ) : (
+              <Jazzicon address={address} size={20} style={styles.avatarImage} />
+            )}
+
             <Typography style={[styles.accountText]}>{slicedAddress}</Typography>
           </View>
         </View>

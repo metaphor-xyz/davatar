@@ -18,8 +18,8 @@ export default function Typography(props: Props) {
     <ReactNativeText
       {...props}
       style={[
-        props.variant && styles[`${props.variant}${isMoWeb ? 'XS' : ''}`],
         styles[props.fontWeight?.toString() || '400'],
+        props.variant && styles[`${props.variant}${isMoWeb ? 'XS' : ''}`],
         props.style,
       ]}
     >
@@ -36,6 +36,7 @@ const styles = StyleSheet.create<StyleSheet.NamedStyles<Record<string, StyleShee
     fontFamily: 'Inter_300Light',
   },
   '400': {
+    fontSize: 16,
     fontFamily: 'Inter_400Regular',
   },
   '500': {
