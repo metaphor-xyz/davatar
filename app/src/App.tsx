@@ -13,6 +13,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { ActivityIndicator, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
+import ENSProvider from './ENSProvider';
 import WalletProvider from './WalletProvider';
 import { VIEW_STEPS } from './constants';
 import AboutScreen from './screens/AboutScreen';
@@ -57,7 +58,9 @@ function App() {
   return (
     <PaperProvider theme={theme}>
       <WalletProvider>
-        <Navigation />
+        <ENSProvider>
+          <Navigation />
+        </ENSProvider>
       </WalletProvider>
     </PaperProvider>
   );

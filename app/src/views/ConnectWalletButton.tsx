@@ -3,9 +3,9 @@ import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 
 import ConnectWallet from '../ConnectWallet';
+import { useENS } from '../ENSProvider';
 import { useWallet } from '../WalletProvider';
 import { sliceWalletAddress, VIEW_STEPS } from '../constants';
-import useENS from '../useENS';
 import useUser from '../useUser';
 import Button from './Button';
 import Jazzicon from './Jazzicon';

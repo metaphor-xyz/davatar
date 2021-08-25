@@ -1,61 +1,26 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import { spacing, VIEW_STEPS } from '../constants';
-import useENS from '../useENS';
-import useUser from '../useUser';
+import { useENS } from '../ENSProvider';
+import { spacing } from '../constants';
 import Button from './Button';
 import Typography from './Typography';
 
 type Props = {
-  onSave: () => void;
+  onSave: () => Promise<void>;
   disabled: boolean;
 };
 
 export default function SaveENS({ disabled, onSave }: Props) {
-  // eslint-disable-next-line
-  const navigation: any = useNavigation();
-  const [connected, setConnected] = useState(false);
-  const { user } = useUser();
-  const { setAvatar, getAvatar } = useENS();
+  const { connected } = useENS();
 
-  useEffect(() => {
-    // Check if the user has previously been to our site
-    if (user && user.ipns) {
-      const ipns = user.ipns;
-
-      getAvatar().then(url => {
-        setConnected(url && url === `ipns://${ipns.replaceAll('ipns/', '')}`);
-      });
-    }
-  }, [getAvatar, user]);
-
-  const connect = useCallback(() => {
-    if (user && user.ipns) {
-      setAvatar(`ipns://${user.ipns.replaceAll('ipns/', '')}`);
-    }
-  }, [setAvatar, user]);
-
-  const onFirstTimeConnect = useCallback(() => {
-    onSave();
-    connect();
-    navigation.navigate(VIEW_STEPS.SUCCESS_SCREEN);
-    navigation.navigate(VIEW_STEPS.SELECT_SOCIALS_MODAL);
-  }, [onSave, connect, navigation]);
-
-  const onReturnTimeConnect = useCallback(() => {
-    onSave();
-    navigation.navigate(VIEW_STEPS.SUCCESS_SCREEN);
-  }, [onSave, navigation]);
+  const onClick = useCallback(async () => {
+    await onSave();
+  }, [onSave]);
 
   return (
     <View style={styles.container}>
-      <Button
-        disabled={disabled}
-        title="Save new avatar"
-        onPress={connected ? onReturnTimeConnect : onFirstTimeConnect}
-      />
+      <Button disabled={disabled} title="Save new avatar" onPress={onClick} />
 
       {!disabled && (
         <View style={styles.spaced}>

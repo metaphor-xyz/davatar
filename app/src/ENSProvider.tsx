@@ -1,7 +1,7 @@
 // @ts-ignore
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, createContext, useContext } from 'react';
 
 import { useWallet } from './WalletProvider';
 import useUser from './useUser';
@@ -10,7 +10,19 @@ export interface Transaction {
   hash: string;
 }
 
-export default function useENS() {
+export interface Context {
+  name: string | null;
+  setAvatar: (_url: string) => Promise<Transaction>;
+  getAvatar: () => Promise<string | null>;
+  loading: boolean;
+  connected: boolean;
+  pendingTransaction: Transaction | null;
+}
+
+const ENSContext = createContext<Context>(null!);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function ENSProvider({ children }: React.PropsWithChildren<Record<string, any>>) {
   const { wallet, address } = useWallet();
   const [name, setName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -96,5 +108,19 @@ export default function useENS() {
     }
   }, [wallet, address, user, getAvatar, pendingTransaction]);
 
-  return { name, setAvatar, getAvatar, loading, connected, pendingTransaction };
+  return (
+    <ENSContext.Provider value={{ name, setAvatar, getAvatar, loading, connected, pendingTransaction }}>
+      {children}
+    </ENSContext.Provider>
+  );
+}
+
+export function useENS() {
+  const context = useContext(ENSContext);
+
+  if (!context) {
+    throw new Error('useENS must be used inside ENSProvider');
+  }
+
+  return context;
 }
