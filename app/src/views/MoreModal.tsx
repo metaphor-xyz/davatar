@@ -57,15 +57,6 @@ export default function MoreModal({ onClose }: Props) {
               left={() => <List.Icon color="#000" icon="discord" />}
               onPress={onJoinDiscord}
             />
-            <List.Item
-              style={styles.listItem}
-              title={<Typography style={styles.listItemText}>Donate</Typography>}
-              left={() => <List.Icon color="#000" icon="handshake" />}
-              onPress={() => {
-                onClose();
-                navigation.navigate(VIEW_STEPS.DONATION_MODAL);
-              }}
-            />
           </List.Section>
         </View>
       </Portal>

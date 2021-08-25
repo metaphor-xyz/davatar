@@ -8,7 +8,7 @@ import PageContainer from './PageContainer';
 
 export default function TopNav() {
   return (
-    <PageContainer noMaxWidth>
+    <PageContainer noMaxWidth noBottomPadding>
       <View style={styles.topNav}>
         <View style={styles.buttonsContainers}>
           <View style={styles.rightPadding}>

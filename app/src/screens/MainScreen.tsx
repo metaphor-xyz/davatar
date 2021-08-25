@@ -17,8 +17,10 @@ export default function MainScreen() {
   return (
     <PageContainer>
       <Typography variant="header" style={styles.spaced}>
-        Davatar
+        davatar
       </Typography>
+
+      <Typography style={styles.subtitle}>One avatar for everything Web3.</Typography>
 
       {loading && (
         <View style={styles.loaderContainer}>
@@ -40,6 +42,10 @@ export default function MainScreen() {
 const styles = StyleSheet.create({
   spaced: {
     paddingTop: spacing(2),
+  },
+  subtitle: {
+    paddingTop: spacing(2),
+    fontSize: 20,
   },
   loaderContainer: {
     paddingTop: spacing(5),

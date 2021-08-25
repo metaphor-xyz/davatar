@@ -1,9 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, View, Image, Platform, Linking } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
-import { spacing, VIEW_STEPS } from '../constants';
+import { spacing } from '../constants';
 import useUser from '../useUser';
 import BackRow from '../views/BackRow';
 import Button from '../views/Button';
@@ -11,8 +10,6 @@ import PageContainer from '../views/PageContainer';
 import Typography from '../views/Typography';
 
 export default function SuccessScreen() {
-  // eslint-disable-next-line
-  const navigation: any = useNavigation();
   const { loading, user } = useUser();
 
   const onJoinDiscord = async () => {
@@ -59,13 +56,6 @@ export default function SuccessScreen() {
         </Typography>
         <View style={styles.spaced}>
           <Button title="Join our Discord" onPress={onJoinDiscord} />
-        </View>
-      </View>
-
-      <View style={styles.container}>
-        <Typography style={styles.spaced}>Want to help fund our storage costs & feature work?</Typography>
-        <View style={styles.spaced}>
-          <Button title="Donate!" onPress={() => navigation.navigate(VIEW_STEPS.DONATION_MODAL)} />
         </View>
       </View>
     </PageContainer>
