@@ -1,5 +1,5 @@
 import { AntDesign } from '@expo/vector-icons';
-import React, { ReactChild } from 'react';
+import React, { ReactChild, useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
 import { StyleSheet, View, Platform, TouchableOpacity } from 'react-native';
@@ -16,6 +16,14 @@ type Props = {
 };
 
 export default function CustomPaperModal({ onClose, visible, title, children }: Props) {
+  const [mouseEntered, setMouseEntered] = useState(false);
+  const onMouseEnter = useCallback(() => {
+    setMouseEntered(true);
+  }, []);
+  const onMouseLeave = useCallback(() => {
+    setMouseEntered(false);
+  }, []);
+
   const escFunction = useCallback(
     e => {
       if (e.keyCode === 27 && onClose) {
@@ -36,9 +44,19 @@ export default function CustomPaperModal({ onClose, visible, title, children }: 
           <View style={styles.headerContainer}>
             <Typography style={styles.title}>{title}</Typography>
             {onClose && (
-              <TouchableOpacity onPress={onClose} activeOpacity={0.8}>
-                <AntDesign name="close" size={24} color="black" />
-              </TouchableOpacity>
+              <button
+                style={{ border: 'none', cursor: 'pointer', background: 'none' }}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+              >
+                <TouchableOpacity
+                  style={[styles.closeButton, mouseEntered && styles.closeButtonHover]}
+                  onPress={onClose}
+                  activeOpacity={0.8}
+                >
+                  <AntDesign name="close" size={24} color="black" />
+                </TouchableOpacity>
+              </button>
             )}
           </View>
           {children}
@@ -49,6 +67,13 @@ export default function CustomPaperModal({ onClose, visible, title, children }: 
 }
 
 const styles = StyleSheet.create({
+  closeButton: {
+    borderRadius: 500,
+    padding: 4,
+  },
+  closeButtonHover: {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
   modalOuterContainerStyles: {
     display: 'flex',
     justifyContent: 'center',

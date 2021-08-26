@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 
 import { useENS } from '../ENSProvider';
 import { spacing } from '../constants';
-import Button from './Button';
+import AnimatedButton from './AnimatedButton';
 import Typography from './Typography';
 
 type Props = {
@@ -22,12 +22,11 @@ export default function SaveENS({ loading, disabled, onSave }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.saveButton}>
-        <Button
+        <AnimatedButton
+          title="Save davatar"
           loading={loading || loadingENS || !!pendingTransaction}
           disabled={disabled || loading || loadingENS || !!pendingTransaction}
-          title="Save new avatar"
           onPress={onClick}
-          fullWidth
         />
       </View>
 
@@ -44,10 +43,12 @@ export default function SaveENS({ loading, disabled, onSave }: Props) {
 
 const styles = StyleSheet.create({
   saveButton: {
-    width: 157,
+    height: 72,
+    justifyContent: 'flex-end',
   },
   container: {
-    paddingTop: spacing(3),
+    zIndex: -2,
+    paddingTop: spacing(6),
     display: 'flex',
     alignItems: 'center',
   },

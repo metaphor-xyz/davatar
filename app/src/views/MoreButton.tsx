@@ -10,6 +10,13 @@ import MoreModal from './MoreModal';
 
 export default function MoreButton() {
   const [visible, setVisible] = useState(false);
+  const [mouseEntered, setMouseEntered] = useState(false);
+  const onMouseEnter = useCallback(() => {
+    setMouseEntered(true);
+  }, []);
+  const onMouseLeave = useCallback(() => {
+    setMouseEntered(false);
+  }, []);
 
   const onClose = useCallback(() => {
     setVisible(false);
@@ -21,9 +28,19 @@ export default function MoreButton() {
 
   return (
     <>
-      <TouchableOpacity style={[styles.container]} onPress={onToggleOpen} activeOpacity={0.8}>
-        <MaterialIcons name="more-horiz" size={24} color="white" />
-      </TouchableOpacity>
+      <button
+        style={{ border: 'none', cursor: 'pointer', background: 'none' }}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        <TouchableOpacity
+          style={[styles.container, mouseEntered && styles.hover]}
+          onPress={onToggleOpen}
+          activeOpacity={0.8}
+        >
+          <MaterialIcons name="more-horiz" size={24} color="white" />
+        </TouchableOpacity>
+      </button>
 
       {visible && <MoreModal onClose={onClose} />}
     </>
@@ -41,5 +58,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 16,
+  },
+  hover: {
+    opacity: 0.85,
   },
 });

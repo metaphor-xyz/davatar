@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Platform, TouchableOpacity } from 'react-native';
 
 import { useWallet } from './WalletProvider';
@@ -12,6 +12,14 @@ export interface Props {
 }
 
 export default function CustomImagePicker({ onChange }: Props) {
+  const [mouseEntered, setMouseEntered] = useState(false);
+  const onMouseEnter = useCallback(() => {
+    setMouseEntered(true);
+  }, []);
+  const onMouseLeave = useCallback(() => {
+    setMouseEntered(false);
+  }, []);
+
   const { nfts } = useWallet();
   const pick = useCallback(async () => {
     if (Platform.OS !== 'web') {
@@ -48,19 +56,25 @@ export default function CustomImagePicker({ onChange }: Props) {
   }, [onChange]);
 
   return (
-    <TouchableOpacity
-      accessibilityLabel="Upload photo"
-      style={[styles.container, nfts.length === 0 && styles.containerWithText]}
-      onPress={pick}
-      activeOpacity={0.8}
+    <button
+      style={{ border: 'none', cursor: 'pointer', background: 'none' }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
-      {nfts?.length === 0 && (
-        <Typography style={styles.text} fontWeight={600}>
-          Upload image
-        </Typography>
-      )}
-      <Feather name="upload" size={24} color="white" />
-    </TouchableOpacity>
+      <TouchableOpacity
+        accessibilityLabel="Upload photo"
+        style={[styles.container, nfts.length === 0 && styles.containerWithText, mouseEntered && styles.hover]}
+        onPress={pick}
+        activeOpacity={0.8}
+      >
+        {nfts?.length === 0 && (
+          <Typography style={styles.text} fontWeight={600}>
+            Upload image
+          </Typography>
+        )}
+        <Feather name="upload" size={24} color="white" />
+      </TouchableOpacity>
+    </button>
   );
 }
 
@@ -86,6 +100,9 @@ const styles = StyleSheet.create({
     width: 'initial',
     paddingRight: spacing(3),
     paddingLeft: spacing(3),
+  },
+  hover: {
+    opacity: 0.85,
   },
   text: {
     fontSize: 18,

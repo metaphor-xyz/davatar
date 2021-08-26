@@ -103,9 +103,14 @@ export default function SelectNFTSection() {
 }
 
 const styles = StyleSheet.create({
-  spaced: {
+  container: {
     fontSize: 18,
     paddingTop: spacing(4),
+    width: '100%',
+  },
+  spaced: {
+    fontSize: 18,
+    paddingTop: spacing(3),
     width: '100%',
   },
   previewContainer: {

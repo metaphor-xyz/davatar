@@ -1,6 +1,6 @@
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import React, { ReactChild } from 'react';
+import React, { ReactChild, useState } from 'react';
 import { useEffect } from 'react';
 import { useCallback } from 'react';
 import { StyleSheet, View, Pressable, Platform, TouchableOpacity } from 'react-native';
@@ -15,6 +15,14 @@ type Props = {
 
 export default function CustomModal({ title, children }: Props) {
   const navigation = useNavigation();
+
+  const [mouseEntered, setMouseEntered] = useState(false);
+  const onMouseEnter = useCallback(() => {
+    setMouseEntered(true);
+  }, []);
+  const onMouseLeave = useCallback(() => {
+    setMouseEntered(false);
+  }, []);
 
   const escFunction = useCallback(
     e => {
@@ -44,9 +52,19 @@ export default function CustomModal({ title, children }: Props) {
       <View style={Platform.OS === 'web' ? styles.modalView : styles.mobileModalView}>
         <View style={styles.headerContainer}>
           <Typography style={styles.title}>{title}</Typography>
-          <TouchableOpacity onPress={navigation.goBack} activeOpacity={0.8}>
-            <AntDesign name="close" size={24} color="black" />
-          </TouchableOpacity>
+          <button
+            style={{ border: 'none', cursor: 'pointer', background: 'none' }}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+          >
+            <TouchableOpacity
+              style={[styles.closeButton, mouseEntered && styles.closeButtonHover]}
+              onPress={navigation.goBack}
+              activeOpacity={0.8}
+            >
+              <AntDesign name="close" size={24} color="black" />
+            </TouchableOpacity>
+          </button>
         </View>
         {children}
       </View>
@@ -55,6 +73,13 @@ export default function CustomModal({ title, children }: Props) {
 }
 
 const styles = StyleSheet.create({
+  closeButton: {
+    borderRadius: 500,
+    padding: 4,
+  },
+  closeButtonHover: {
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
