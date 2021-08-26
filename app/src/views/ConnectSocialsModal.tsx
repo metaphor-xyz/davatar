@@ -1,32 +1,22 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { useCallback } from 'react';
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { spacing } from '../constants';
 import Button from './Button';
+import ConnectTwitter from './ConnectTwitter';
 import CustomModal from './CustomModal';
 import Typography from './Typography';
 
 export default function ConnectSocialsModal() {
   const navigation = useNavigation();
-  const [twitterConnected, setTwitterConnected] = useState(false);
-
-  const toggleTwitterConnect = useCallback(() => {
-    setTwitterConnected(connection => !connection);
-  }, []);
 
   return (
     <CustomModal>
       <Typography style={styles.text}>Want to update your Twitter profile photo too?</Typography>
 
       <View style={styles.spaced}>
-        <Button
-          color="blue"
-          title={twitterConnected ? 'Disonnect TWEEEETER' : 'Connect TWEEEETER'}
-          onPress={toggleTwitterConnect}
-        />
+        <ConnectTwitter />
       </View>
 
       <View style={styles.doneButton}>

@@ -7,7 +7,8 @@ export interface User {
   avatarPreviewURL?: string | null;
   ipfs?: string | null;
   ipns?: string | null;
-  discordConnected?: string | null;
+  discordConnected?: boolean;
+  twitterConnected?: boolean;
 }
 
 export default function useUser() {

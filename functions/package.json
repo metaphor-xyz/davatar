@@ -16,6 +16,7 @@
     "axios": "^0.21.1",
     "firebase-admin": "^9.8.0",
     "firebase-functions": "^3.14.1",
+    "twitter-lite": "^1.1.0",
     "web3": "^1.5.1"
   },
   "devDependencies": {

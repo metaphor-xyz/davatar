@@ -9,8 +9,8 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { registerRootComponent } from 'expo';
-import React from 'react';
-import { useCallback } from 'react';
+import * as WebBrowser from 'expo-web-browser';
+import React, { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { ActivityIndicator, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
@@ -25,6 +25,8 @@ import AccountModal from './views/AccountModal';
 import ConnectSocialsModal from './views/ConnectSocialsModal';
 import PageContainer from './views/PageContainer';
 import TopNav from './views/TopNav';
+
+WebBrowser.maybeCompleteAuthSession();
 
 const Stack = createStackNavigator();
 
@@ -44,6 +46,15 @@ function App() {
     Inter_500Medium,
     Inter_600SemiBold,
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.has('authUrl')) {
+      // @ts-ignore
+      window.location = params.get('authUrl');
+    }
+  }, []);
 
   if (!fontsLoaded) {
     return (
