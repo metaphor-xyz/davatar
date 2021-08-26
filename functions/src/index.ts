@@ -1,8 +1,12 @@
 import axios from 'axios';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import Twitter from 'twitter-lite';
 import { URLSearchParams } from 'url';
 import Web3 from 'web3';
+
+const TWITTER_CONSUMER_KEY = functions.config().twitter.consumer_key;
+const TWITTER_CONSUMER_SECRET = functions.config().twitter.consumer_secret;
 
 admin.initializeApp();
 
@@ -77,15 +81,15 @@ export const storeIpfs = functions.https.onCall(async (data, context) => {
     throw new Error('no avatarId specified');
   }
 
-  const avatars = await admin.firestore().collection('users').doc(context.auth.uid).get();
+  const user = await admin.firestore().collection('users').doc(context.auth.uid).get();
 
-  if (!avatars.exists) {
+  if (!user.exists) {
     throw new Error('no avatars uploaded');
   }
 
-  const avatarData = avatars.data();
+  const userData = user.data();
 
-  if (!avatarData || !avatarData.avatars.find((a: string) => a === avatarId)) {
+  if (!userData || !userData.avatars.find((a: string) => a === avatarId)) {
     throw new Error('invalid avatarId');
   }
 
@@ -109,6 +113,10 @@ export const storeIpfs = functions.https.onCall(async (data, context) => {
       ipfs: response.data.ipfs,
       ipns: response.data.ipns,
     });
+
+    if (userData.twitterConnected) {
+      await updateTwitterAvatar(context.auth.uid);
+    }
 
     return response.data;
   } else {
@@ -231,4 +239,123 @@ const updateDiscordAvatar = async (userId: string) => {
       avatar: image,
     }).toString(),
   });
+};
+
+export const requestTwitterToken = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new Error('not logged in');
+  }
+
+  const twitter = new Twitter({
+    consumer_key: TWITTER_CONSUMER_KEY,
+    consumer_secret: TWITTER_CONSUMER_SECRET,
+  });
+
+  const response = await twitter.getRequestToken(data.redirectUri);
+
+  return response;
+});
+
+export const connectTwitter = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new Error('not logged in');
+  }
+
+  try {
+    const preAuth = new Twitter({
+      consumer_key: TWITTER_CONSUMER_KEY,
+      consumer_secret: TWITTER_CONSUMER_SECRET,
+    });
+
+    const response = await preAuth.getAccessToken({
+      oauth_token: data.oauthToken,
+      oauth_verifier: data.oauthVerifier,
+    });
+
+    const twitter = new Twitter({
+      consumer_key: TWITTER_CONSUMER_KEY,
+      consumer_secret: TWITTER_CONSUMER_SECRET,
+      access_token_key: response.oauth_token,
+      access_token_secret: response.oauth_token_secret,
+    });
+
+    const profile = await twitter.get('account/verify_credentials');
+
+    await admin.firestore().collection('users').doc(context.auth.uid).set(
+      {
+        twitterHandle: profile.screen_name,
+        twitterAccessToken: response.oauth_token,
+        twitterAccessTokenSecret: response.oauth_token_secret,
+        twitterConnected: true,
+      },
+      { merge: true }
+    );
+
+    const user = await admin.firestore().collection('users').doc(context.auth.uid).get();
+    const userData = user.data() as { twitterConnected: boolean };
+
+    if (userData.twitterConnected) {
+      await updateTwitterAvatar(context.auth.uid);
+    }
+
+    return true;
+  } catch (e) {
+    functions.logger.error(e);
+
+    return false;
+  }
+});
+
+const updateTwitterAvatar = async (userId: string) => {
+  const user = await admin.firestore().collection('users').doc(userId).get();
+
+  const userData = user.data();
+
+  if (!user.exists || !userData) {
+    throw new Error('could not find user');
+  }
+
+  if (!userData.currentAvatar) {
+    throw new Error('no avatar set');
+  }
+
+  if (!userData.twitterAccessToken) {
+    throw new Error('discord not connected');
+  }
+
+  const avatarId = userData.currentAvatar;
+  const storageKey = `${userId}/${avatarId}`;
+
+  const [fileExists] = await admin.storage().bucket().file(storageKey).exists();
+
+  if (!fileExists) {
+    throw new Error('avatar not uploaded');
+  }
+
+  const imageData = await new Promise<string>((resolve, reject) => {
+    const stream = admin
+      .storage()
+      .bucket()
+      .file(storageKey)
+      .createReadStream({
+        validation: process.env.NODE_ENV === 'production',
+      });
+
+    let data = '';
+
+    stream.on('data', chunk => (data += chunk));
+    stream.on('error', e => reject(e));
+    stream.on('end', () => resolve(data));
+  });
+
+  const image = Buffer.from(imageData).toString('base64');
+
+  const twitter = new Twitter({
+    consumer_key: TWITTER_CONSUMER_KEY,
+    consumer_secret: TWITTER_CONSUMER_SECRET,
+    access_token_key: userData.twitterAccessToken,
+    access_token_secret: userData.twitterAccessTokenSecret,
+  });
+
+  await twitter.post('account/update_profile_image', { image });
 };

@@ -48,14 +48,14 @@ export default function SelectNFTSection() {
         }
 
         navigation.navigate(VIEW_STEPS.SUCCESS_SCREEN);
-        if (connected) {
+        if (user && !user.twitterConnected) {
           navigation.navigate(VIEW_STEPS.SELECT_SOCIALS_MODAL);
         }
       } finally {
         setInProgress(false);
       }
     }
-  }, [address, avatar, connected, navigation, setEnsAvatar]);
+  }, [address, avatar, connected, navigation, setEnsAvatar, user]);
 
   const setNft = useCallback((blob: Blob, index: number) => {
     setAvatar(blob);
