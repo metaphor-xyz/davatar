@@ -1,5 +1,6 @@
 import React, { ReactChild } from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 
 import Typography from './Typography';
 
@@ -7,13 +8,32 @@ export interface Props {
   title?: string;
   onPress?: () => void;
   disabled?: boolean;
+  loading?: boolean;
   size?: string;
   color?: string;
   fullWidth?: boolean;
   preTextComponent?: ReactChild | ReactChild[];
 }
 
-export default function Button({ preTextComponent, title, onPress, disabled, size, fullWidth, color }: Props) {
+export default function Button({ preTextComponent, title, onPress, disabled, size, fullWidth, color, loading }: Props) {
+  if (loading) {
+    return (
+      <TouchableOpacity
+        style={[
+          styles.container,
+          size === 'sm' && styles.containerSM,
+          styles.loadingButton,
+          disabled && styles.disabled,
+          fullWidth && styles.fullWidth,
+          color ? { backgroundColor: color } : {},
+        ]}
+        disabled={disabled}
+      >
+        <ActivityIndicator color="#fff" size="small" />
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <TouchableOpacity
       style={[
@@ -51,7 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
   },
   disabled: {
-    opacity: 0.8,
+    opacity: 0.6,
   },
   fullWidth: {
     width: '100%',
@@ -63,5 +83,8 @@ const styles = StyleSheet.create({
   },
   textSM: {
     fontSize: 13,
+  },
+  loadingButton: {
+    minWidth: 100,
   },
 });

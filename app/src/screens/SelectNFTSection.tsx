@@ -19,7 +19,7 @@ export default function SelectNFTSection() {
   const [preview, setPreview] = useState<string | null>(null);
   const { address } = useWallet();
   const { user } = useUser();
-  const { name, connected, setAvatar: setEnsAvatar, pendingTransaction } = useENS();
+  const { name, connected, setAvatar: setEnsAvatar } = useENS();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useNavigation<Record<string, any>>();
   const [nftIndex, setNftIndex] = useState<number | null>(null);
@@ -96,7 +96,7 @@ export default function SelectNFTSection() {
           )}
         </View>
 
-        {name && <SaveENS disabled={!preview || !!pendingTransaction || inProgress} onSave={upload} />}
+        {name && <SaveENS disabled={!preview} loading={inProgress} onSave={upload} />}
       </View>
     </>
   );

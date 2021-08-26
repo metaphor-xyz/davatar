@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
+import { useENS } from '../ENSProvider';
 import { useWallet } from '../WalletProvider';
 import { spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
@@ -15,8 +16,9 @@ export default function MainScreen() {
   const isMoWeb = useIsMoWeb();
   const { wallet } = useWallet();
   const { loading, user } = useUser();
+  const { loading: loadingENS } = useENS();
 
-  if (loading) {
+  if (loading || loadingENS) {
     return (
       <PageContainer>
         <View style={styles.loaderContainer}>

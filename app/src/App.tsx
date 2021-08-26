@@ -75,7 +75,7 @@ function Navigation() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          title: 'Davatar',
+          title: 'davatar',
         }}
       >
         <Stack.Group
