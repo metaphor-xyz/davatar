@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 import { useWallet } from './WalletProvider';
 import { httpsCallable, signInWithCustomToken } from './firebase';
-import Button from './views/Button';
+import AnimatedButton from './views/AnimatedButton';
 
 type Props = {
   onConnectSuccess?: () => void;
@@ -50,7 +50,7 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
 
   return (
     <>
-      <Button title="Connect Wallet" onPress={connectWallet} />
+      <AnimatedButton title="Connect Wallet" onPress={connectWallet} />
     </>
   );
 }
