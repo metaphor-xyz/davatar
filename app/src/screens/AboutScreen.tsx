@@ -95,6 +95,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     textAlign: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 20,
   },
   subtitle: {
     paddingTop: spacing(2),
@@ -130,15 +132,14 @@ const styles = StyleSheet.create({
     marginTop: 8,
     flexDirection: 'row',
     borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    // backgroundColor: '#e8e8ff',
   },
   meetTeamContainer: {
     padding: 16,
     // textAlign: 'left',
     marginTop: spacing(4),
     borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    // backgroundColor: '#e8e8ff',
+  },
+  bold: {
+    fontWeight: '600',
   },
 });

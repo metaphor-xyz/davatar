@@ -1,9 +1,11 @@
 import React from 'react';
 import { useCallback } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 
 import { useWallet } from '../WalletProvider';
 import { sliceWalletAddress, spacing } from '../constants';
+import useENS from '../useENS';
 import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
 import Button from './Button';
@@ -18,6 +20,7 @@ export default function ConnectedWalletBox({ onDisconnect }: Props) {
   const { address, disconnect, walletName } = useWallet();
   const isMoWeb = useIsMoWeb();
   const { user } = useUser();
+  const { name, loading } = useENS();
 
   const slicedAddress = sliceWalletAddress(address || '');
 
@@ -38,13 +41,14 @@ export default function ConnectedWalletBox({ onDisconnect }: Props) {
             <>Connected with {walletName}</>
           </Typography>
           <View style={styles.avatarAndAccountText}>
-            {user.avatarPreviewURL ? (
+            {user?.avatarPreviewURL ? (
               <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} />
             ) : (
               <Jazzicon address={address} size={20} style={styles.avatarImage} />
             )}
 
-            <Typography style={[styles.accountText]}>{slicedAddress}</Typography>
+            {loading && <ActivityIndicator size={20} style={styles.loader} />}
+            {!loading && <Typography style={styles.accountText}>{name || slicedAddress}</Typography>}
           </View>
         </View>
         <View style={styles.button}>
@@ -56,6 +60,9 @@ export default function ConnectedWalletBox({ onDisconnect }: Props) {
 }
 
 const styles = StyleSheet.create({
+  loader: {
+    marginLeft: 40,
+  },
   innerContainer: {
     width: '400px',
     maxWidth: '100%',

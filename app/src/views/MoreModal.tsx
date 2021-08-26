@@ -54,7 +54,7 @@ export default function MoreModal({ onClose }: Props) {
         />
 
         <View style={styles.modalView}>
-          <List.Section style={{ width: '100%', margin: 0 }}>
+          <List.Section style={styles.listSection}>
             <List.Item
               style={styles.listItem}
               title={<Typography style={styles.listItemText}>About</Typography>}
@@ -75,6 +75,10 @@ export default function MoreModal({ onClose }: Props) {
 }
 
 const styles = StyleSheet.create({
+  listSection: {
+    width: '100%',
+    margin: 0,
+  },
   listItem: {
     padding: 0,
     paddingRight: 0,

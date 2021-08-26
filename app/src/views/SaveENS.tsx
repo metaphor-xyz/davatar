@@ -9,10 +9,11 @@ import Typography from './Typography';
 type Props = {
   onSave: () => Promise<void>;
   disabled: boolean;
+  loading?: boolean;
 };
 
-export default function SaveENS({ disabled, onSave }: Props) {
-  const { connected } = useENS();
+export default function SaveENS({ loading, disabled, onSave }: Props) {
+  const { connected, loading: loadingENS, pendingTransaction } = useENS();
 
   const onClick = useCallback(async () => {
     await onSave();
@@ -20,11 +21,19 @@ export default function SaveENS({ disabled, onSave }: Props) {
 
   return (
     <View style={styles.container}>
-      <Button disabled={disabled} title="Save new avatar" onPress={onClick} />
+      <View style={styles.saveButton}>
+        <Button
+          loading={loading || loadingENS || !!pendingTransaction}
+          disabled={disabled || loading || loadingENS || !!pendingTransaction}
+          title="Save new avatar"
+          onPress={onClick}
+          fullWidth
+        />
+      </View>
 
       {!disabled && !connected && (
         <View style={styles.spaced}>
-          <Typography style={{ color: '#d32f2f' }}>
+          <Typography style={styles.warning}>
             You will be charged a one-time gas fee. All subsequent updates are free!
           </Typography>
         </View>
@@ -34,6 +43,9 @@ export default function SaveENS({ disabled, onSave }: Props) {
 }
 
 const styles = StyleSheet.create({
+  saveButton: {
+    width: 157,
+  },
   container: {
     paddingTop: spacing(3),
     display: 'flex',
@@ -41,5 +53,8 @@ const styles = StyleSheet.create({
   },
   spaced: {
     paddingTop: spacing(2),
+  },
+  warning: {
+    color: '#d32f2f',
   },
 });
