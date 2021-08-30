@@ -5,7 +5,7 @@
     "start": "concurrently \"npm:start:*\"",
     "start:app": "cd app && npm start",
     "start:firebase": "cd functions && npm start",
-    "start:ipfs": "cd ipfs_node && FIREBASE_STORAGE_EMULATOR_HOST=localhost:9199 npm start"
+    "start:arlocal": "npx arlocal"
   },
   "dependencies": {
     "concurrently": "^6.2.1"

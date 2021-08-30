@@ -14,7 +14,11 @@ admin.initializeApp();
 const IPFS_NODE =
   process.env.NODE_ENV === 'production' ? 'https://ipfs-node-fa5ujdlota-uc.a.run.app' : 'http://localhost:8081';
 const web3 = new Web3('wss://mainnet.infura.io/ws/v3/e6e57d41c8b2411ea434bf96efe69f08');
-const arweave = Arweave.init({ host: 'arweave.net', port: 443, protocol: 'https', logging: true });
+const arConfig =
+  process.env.NODE_ENV === 'production'
+    ? { host: 'arweave.net', port: 443, protocol: 'https' }
+    : { host: 'localhost', port: 1984, protocol: 'http', logging: true };
+const arweave = Arweave.init(arConfig);
 const ARWEAVE_KEY = functions.config().arweave_key;
 
 const randomString = (length: number): string => {
@@ -189,6 +193,12 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
 
     const transaction = await arweave.createTransaction({ data: imageData }, ARWEAVE_KEY);
     transaction.addTag('Content-Type', metadata.contentType);
+    transaction.addTag('App-Name', 'davatar.xyz');
+
+    // The Origin tag allows us to support "mutable" records, a draft spec being worked on with Arweave team
+    if (userData.avatarProtocol === 'arweave') {
+      transaction.addTag('Origin', userData.avatarId);
+    }
 
     await arweave.transactions.sign(transaction, ARWEAVE_KEY);
 
@@ -198,14 +208,17 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
       await uploader.uploadChunk();
     }
 
-    const avatarUri = `arweave://${transaction.id}`;
-
     await admin.firestore().collection('users').doc(context.auth.uid).update({
       currentAvatar: avatarId,
-      avatarUri,
+      avatarProtocol: 'arweave',
+      avatarId: transaction.id,
     });
 
-    return avatarUri;
+    if (userData.avatarProtocol === 'arweave') {
+      return { avatarProtocol: userData.avatarProtocol, avatarId: userData.avatarId };
+    } else {
+      return { avatarProtocol: 'arweave', avatarId: transaction.id };
+    }
   } catch (e) {
     functions.logger.error(e, { structuredData: true });
     return null;

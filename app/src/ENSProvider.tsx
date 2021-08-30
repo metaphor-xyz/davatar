@@ -100,9 +100,9 @@ export default function ENSProvider({ children }: React.PropsWithChildren<Record
         .then((ensName: { name: string } | null) => setName(ensName?.name || null))
         .finally(() => setLoading(false));
 
-      if (user && user.ipns) {
-        const ipns = user.ipns;
-        getAvatar().then(url => setConnected(url && url === `ipns://${ipns.replaceAll('ipns/', '')}`));
+      if (user && user.avatarProtocol) {
+        const uri = `${user.avatarProtocol}://${user.avatarId}`;
+        getAvatar().then(url => setConnected(url && url === uri));
       }
     }
   }, [wallet, address, user, getAvatar, pendingTransaction]);

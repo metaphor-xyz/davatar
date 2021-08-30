@@ -41,10 +41,10 @@ export default function SelectNFTSection() {
         await uploadBytes(ref, avatar);
 
         const response = await httpsCallable('setAvatar')({ address, avatarId: avatarId.data });
-        const data = response.data as string | null;
+        const data = response.data as { avatarProtocol: string; avatarId: string } | null;
 
         if (!connected && data) {
-          await setEnsAvatar(data);
+          await setEnsAvatar(`${data.avatarProtocol}://${data.avatarId}`);
         }
 
         if (data) {
