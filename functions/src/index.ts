@@ -25,10 +25,23 @@ export const connectWallet = functions.https.onCall(async data => {
     throw new Error('need address');
   }
 
-  const challenge = 'message';
+  let challenge = `
+Sign this message to login securely into davatar!
+
+Nonce: ${randomString(32)}
+  `;
 
   if (!signature) {
+    await admin.firestore().collection('users').doc(address).set({ challenge }, { merge: true });
+
     return challenge;
+  } else {
+    const user = await admin.firestore().collection('users').doc(address).get();
+    const userData = user.data() as { challenge?: string | null };
+
+    if (userData.challenge) {
+      challenge = userData.challenge;
+    }
   }
 
   const signedAddress = web3.eth.accounts.recover(challenge, signature);
@@ -162,11 +175,16 @@ export const authDiscord = functions.https.onCall(async (data, context) => {
 
     const userId = userResponse.data.id;
 
-    await admin.firestore().collection('users').doc(context.auth.uid).set(
+    await admin.firestore().collection('users').doc(`${context.auth.uid}/private`).set(
       {
         discordUserId: userId,
         discordAccessToken: accessToken,
         discordRefreshToken: refreshToken,
+      },
+      { merge: true }
+    );
+    await admin.firestore().collection('users').doc(context.auth.uid).set(
+      {
         discordConnected: true,
       },
       { merge: true }
@@ -183,7 +201,7 @@ export const authDiscord = functions.https.onCall(async (data, context) => {
 });
 
 const updateDiscordAvatar = async (userId: string) => {
-  const user = await admin.firestore().collection('users').doc(userId).get();
+  const user = await admin.firestore().collection('users').doc(`${userId}/private`).get();
 
   const userData = user.data();
 
@@ -281,11 +299,16 @@ export const connectTwitter = functions.https.onCall(async (data, context) => {
 
     const profile = await twitter.get('account/verify_credentials');
 
-    await admin.firestore().collection('users').doc(context.auth.uid).set(
+    await admin.firestore().collection('users').doc(`${context.auth.uid}/private`).set(
       {
         twitterHandle: profile.screen_name,
         twitterAccessToken: response.oauth_token,
         twitterAccessTokenSecret: response.oauth_token_secret,
+      },
+      { merge: true }
+    );
+    await admin.firestore().collection('users').doc(context.auth.uid).set(
+      {
         twitterConnected: true,
       },
       { merge: true }
@@ -307,7 +330,7 @@ export const connectTwitter = functions.https.onCall(async (data, context) => {
 });
 
 const updateTwitterAvatar = async (userId: string) => {
-  const user = await admin.firestore().collection('users').doc(userId).get();
+  const user = await admin.firestore().collection('users').doc(`${userId}/private`).get();
 
   const userData = user.data();
 
@@ -320,7 +343,7 @@ const updateTwitterAvatar = async (userId: string) => {
   }
 
   if (!userData.twitterAccessToken) {
-    throw new Error('discord not connected');
+    throw new Error('twitter not connected');
   }
 
   const avatarId = userData.currentAvatar;
