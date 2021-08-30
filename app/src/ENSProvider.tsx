@@ -92,7 +92,6 @@ export default function ENSProvider({ children }: React.PropsWithChildren<Record
 
   useEffect(() => {
     if (wallet) {
-      setLoading(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const provider = wallet.currentProvider as any;
       const ens = new ENS({ provider, ensAddress: getEnsAddress(provider.chainId) });

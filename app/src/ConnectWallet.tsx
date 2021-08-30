@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props) {
-  const { connect, signMessage } = useWallet();
+  const { connect, signMessage, connecting } = useWallet();
 
   const connectWallet = useCallback(async () => {
     // Connect the wallet
@@ -48,9 +48,5 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect, onConnectFail, onConnectSuccess]);
 
-  return (
-    <>
-      <AnimatedButton title="Connect Wallet" onPress={connectWallet} />
-    </>
-  );
+  return <AnimatedButton title="Connect Wallet" onPress={connectWallet} loading={connecting} />;
 }

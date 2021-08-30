@@ -40,16 +40,18 @@ export default function SelectNFTSection() {
         const ref = storageRef(`${address}/${avatarId.data}`);
         await uploadBytes(ref, avatar);
 
-        const response = await httpsCallable('storeIpfs')({ address, avatarId: avatarId.data });
-        const data = response.data as { ipns: string };
+        const response = await httpsCallable('setAvatar')({ address, avatarId: avatarId.data });
+        const data = response.data as string | null;
 
-        if (!connected) {
-          await setEnsAvatar(`ipns://${data.ipns}`);
+        if (!connected && data) {
+          await setEnsAvatar(data);
         }
 
-        navigation.navigate(VIEW_STEPS.SUCCESS_SCREEN);
-        if (user && !user.twitterConnected) {
-          navigation.navigate(VIEW_STEPS.SELECT_SOCIALS_MODAL);
+        if (data) {
+          navigation.navigate(VIEW_STEPS.SUCCESS_SCREEN);
+          if (user && !user.twitterConnected) {
+            navigation.navigate(VIEW_STEPS.SELECT_SOCIALS_MODAL);
+          }
         }
       } finally {
         setInProgress(false);
