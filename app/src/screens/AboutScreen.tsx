@@ -3,16 +3,13 @@ import React, { useCallback } from 'react';
 import { StyleSheet, View, Platform, Linking } from 'react-native';
 
 import { spacing } from '../constants';
-import useIsMoWeb from '../useIsMoWeb';
 import BackRow from '../views/BackRow';
-import Jazzicon from '../views/Jazzicon';
 import Link from '../views/Link';
+import MassiveJazzicon from '../views/MassiveJazzicon';
 import PageContainer from '../views/PageContainer';
 import Typography from '../views/Typography';
 
 export default function AboutScreen() {
-  const isMoWeb = useIsMoWeb();
-
   const onJoinDiscord = useCallback(async () => {
     const url = 'https://discord.gg/DRWXxhcn58';
 
@@ -27,13 +24,7 @@ export default function AboutScreen() {
 
   return (
     <>
-      <PageContainer
-        backgroundComponent={
-          <View style={[styles.jazziconContainer, isMoWeb && styles.jazziconContainerXS]}>
-            <Jazzicon address="" size={isMoWeb ? 500 : 800} />
-          </View>
-        }
-      >
+      <PageContainer backgroundComponent={<MassiveJazzicon />}>
         <BackRow />
 
         <View style={styles.container}>

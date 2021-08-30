@@ -31,6 +31,9 @@ export default function PageContainer({ noMaxWidth, noBottomPadding, backgroundC
 
 const styles = StyleSheet.create({
   outerContainer: {
+    position: 'absolute',
+    overflow: 'scroll',
+    paddingTop: '74px',
     backgroundColor: '#fff',
     width: '100%',
     height: '100%',
@@ -40,7 +43,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     maxWidth: '750px',
-    alignItems: 'center',
+    // alignItems: 'center',
     paddingRight: '32px',
     paddingLeft: '32px',
     paddingBottom: 100,
