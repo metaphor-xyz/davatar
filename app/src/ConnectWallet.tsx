@@ -48,9 +48,5 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect, onConnectFail, onConnectSuccess]);
 
-  return (
-    <>
-      <AnimatedButton title="Connect Wallet" onPress={connectWallet} />
-    </>
-  );
+  return <AnimatedButton title="Connect Wallet" onPress={connectWallet} />;
 }

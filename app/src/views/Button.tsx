@@ -8,6 +8,7 @@ import Typography from './Typography';
 
 export interface Props {
   title?: string;
+  titleComponent?: ReactChild | ReactChild[];
   onPress?: () => void;
   disabled?: boolean;
   loading?: boolean;
@@ -17,7 +18,17 @@ export interface Props {
   preTextComponent?: ReactChild | ReactChild[];
 }
 
-export default function Button({ preTextComponent, title, onPress, disabled, size, fullWidth, color, loading }: Props) {
+export default function Button({
+  preTextComponent,
+  title,
+  titleComponent,
+  onPress,
+  disabled,
+  size,
+  fullWidth,
+  color,
+  loading,
+}: Props) {
   const [mouseEntered, setMouseEntered] = useState(false);
   const onMouseEnter = useCallback(() => {
     setMouseEntered(true);
@@ -51,6 +62,7 @@ export default function Button({ preTextComponent, title, onPress, disabled, siz
         cursor: disabled ? 'default' : 'pointer',
         background: 'none',
         width: fullWidth ? '100%' : undefined,
+        padding: 0,
       }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -70,7 +82,11 @@ export default function Button({ preTextComponent, title, onPress, disabled, siz
         activeOpacity={0.8}
       >
         {preTextComponent}
-        <Typography style={[styles.text, size === 'sm' && styles.textSM]}>{title}</Typography>
+        {titleComponent ? (
+          <>{titleComponent}</>
+        ) : (
+          <Typography style={[styles.text, size === 'sm' && styles.textSM]}>{title}</Typography>
+        )}
       </TouchableOpacity>
     </button>
   );

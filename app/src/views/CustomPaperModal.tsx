@@ -45,7 +45,7 @@ export default function CustomPaperModal({ onClose, visible, title, children }: 
             <Typography style={styles.title}>{title}</Typography>
             {onClose && (
               <button
-                style={{ border: 'none', cursor: 'pointer', background: 'none' }}
+                style={{ border: 'none', cursor: 'pointer', background: 'none', padding: 0 }}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
               >
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     minWidth: '275px',
-    minHeight: '275px',
+    // minHeight: '275px',
     maxWidth: '100%',
     maxHeight: '100%',
     backgroundColor: 'white',

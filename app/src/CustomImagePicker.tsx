@@ -57,7 +57,7 @@ export default function CustomImagePicker({ onChange }: Props) {
 
   return (
     <button
-      style={{ border: 'none', cursor: 'pointer', background: 'none' }}
+      style={{ border: 'none', cursor: 'pointer', background: 'none', padding: 0 }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
