@@ -71,7 +71,8 @@ export default function Avatar({ uri, style }: Props) {
               } else {
                 setUrl(`${baseUrl}/${id}`);
               }
-            });
+            })
+            .catch(e => console.error(e)); // eslint-disable-line
 
           break;
         }
