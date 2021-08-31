@@ -8,6 +8,7 @@ import NFTSelectorCloud from '../NFTSelectorCloud';
 import { useWallet } from '../WalletProvider';
 import { spacing, VIEW_STEPS } from '../constants';
 import { httpsCallable, storageRef, uploadBytes } from '../firebase';
+import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
 import Avatar from '../views/Avatar';
 import ENSDisplay from '../views/ENSDisplay';
@@ -17,6 +18,7 @@ import SaveENS from '../views/SaveENS';
 import Typography from '../views/Typography';
 
 export default function SelectNFTSection() {
+  const isMoWeb = useIsMoWeb();
   const [avatar, setAvatar] = useState<Blob | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const { address } = useWallet();
@@ -81,41 +83,31 @@ export default function SelectNFTSection() {
 
   return (
     <>
-      <PageContainer
-        backgroundComponent={
-          <>
-            {/* <MassiveJazzicon />
-            <View style={{ position: 'absolute', opacity: 0.6, top: '70px', right: '-32px' }}>
-              <FontAwesome5 name="ethereum" size={750} color="white" />
-            </View> */}
-          </>
-        }
-      >
-        <View>
-          <Typography fontWeight={600} variant="header">
-            davatar
-          </Typography>
-          <Typography>One avatar for everything Web3.</Typography>
-        </View>
+      <PageContainer>
+        <Typography style={[styles.subtitle, isMoWeb && styles.subtitleXS]}>Choose your new look!</Typography>
 
-        <View style={styles.spaced}>
-          <View style={styles.previewContainer}>
-            {!avatarPreview && address && <Jazzicon address={address} size={200} style={styles.previewPlaceholder} />}
-            {avatarPreview && <Avatar style={styles.preview} uri={avatarPreview} />}
+        <View style={[styles.previewContainer, styles.previewContainerXS]}>
+          {!avatarPreview && address && (
+            <Jazzicon
+              address={address}
+              size={200}
+              style={isMoWeb ? styles.previewPlaceholderXS : styles.previewPlaceholder}
+            />
+          )}
+          {avatarPreview && <Avatar style={styles.preview} uri={avatarPreview} />}
 
-            <ENSDisplay />
+          <ENSDisplay />
 
-            {name && (
-              <View style={styles.spaced}>
-                <Typography style={styles.spaced}>Select NFT or upload image</Typography>
-                <NFTSelectorCloud
-                  selectedIndex={nftIndex}
-                  onSelect={setNft}
-                  uploadImageComponent={<CustomImagePicker onChange={setUploadedPhotoAvatar} />}
-                />
-              </View>
-            )}
-          </View>
+          {name && (
+            <View style={[styles.spaced, isMoWeb && styles.spacedXS]}>
+              <Typography>Select NFT or upload image</Typography>
+              <NFTSelectorCloud
+                selectedIndex={nftIndex}
+                onSelect={setNft}
+                uploadImageComponent={<CustomImagePicker onChange={setUploadedPhotoAvatar} />}
+              />
+            </View>
+          )}
         </View>
       </PageContainer>
 
@@ -134,13 +126,22 @@ const styles = StyleSheet.create({
   },
   spaced: {
     fontSize: 18,
-    paddingTop: spacing(3),
+    paddingTop: spacing(6),
+    width: '100%',
+  },
+  spacedXS: {
+    fontSize: 18,
+    paddingTop: spacing(4),
     width: '100%',
   },
   previewContainer: {
     width: '100%',
     alignItems: 'center',
     textAlign: 'center',
+    paddingTop: 54,
+  },
+  previewContainerXS: {
+    paddingTop: 24,
   },
   preview: {
     flex: 1,
@@ -149,7 +150,21 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   previewPlaceholder: {
-    width: '200px',
-    height: '200px',
+    width: 200,
+    height: 200,
+  },
+  previewPlaceholderXS: {
+    width: 150,
+    height: 150,
+  },
+  header: {
+    color: '#5a58eb',
+    paddingBottom: spacing(2),
+  },
+  subtitle: {
+    fontSize: 44,
+  },
+  subtitleXS: {
+    fontSize: 24,
   },
 });

@@ -2,14 +2,15 @@ import React, { useCallback } from 'react';
 
 import { useWallet } from './WalletProvider';
 import { httpsCallable, signInWithCustomToken } from './firebase';
-import AnimatedButton from './views/AnimatedButton';
+import AnimatedPointingButton from './views/AnimatedPointingButton';
 
 type Props = {
   onConnectSuccess?: () => void;
   onConnectFail?: () => void;
+  disableAnimation?: boolean;
 };
 
-export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props) {
+export default function ConnectWallet({ onConnectSuccess, onConnectFail, disableAnimation }: Props) {
   const { connect, signMessage, connecting } = useWallet();
 
   const connectWallet = useCallback(async () => {
@@ -48,5 +49,12 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail }: Props
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect, onConnectFail, onConnectSuccess]);
 
-  return <AnimatedButton title="Connect Wallet" onPress={connectWallet} loading={connecting} />;
+  return (
+    <AnimatedPointingButton
+      title="Connect Wallet"
+      onPress={connectWallet}
+      disableAnimation={disableAnimation}
+      loading={connecting}
+    />
+  );
 }

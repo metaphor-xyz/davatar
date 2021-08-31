@@ -6,13 +6,13 @@ import Typography from '../views/Typography';
 
 export default function HowItWorks() {
   return (
-    <>
+    <View style={styles.outerContainer}>
       <View style={styles.container}>
         <Typography style={styles.header} variant="header">
           How it works
         </Typography>
 
-        <View style={styles.valuePropContainer}>
+        <View style={styles.valuePropContainerFirst}>
           <Typography style={styles.text}>
             <span style={{ fontWeight: 600 }}>☝️</span> Connect your wallet 🔌
           </Typography>
@@ -37,16 +37,20 @@ export default function HowItWorks() {
           </Typography>
         </View>
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
   container: {
     width: 550,
     maxWidth: '100%',
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     textAlign: 'center',
     // backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderRadius: 20,
@@ -68,6 +72,8 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingBottom: spacing(1),
+    width: '100%',
+    textAlign: 'center',
   },
   teamHeader: {
     fontSize: 18,
@@ -82,6 +88,12 @@ const styles = StyleSheet.create({
   valuePropContainer: {
     textAlign: 'left',
     marginTop: 32,
+    width: '100%',
+  },
+  valuePropContainerFirst: {
+    textAlign: 'left',
+    marginTop: 24,
+    width: '100%',
   },
   meetTeamContainer: {
     padding: 16,
