@@ -3,9 +3,9 @@ import { useCallback } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
+import { useENS } from '../ENSProvider';
 import { useWallet } from '../WalletProvider';
 import { sliceWalletAddress, spacing } from '../constants';
-import useENS from '../useENS';
 import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
 import Button from './Button';

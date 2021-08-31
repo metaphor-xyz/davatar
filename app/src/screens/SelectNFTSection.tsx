@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useCallback, useEffect } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import CustomImagePicker from '../CustomImagePicker';
 import { useENS } from '../ENSProvider';
@@ -9,6 +9,7 @@ import { useWallet } from '../WalletProvider';
 import { spacing, VIEW_STEPS } from '../constants';
 import { httpsCallable, storageRef, uploadBytes } from '../firebase';
 import useUser from '../useUser';
+import Avatar from '../views/Avatar';
 import ENSDisplay from '../views/ENSDisplay';
 import Jazzicon from '../views/Jazzicon';
 import PageContainer from '../views/PageContainer';
@@ -41,16 +42,18 @@ export default function SelectNFTSection() {
         const ref = storageRef(`${address}/${avatarId.data}`);
         await uploadBytes(ref, avatar);
 
-        const response = await httpsCallable('storeIpfs')({ address, avatarId: avatarId.data });
-        const data = response.data as { ipns: string };
+        const response = await httpsCallable('setAvatar')({ address, avatarId: avatarId.data });
+        const data = response.data as { avatarProtocol: string; avatarId: string } | null;
 
-        if (!connected) {
-          await setEnsAvatar(`ipns://${data.ipns}`);
+        if (!connected && data) {
+          await setEnsAvatar(`${data.avatarProtocol}://${data.avatarId}`);
         }
 
-        navigation.navigate(VIEW_STEPS.SUCCESS_SCREEN);
-        if (user && !user.twitterConnected) {
-          navigation.navigate(VIEW_STEPS.SELECT_SOCIALS_MODAL);
+        if (data) {
+          navigation.navigate(VIEW_STEPS.SUCCESS_SCREEN);
+          if (user && !user.twitterConnected) {
+            navigation.navigate(VIEW_STEPS.SELECT_SOCIALS_MODAL);
+          }
         }
       } finally {
         setInProgress(false);
@@ -98,7 +101,7 @@ export default function SelectNFTSection() {
         <View style={styles.spaced}>
           <View style={styles.previewContainer}>
             {!avatarPreview && address && <Jazzicon address={address} size={200} style={styles.previewPlaceholder} />}
-            {avatarPreview && <Image style={styles.preview} source={{ uri: avatarPreview }} />}
+            {avatarPreview && <Avatar style={styles.preview} uri={avatarPreview} />}
 
             <ENSDisplay />
 

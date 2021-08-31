@@ -4,8 +4,8 @@ import { useCallback } from 'react';
 import { StyleSheet, View, Image, Platform, Linking } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
+import { useENS } from '../ENSProvider';
 import { spacing } from '../constants';
-import useENS from '../useENS';
 import useUser from '../useUser';
 import BackRow from '../views/BackRow';
 import Button from '../views/Button';

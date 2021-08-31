@@ -5,8 +5,8 @@ import { onAuthStateChanged, snapshot, UserInfo, storageRef, getDownloadURL } fr
 export interface User {
   currentAvatar?: string | null;
   avatarPreviewURL?: string | null;
-  ipfs?: string | null;
-  ipns?: string | null;
+  avatarProtocol?: string | null;
+  avatarId?: string | null;
   discordConnected?: boolean;
   twitterConnected?: boolean;
 }

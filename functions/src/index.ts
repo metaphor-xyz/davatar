@@ -1,3 +1,4 @@
+import Arweave from 'arweave';
 import axios from 'axios';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
@@ -13,6 +14,12 @@ admin.initializeApp();
 const IPFS_NODE =
   process.env.NODE_ENV === 'production' ? 'https://ipfs-node-fa5ujdlota-uc.a.run.app' : 'http://localhost:8081';
 const web3 = new Web3('wss://mainnet.infura.io/ws/v3/e6e57d41c8b2411ea434bf96efe69f08');
+const arConfig =
+  process.env.NODE_ENV === 'production'
+    ? { host: 'arweave.net', port: 443, protocol: 'https' }
+    : { host: 'localhost', port: 1984, protocol: 'http', logging: true };
+const arweave = Arweave.init(arConfig);
+const ARWEAVE_KEY = functions.config().arweave_key;
 
 const randomString = (length: number): string => {
   return [...Array(length)].map(_i => (~~(Math.random() * 36)).toString(36)).join('');
@@ -73,12 +80,9 @@ export const createAvatar = functions.https.onCall(async (_data, context) => {
   }
 
   const avatarId = randomString(32);
+  const newAvatars = Array.isArray(userData.avatars) ? [...userData.avatars, avatarId] : [avatarId];
 
-  await admin
-    .firestore()
-    .collection('users')
-    .doc(context.auth.uid)
-    .set({ avatars: [...userData.avatars, avatarId] }, { merge: true });
+  await admin.firestore().collection('users').doc(context.auth.uid).set({ avatars: newAvatars }, { merge: true });
 
   return avatarId;
 });
@@ -133,6 +137,95 @@ export const storeIpfs = functions.https.onCall(async (data, context) => {
 
     return response.data;
   } else {
+    return null;
+  }
+});
+
+export const setAvatar = functions.https.onCall(async (data, context) => {
+  try {
+    if (!context.auth) {
+      throw new Error('must be logged in');
+    }
+
+    const { avatarId } = data;
+
+    if (!avatarId) {
+      throw new Error('no avatarId specified');
+    }
+
+    const user = await admin.firestore().collection('users').doc(context.auth.uid).get();
+
+    if (!user.exists) {
+      throw new Error('no avatars uploaded');
+    }
+
+    const userData = user.data();
+
+    if (!userData || !userData.avatars.find((a: string) => a === avatarId)) {
+      throw new Error('invalid avatarId');
+    }
+
+    const storageKey = `${context.auth.uid}/${avatarId}`;
+
+    const [fileExists] = await admin.storage().bucket().file(storageKey).exists();
+
+    if (!fileExists) {
+      throw new Error('avatar not uploaded');
+    }
+
+    const imageData = await new Promise<Buffer>((resolve, reject) => {
+      const stream = admin
+        .storage()
+        .bucket()
+        .file(storageKey)
+        .createReadStream({
+          validation: process.env.NODE_ENV === 'production',
+        });
+
+      const buffer: Uint8Array[] = [];
+
+      stream.on('data', chunk => buffer.push(chunk));
+      stream.on('error', e => reject(e));
+      stream.on('end', () => resolve(Buffer.concat(buffer)));
+    });
+
+    const [metadata] = await admin.storage().bucket().file(storageKey).getMetadata();
+
+    const transaction = await arweave.createTransaction({ data: imageData }, ARWEAVE_KEY);
+    transaction.addTag('Content-Type', metadata.contentType);
+    transaction.addTag('App-Name', 'davatar.xyz');
+
+    // The Origin tag allows us to support "mutable" records, a draft spec being worked on with Arweave team
+    if (userData.avatarProtocol === 'arweave') {
+      transaction.addTag('Origin', userData.avatarId);
+    }
+
+    await arweave.transactions.sign(transaction, ARWEAVE_KEY);
+
+    const uploader = await arweave.transactions.getUploader(transaction);
+
+    while (!uploader.isComplete) {
+      await uploader.uploadChunk();
+    }
+
+    if (process.env.NODE_ENV !== 'production') {
+      await axios.get('http://localhost:1984/mine');
+    }
+
+    if (userData.avatarProtocol === 'arweave') {
+      functions.logger.info(transaction.id);
+      return { avatarProtocol: userData.avatarProtocol, avatarId: userData.avatarId };
+    } else {
+      await admin.firestore().collection('users').doc(context.auth.uid).update({
+        currentAvatar: avatarId,
+        avatarProtocol: 'arweave',
+        avatarId: transaction.id,
+      });
+
+      return { avatarProtocol: 'arweave', avatarId: transaction.id };
+    }
+  } catch (e) {
+    functions.logger.error(e, { structuredData: true });
     return null;
   }
 });
