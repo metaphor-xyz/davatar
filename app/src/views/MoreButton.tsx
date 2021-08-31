@@ -29,7 +29,7 @@ export default function MoreButton() {
   return (
     <>
       <button
-        style={{ border: 'none', cursor: 'pointer', background: 'none' }}
+        style={{ border: 'none', cursor: 'pointer', background: 'none', padding: 0 }}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >

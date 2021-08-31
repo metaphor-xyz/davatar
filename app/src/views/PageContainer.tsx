@@ -1,58 +1,36 @@
 import React, { ReactChild } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import useIsMoWeb from '../useIsMoWeb';
-
 type Props = {
-  noMaxWidth?: boolean;
-  noBottomPadding?: boolean;
   backgroundComponent?: ReactChild | ReactChild[];
+  backgroundColor?: string;
+  noBottomPadding?: boolean;
 } & React.PropsWithChildren<Record<string, unknown>>;
 
-export default function PageContainer({ noMaxWidth, noBottomPadding, backgroundComponent, children }: Props) {
-  const isMoWeb = useIsMoWeb();
-
+export default function PageContainer({ backgroundComponent, children, backgroundColor, noBottomPadding }: Props) {
   return (
-    <View style={styles.outerContainer}>
+    <View
+      style={[
+        styles.outerContainer,
+        noBottomPadding && { paddingBottom: 0 },
+        { backgroundColor: backgroundColor || '#f8f8fe' },
+      ]}
+    >
       {backgroundComponent}
-      <View
-        style={[
-          styles.container,
-          isMoWeb && styles.containerXS,
-          noMaxWidth && styles.containerNoMaxWidth,
-          noBottomPadding && styles.containerNoBottomPadding,
-        ]}
-      >
-        {children}
-      </View>
+
+      {children}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   outerContainer: {
-    backgroundColor: '#fff',
+    position: 'absolute',
+    overflow: 'scroll',
+    paddingTop: '74px',
     width: '100%',
     height: '100%',
     alignItems: 'center',
-  },
-  container: {
-    width: '100%',
-    height: '100%',
-    maxWidth: '750px',
-    alignItems: 'center',
-    paddingRight: '32px',
-    paddingLeft: '32px',
     paddingBottom: 100,
-  },
-  containerNoMaxWidth: {
-    maxWidth: 'initial',
-  },
-  containerNoBottomPadding: {
-    paddingBottom: 0,
-  },
-  containerXS: {
-    paddingRight: '24px',
-    paddingLeft: '24px',
   },
 });

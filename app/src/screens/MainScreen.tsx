@@ -8,9 +8,13 @@ import { spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
 import PageContainer from '../views/PageContainer';
+import SectionContainer from '../views/SectionContainer';
 import Typography from '../views/Typography';
+import AboutSection from './AboutSection';
 import ConnectSection from './ConnectSection';
+import HowItWorks from './HowItWorks';
 import SelectNFTSection from './SelectNFTSection';
+import TeamSection from './TeamSection';
 
 export default function MainScreen() {
   const isMoWeb = useIsMoWeb();
@@ -28,32 +32,48 @@ export default function MainScreen() {
     );
   }
 
+  if (wallet && user) return <SelectNFTSection />;
+
   return (
-    <PageContainer>
-      {isMoWeb && (!wallet || !user) && (
-        <View>
-          <Typography fontWeight={600} style={styles.subtitle}>
-            davatar
-          </Typography>
-          <Typography>One avatar for everything Web3.</Typography>{' '}
-        </View>
-      )}
+    <>
+      <PageContainer containerNoMaxWidth noBottomPadding>
+        <SectionContainer noTopPadding>
+          {isMoWeb && (
+            <Typography style={styles.header} variant="header" fontWeight={600}>
+              davatar
+            </Typography>
+          )}
+          <Typography style={styles.subtitle}>One avatar for everything Web3</Typography>
 
-      <ConnectSection />
+          <ConnectSection />
+        </SectionContainer>
 
-      {wallet && user && <SelectNFTSection />}
-    </PageContainer>
+        <SectionContainer noBottomPadding backgroundColor="#5a58eb">
+          <AboutSection />
+        </SectionContainer>
+
+        <SectionContainer noBottomPadding>
+          <HowItWorks />
+        </SectionContainer>
+
+        <SectionContainer backgroundColor="#5a58eb">
+          <TeamSection />
+        </SectionContainer>
+      </PageContainer>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    color: '#5a58eb',
+    paddingBottom: spacing(2),
+  },
   spaced: {
     paddingTop: spacing(2),
   },
   subtitle: {
-    paddingTop: spacing(2),
-    fontSize: 20,
-    paddingBottom: 4,
+    fontSize: 44,
   },
   loaderContainer: {
     paddingTop: spacing(5),

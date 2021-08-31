@@ -7,11 +7,13 @@ export interface Props {
   title: string;
   onPress?: () => void;
   disabled?: boolean;
+  // eslint-disable-next-line
+  style?: any;
 }
 
 export default function Link(props: Props) {
   return (
-    <Typography style={styles.link} onPress={props.onPress} fontWeight={600}>
+    <Typography style={[styles.link, props.style]} onPress={props.onPress} fontWeight={600}>
       {props.title}
     </Typography>
   );

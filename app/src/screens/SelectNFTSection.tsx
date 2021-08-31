@@ -12,6 +12,7 @@ import useUser from '../useUser';
 import Avatar from '../views/Avatar';
 import ENSDisplay from '../views/ENSDisplay';
 import Jazzicon from '../views/Jazzicon';
+import PageContainer from '../views/PageContainer';
 import SaveENS from '../views/SaveENS';
 import Typography from '../views/Typography';
 
@@ -80,26 +81,46 @@ export default function SelectNFTSection() {
 
   return (
     <>
-      <View style={styles.spaced}>
-        <View style={styles.previewContainer}>
-          {!avatarPreview && address && <Jazzicon address={address} size={200} style={styles.previewPlaceholder} />}
-          {avatarPreview && <Avatar style={styles.preview} uri={avatarPreview} />}
-
-          <ENSDisplay />
-
-          {name && (
-            <View style={styles.spaced}>
-              <Typography style={styles.spaced}>Select NFT or upload image</Typography>
-              <NFTSelectorCloud
-                selectedIndex={nftIndex}
-                onSelect={setNft}
-                uploadImageComponent={<CustomImagePicker onChange={setUploadedPhotoAvatar} />}
-              />
-            </View>
-          )}
+      <PageContainer
+        backgroundComponent={
+          <>
+            {/* <MassiveJazzicon />
+            <View style={{ position: 'absolute', opacity: 0.6, top: '70px', right: '-32px' }}>
+              <FontAwesome5 name="ethereum" size={750} color="white" />
+            </View> */}
+          </>
+        }
+      >
+        <View>
+          <Typography fontWeight={600} variant="header">
+            davatar
+          </Typography>
+          <Typography>One avatar for everything Web3.</Typography>
         </View>
 
-        {name && <SaveENS disabled={!preview} loading={inProgress} onSave={upload} />}
+        <View style={styles.spaced}>
+          <View style={styles.previewContainer}>
+            {!avatarPreview && address && <Jazzicon address={address} size={200} style={styles.previewPlaceholder} />}
+            {avatarPreview && <Avatar style={styles.preview} uri={avatarPreview} />}
+
+            <ENSDisplay />
+
+            {name && (
+              <View style={styles.spaced}>
+                <Typography style={styles.spaced}>Select NFT or upload image</Typography>
+                <NFTSelectorCloud
+                  selectedIndex={nftIndex}
+                  onSelect={setNft}
+                  uploadImageComponent={<CustomImagePicker onChange={setUploadedPhotoAvatar} />}
+                />
+              </View>
+            )}
+          </View>
+        </View>
+      </PageContainer>
+
+      <View style={{ position: 'absolute', bottom: 0, width: '100%' }}>
+        {name && <SaveENS disabled={!preview} loading={inProgress} onSave={upload} preview={preview} />}
       </View>
     </>
   );

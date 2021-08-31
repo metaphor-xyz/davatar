@@ -15,7 +15,7 @@ export default function ConnectWalletButton() {
   const navigation: any = useNavigation();
   const { address } = useWallet();
   const { user } = useUser();
-  const { name, loading } = useENS();
+  const { name } = useENS();
 
   const onPress = useCallback(() => {
     navigation.navigate(VIEW_STEPS.CONNECT_WALLET_MODAL);
@@ -23,13 +23,13 @@ export default function ConnectWalletButton() {
 
   if (!address || !user) return null;
 
+  // TODO : ELLIPSIS WHE
   const slicedAddress = sliceWalletAddress(address);
 
   return (
     <Button
       title={name || slicedAddress}
       onPress={onPress}
-      loading={loading}
       preTextComponent={
         user.avatarPreviewURL ? (
           <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} />
@@ -48,5 +48,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginRight: '8px',
     backgroundColor: 'blue',
+  },
+  buttonStyleXS: {
+    maxWidth: 180,
   },
 });

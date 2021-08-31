@@ -5,18 +5,13 @@ import ConnectWallet from '../ConnectWallet';
 import { useWallet } from '../WalletProvider';
 import { spacing } from '../constants';
 import useUser from '../useUser';
-import PageContainer from '../views/PageContainer';
 
 export default function ConnectSection() {
   const { wallet } = useWallet();
   const { loading, user } = useUser();
 
   if (loading) {
-    return (
-      <PageContainer>
-        <ActivityIndicator size="large" />
-      </PageContainer>
-    );
+    return <ActivityIndicator size="large" />;
   }
 
   if (user && wallet) return null;

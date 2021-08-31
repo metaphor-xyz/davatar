@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { TouchableOpacity, StyleSheet, Animated, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
-import ExpandingRing from './ExpandingRing';
+// import ExpandingRing from './ExpandingRing';
 import Typography from './Typography';
 
 export interface Props {
@@ -51,10 +51,10 @@ export default function AnimatedButton({ title, onPress, disabled, loading }: Pr
 
   return (
     <View style={styles.outerContainer}>
-      {!disabled && <ExpandingRing />}
+      {/* {!disabled && <ExpandingRing />} */}
 
       <button
-        style={{ border: 'none', cursor: disabled ? 'default' : 'pointer', background: 'none' }}
+        style={{ border: 'none', cursor: disabled ? 'default' : 'pointer', background: 'none', padding: 0 }}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         disabled={disabled}
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   animatedBorder: {
     width: 320,
     height: 80,
-    borderRadius: 500,
+    borderRadius: 20,
     position: 'absolute',
     borderWidth: 6,
     borderStyle: 'solid',
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     margin: 10,
     width: 300,
     height: 60,
-    borderRadius: 500,
+    borderRadius: 20,
     backgroundColor: 'linear-gradient(90deg, rgba(91, 88, 235, 1) 0%, rgba(142, 141, 220, 1) 140%)',
   },
   disabled: {

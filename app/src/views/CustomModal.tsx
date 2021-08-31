@@ -53,7 +53,7 @@ export default function CustomModal({ title, children }: Props) {
         <View style={styles.headerContainer}>
           <Typography style={styles.title}>{title}</Typography>
           <button
-            style={{ border: 'none', cursor: 'pointer', background: 'none' }}
+            style={{ border: 'none', cursor: 'pointer', background: 'none', padding: 0 }}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
           >
