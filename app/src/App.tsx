@@ -18,7 +18,6 @@ import ENSProvider from './ENSProvider';
 import WalletProvider from './WalletProvider';
 import { VIEW_STEPS } from './constants';
 import AboutScreen from './screens/AboutScreen';
-import ErrorScreen from './screens/ErrorScreen';
 import MainScreen from './screens/MainScreen';
 import SuccessScreen from './screens/SuccessScreen';
 import AccountModal from './views/AccountModal';
@@ -86,7 +85,7 @@ function Navigation() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          title: 'davatar',
+          title: 'Davatar',
         }}
       >
         <Stack.Group
@@ -96,7 +95,6 @@ function Navigation() {
         >
           <Stack.Screen name={VIEW_STEPS.CONNECT} component={MainScreen} />
           <Stack.Screen name={VIEW_STEPS.ABOUT} component={AboutScreen} />
-          <Stack.Screen name={VIEW_STEPS.ERROR} component={ErrorScreen} />
           <Stack.Screen name={VIEW_STEPS.SUCCESS_SCREEN} component={SuccessScreen} />
         </Stack.Group>
         <Stack.Group

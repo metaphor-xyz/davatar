@@ -6,7 +6,6 @@ import pixelLogo from '../assets/logo.png';
 import { spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
 import ConnectWalletButton from './ConnectWalletButton';
-import MoreButton from './MoreButton';
 import Typography from './Typography';
 
 export default function TopNav() {
@@ -27,11 +26,8 @@ export default function TopNav() {
           </View>
         </View>
 
-        <View style={styles.buttonsContainers}>
-          <View style={styles.rightPadding}>
-            <ConnectWalletButton />
-          </View>
-          <MoreButton />
+        <View style={styles.rightPadding}>
+          <ConnectWalletButton />
         </View>
       </View>
     </View>
@@ -45,7 +41,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f8fe',
     width: '100%',
     height: '74px',
     // alignItems: 'center',

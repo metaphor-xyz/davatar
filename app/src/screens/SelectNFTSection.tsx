@@ -1,4 +1,3 @@
-import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
@@ -12,7 +11,6 @@ import { httpsCallable, storageRef, uploadBytes } from '../firebase';
 import useUser from '../useUser';
 import ENSDisplay from '../views/ENSDisplay';
 import Jazzicon from '../views/Jazzicon';
-import MassiveJazzicon from '../views/MassiveJazzicon';
 import PageContainer from '../views/PageContainer';
 import SaveENS from '../views/SaveENS';
 import Typography from '../views/Typography';
@@ -83,10 +81,10 @@ export default function SelectNFTSection() {
       <PageContainer
         backgroundComponent={
           <>
-            <MassiveJazzicon />
+            {/* <MassiveJazzicon />
             <View style={{ position: 'absolute', opacity: 0.6, top: '70px', right: '-32px' }}>
               <FontAwesome5 name="ethereum" size={750} color="white" />
-            </View>
+            </View> */}
           </>
         }
       >

@@ -1,4 +1,3 @@
-import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
@@ -8,11 +7,14 @@ import { useWallet } from '../WalletProvider';
 import { spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
-import MassiveJazzicon from '../views/MassiveJazzicon';
 import PageContainer from '../views/PageContainer';
+import SectionContainer from '../views/SectionContainer';
 import Typography from '../views/Typography';
+import AboutSection from './AboutSection';
 import ConnectSection from './ConnectSection';
+import HowItWorks from './HowItWorks';
 import SelectNFTSection from './SelectNFTSection';
+import TeamSection from './TeamSection';
 
 export default function MainScreen() {
   const isMoWeb = useIsMoWeb();
@@ -34,52 +36,44 @@ export default function MainScreen() {
 
   return (
     <>
-      <PageContainer
-        backgroundComponent={
-          <>
-            <MassiveJazzicon />
-            <View style={{ position: 'absolute', opacity: 0.6, top: '70px', right: '-32px' }}>
-              <FontAwesome5 name="ethereum" size={750} color="white" />
-            </View>
-          </>
-        }
-      >
-        {isMoWeb && (!wallet || !user) && (
-          <View>
-            <Typography fontWeight={600} style={styles.subtitle}>
+      <PageContainer containerNoMaxWidth noBottomPadding>
+        <SectionContainer noTopPadding>
+          {isMoWeb && (
+            <Typography style={styles.header} variant="header" fontWeight={600}>
               davatar
             </Typography>
-            <Typography>One avatar for everything Web3.</Typography>
-          </View>
-        )}
+          )}
+          <Typography style={styles.subtitle}>One avatar for everything Web3</Typography>
 
-        <View>
-          <Typography fontWeight={600} style={styles.subtitle} variant="header">
-            davatar
-          </Typography>
-          <Typography>One avatar for everything Web3.</Typography>
-        </View>
+          <ConnectSection />
+        </SectionContainer>
 
-        <ConnectSection />
+        <SectionContainer noBottomPadding backgroundColor="#5a58eb">
+          <AboutSection />
+        </SectionContainer>
 
-        {wallet && user && <SelectNFTSection />}
+        <SectionContainer noBottomPadding>
+          <HowItWorks />
+        </SectionContainer>
+
+        <SectionContainer backgroundColor="#5a58eb">
+          <TeamSection />
+        </SectionContainer>
       </PageContainer>
-
-      <View style={{ position: 'absolute', bottom: 0, height: '70px' }}>
-        <Typography>SAVE.</Typography>
-      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  header: {
+    color: '#5a58eb',
+    paddingBottom: spacing(2),
+  },
   spaced: {
     paddingTop: spacing(2),
   },
   subtitle: {
-    color: '#5b58eb',
-    paddingTop: spacing(2),
-    paddingBottom: 24,
+    fontSize: 44,
   },
   loaderContainer: {
     paddingTop: spacing(5),
