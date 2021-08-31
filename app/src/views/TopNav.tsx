@@ -26,9 +26,7 @@ export default function TopNav() {
           </View>
         </View>
 
-        <View style={styles.rightPadding}>
-          <ConnectWalletButton />
-        </View>
+        <ConnectWalletButton />
       </View>
     </View>
   );
@@ -56,9 +54,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  rightPadding: {
-    paddingRight: spacing(1),
   },
   buttonsContainers: {
     flexDirection: 'row',

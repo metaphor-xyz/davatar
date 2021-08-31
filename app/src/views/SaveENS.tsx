@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
   centeredSaveButton: {
     alignItems: 'center',
+    paddingRight: 0,
   },
   container: {
     paddingTop: spacing(1),

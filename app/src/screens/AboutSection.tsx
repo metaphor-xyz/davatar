@@ -7,7 +7,7 @@ import Typography from '../views/Typography';
 
 export default function AboutSection() {
   return (
-    <>
+    <View style={styles.outerContainer}>
       <View style={styles.container}>
         <Typography style={styles.header} variant="header">
           Why use davatar?
@@ -38,11 +38,15 @@ export default function AboutSection() {
           </Typography>
         </View>
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
   container: {
     width: 550,
     maxWidth: '100%',
