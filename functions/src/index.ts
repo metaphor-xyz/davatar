@@ -208,15 +208,20 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
       await uploader.uploadChunk();
     }
 
-    await admin.firestore().collection('users').doc(context.auth.uid).update({
-      currentAvatar: avatarId,
-      avatarProtocol: 'arweave',
-      avatarId: transaction.id,
-    });
+    if (process.env.NODE_ENV !== 'production') {
+      await axios.get('http://localhost:1984/mine');
+    }
 
     if (userData.avatarProtocol === 'arweave') {
+      functions.logger.info(transaction.id);
       return { avatarProtocol: userData.avatarProtocol, avatarId: userData.avatarId };
     } else {
+      await admin.firestore().collection('users').doc(context.auth.uid).update({
+        currentAvatar: avatarId,
+        avatarProtocol: 'arweave',
+        avatarId: transaction.id,
+      });
+
       return { avatarProtocol: 'arweave', avatarId: transaction.id };
     }
   } catch (e) {

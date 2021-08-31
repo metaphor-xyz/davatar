@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useCallback, useEffect } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import CustomImagePicker from '../CustomImagePicker';
 import { useENS } from '../ENSProvider';
@@ -9,6 +9,7 @@ import { useWallet } from '../WalletProvider';
 import { spacing, VIEW_STEPS } from '../constants';
 import { httpsCallable, storageRef, uploadBytes } from '../firebase';
 import useUser from '../useUser';
+import Avatar from '../views/Avatar';
 import ENSDisplay from '../views/ENSDisplay';
 import Jazzicon from '../views/Jazzicon';
 import SaveENS from '../views/SaveENS';
@@ -82,7 +83,7 @@ export default function SelectNFTSection() {
       <View style={styles.spaced}>
         <View style={styles.previewContainer}>
           {!avatarPreview && address && <Jazzicon address={address} size={200} style={styles.previewPlaceholder} />}
-          {avatarPreview && <Image style={styles.preview} source={{ uri: avatarPreview }} />}
+          {avatarPreview && <Avatar style={styles.preview} uri={avatarPreview} />}
 
           <ENSDisplay />
 
