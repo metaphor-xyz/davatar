@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { TouchableOpacity, StyleSheet, Animated, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
-import ExpandingRing from './ExpandingRing';
+// import ExpandingRing from './ExpandingRing';
 import Typography from './Typography';
 
 export interface Props {
@@ -51,7 +51,7 @@ export default function AnimatedButton({ title, onPress, disabled, loading }: Pr
 
   return (
     <View style={styles.outerContainer}>
-      {!disabled && <ExpandingRing />}
+      {/* {!disabled && <ExpandingRing />} */}
 
       <button
         style={{ border: 'none', cursor: disabled ? 'default' : 'pointer', background: 'none', padding: 0 }}

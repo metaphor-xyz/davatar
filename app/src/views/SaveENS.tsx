@@ -71,7 +71,7 @@ export default function SaveENS({ loading, disabled, onSave, preview }: Props) {
 const styles = StyleSheet.create({
   saveButton: {
     alignItems: 'flex-end',
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f8fe',
     width: '100%',
     paddingRight: 16,
   },
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing(1),
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f8fe',
   },
   messageContainer: {
     paddingTop: 16,
