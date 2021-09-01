@@ -13,28 +13,33 @@ export default function HowItWorks() {
         </Typography>
 
         <View style={styles.valuePropContainerFirst}>
+          <Typography style={styles.textIcon}>
+            <span style={{ fontWeight: 600 }}>☝️</span>
+          </Typography>
+          <Typography style={styles.text}>Connect your wallet 🔌</Typography>
+        </View>
+
+        <View style={styles.valuePropContainer}>
+          <Typography style={styles.textIcon}>
+            <span style={{ fontWeight: 600 }}>✌️</span>
+          </Typography>
+          <Typography style={styles.text}>Select your new look (NFT or upload a photo) 🎨</Typography>
+        </View>
+
+        <View style={styles.valuePropContainer}>
+          <Typography style={styles.textIcon}>
+            <span style={{ fontWeight: 600 }}>🖖</span>
+          </Typography>
           <Typography style={styles.text}>
-            <span style={{ fontWeight: 600 }}>☝️</span> Connect your wallet 🔌
+            Click Save, pay the one-time gas fee, and watch your ENS profile photo update everywhere 💫
           </Typography>
         </View>
 
         <View style={styles.valuePropContainer}>
-          <Typography style={styles.text}>
-            <span style={{ fontWeight: 600 }}>✌️</span> Select your new look (NFT or upload a photo) 🎨
+          <Typography style={styles.textIcon}>
+            <span style={{ fontWeight: 600 }}>👋 </span>
           </Typography>
-        </View>
-
-        <View style={styles.valuePropContainer}>
-          <Typography style={styles.text}>
-            <span style={{ fontWeight: 600 }}>🖖</span> Click Save, pay the one-time gas fee, and watch your ENS profile
-            photo update everywhere 💫
-          </Typography>
-        </View>
-
-        <View style={styles.valuePropContainer}>
-          <Typography style={styles.text}>
-            <span style={{ fontWeight: 600 }}>👋 </span>Come back anytime! All updates are gasless! 💅
-          </Typography>
+          <Typography style={styles.text}>Come back anytime! All updates are gasless! 💅</Typography>
         </View>
       </View>
     </View>
@@ -81,19 +86,29 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 12,
   },
+  textIcon: {
+    marginRight: 8,
+    marginLeft: 4,
+    fontSize: 18,
+    // paddingTop: 2,
+  },
   text: {
     fontSize: 18,
     // paddingTop: 2,
   },
   valuePropContainer: {
     textAlign: 'left',
-    marginTop: 32,
+    // marginTop: 32,
     width: '100%',
+    padding: 16,
+    flexDirection: 'row',
   },
   valuePropContainerFirst: {
+    padding: 16,
     textAlign: 'left',
     marginTop: 24,
     width: '100%',
+    flexDirection: 'row',
   },
   meetTeamContainer: {
     padding: 16,

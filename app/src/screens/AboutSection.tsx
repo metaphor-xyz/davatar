@@ -30,7 +30,7 @@ export default function AboutSection() {
         </View>
 
         <View style={styles.valuePropContainer}>
-          <Fontisto style={styles.icon} name="dollar" size={24} color="white" />
+          <Fontisto style={styles.iconLast} name="dollar" size={24} color="white" />
           <Typography style={styles.text}>
             <span style={{ fontWeight: 600 }}>One-time gas fee, unlimited updates.</span> ENS requires a gas fee for
             each update to your profile photo. Davatar solves this with IPFS. Pay once then all subsequent updates are
@@ -81,8 +81,11 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 12,
   },
+  iconLast: {
+    marginRight: 12,
+    marginLeft: 6,
+  },
   text: {
-    // paddingTop: 2,]
     color: '#fff',
   },
   valuePropContainer: {
