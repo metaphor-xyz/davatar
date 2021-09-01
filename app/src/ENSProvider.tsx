@@ -23,18 +23,12 @@ const ENSContext = createContext<Context>(null!);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ENSProvider({ children }: React.PropsWithChildren<Record<string, any>>) {
-  const { wallet, address, loadingWallet } = useWallet();
+  const { wallet, address } = useWallet();
   const [name, setName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [connected, setConnected] = useState(false);
   const { user } = useUser();
   const [pendingTransaction, setPendingTransaction] = useState<Transaction | null>(null);
-
-  useEffect(() => {
-    if (loadingWallet) {
-      setLoading(true);
-    }
-  }, [loadingWallet]);
 
   useEffect(() => {
     if (wallet) {
