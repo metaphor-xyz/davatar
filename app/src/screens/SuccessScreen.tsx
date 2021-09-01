@@ -1,11 +1,11 @@
 import { FontAwesome5 } from '@expo/vector-icons';
-import React from 'react';
-import { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, Image, Platform, Linking } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
 import { useENS } from '../ENSProvider';
 import { spacing } from '../constants';
+import { httpsCallable } from '../firebase';
 import useUser from '../useUser';
 import BackRow from '../views/BackRow';
 import Button from '../views/Button';
@@ -15,6 +15,7 @@ import Typography from '../views/Typography';
 export default function SuccessScreen() {
   const { name, loading: loadingENS } = useENS();
   const { loading, user } = useUser();
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const onJoinDiscord = useCallback(async () => {
     const url = 'https://discord.gg/DRWXxhcn58';
@@ -40,6 +41,11 @@ export default function SuccessScreen() {
     }
   }, [name]);
 
+  const onFeature = useCallback(() => {
+    httpsCallable('featureAvatar')();
+    setIsFeatured(true);
+  }, []);
+
   if (loading || loadingENS)
     return (
       <PageContainer>
@@ -57,6 +63,13 @@ export default function SuccessScreen() {
         <Typography variant="header">Looking good!</Typography>
 
         {user?.avatarPreviewURL && <Image style={styles.avatar} source={{ uri: user.avatarPreviewURL }} />}
+      </View>
+
+      <View style={styles.container}>
+        <Typography style={styles.spaced}>Can we feature your davatar on the front page?</Typography>
+        <View style={styles.spaced}>
+          <Button title="Feature my davatar" onPress={onFeature} disabled={isFeatured} />
+        </View>
       </View>
 
       <View style={styles.container}>
