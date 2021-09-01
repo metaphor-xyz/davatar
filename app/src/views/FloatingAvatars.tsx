@@ -36,7 +36,7 @@ function FloatingAvatar({ x, y, r, uri }: FloatingAvatarProps) {
           useNativeDriver: true,
         }),
       ])
-    ).start();
+    ); //.start();
   }, [ay, r, y]);
 
   return (
