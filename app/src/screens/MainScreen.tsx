@@ -7,6 +7,7 @@ import { useWallet } from '../WalletProvider';
 import { spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
+import FloatingAvatars from '../views/FloatingAvatars';
 import PageContainer from '../views/PageContainer';
 import SectionContainer from '../views/SectionContainer';
 import Typography from '../views/Typography';
@@ -36,8 +37,8 @@ export default function MainScreen() {
 
   return (
     <>
-      <PageContainer containerNoMaxWidth noBottomPadding>
-        <SectionContainer noTopPadding>
+      <PageContainer containerNoMaxWidth noBottomPadding backgroundComponent={<FloatingAvatars />}>
+        <SectionContainer noTopPadding backgroundColor={'unset'}>
           {isMoWeb && (
             <Typography style={styles.header} variant="header" fontWeight={600}>
               davatar
