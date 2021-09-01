@@ -213,7 +213,14 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
     }
 
     if (userData.avatarProtocol === 'ar') {
-      functions.logger.info(transaction.id);
+      await admin.firestore().collection('users').doc(context.auth.uid).update({
+        currentAvatar: avatarId,
+      });
+
+      if (userData.twitterConnected) {
+        await updateTwitterAvatar(context.auth.uid);
+      }
+
       return { avatarProtocol: userData.avatarProtocol, avatarId: userData.avatarId };
     } else {
       await admin.firestore().collection('users').doc(context.auth.uid).update({
@@ -221,6 +228,10 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
         avatarProtocol: 'ar',
         avatarId: transaction.id,
       });
+
+      if (userData.twitterConnected) {
+        await updateTwitterAvatar(context.auth.uid);
+      }
 
       return { avatarProtocol: 'ar', avatarId: transaction.id };
     }
@@ -418,7 +429,7 @@ export const connectTwitter = functions.https.onCall(async (data, context) => {
 
     const profile = await twitter.get('account/verify_credentials');
 
-    await admin.firestore().collection('users').doc(`${context.auth.uid}/private`).set(
+    await admin.firestore().collection('users').doc(`${context.auth.uid}/private/twitter`).set(
       {
         twitterHandle: profile.screen_name,
         twitterAccessToken: response.oauth_token,
@@ -449,19 +460,25 @@ export const connectTwitter = functions.https.onCall(async (data, context) => {
 });
 
 const updateTwitterAvatar = async (userId: string) => {
-  const user = await admin.firestore().collection('users').doc(`${userId}/private`).get();
+  const user = await admin.firestore().collection('users').doc(userId).get();
+  const privateUser = await admin.firestore().collection('users').doc(`${userId}/private/twitter`).get();
 
   const userData = user.data();
+  const privateData = privateUser.data();
 
   if (!user.exists || !userData) {
     throw new Error('could not find user');
+  }
+
+  if (!privateUser.exists || !privateData) {
+    throw new Error('twitter not connected for user');
   }
 
   if (!userData.currentAvatar) {
     throw new Error('no avatar set');
   }
 
-  if (!userData.twitterAccessToken) {
+  if (!privateData.twitterAccessToken) {
     throw new Error('twitter not connected');
   }
 
@@ -474,7 +491,7 @@ const updateTwitterAvatar = async (userId: string) => {
     throw new Error('avatar not uploaded');
   }
 
-  const imageData = await new Promise<string>((resolve, reject) => {
+  const imageData = await new Promise<Buffer>((resolve, reject) => {
     const stream = admin
       .storage()
       .bucket()
@@ -483,21 +500,21 @@ const updateTwitterAvatar = async (userId: string) => {
         validation: process.env.NODE_ENV === 'production',
       });
 
-    let data = '';
+    const buffer: Uint8Array[] = [];
 
-    stream.on('data', chunk => (data += chunk));
+    stream.on('data', chunk => buffer.push(chunk));
     stream.on('error', e => reject(e));
-    stream.on('end', () => resolve(data));
+    stream.on('end', () => resolve(Buffer.concat(buffer)));
   });
 
-  const image = Buffer.from(imageData).toString('base64');
+  const image = imageData.toString('base64');
 
   const twitter = new Twitter({
     consumer_key: TWITTER_CONSUMER_KEY,
     consumer_secret: TWITTER_CONSUMER_SECRET,
-    access_token_key: userData.twitterAccessToken,
-    access_token_secret: userData.twitterAccessTokenSecret,
+    access_token_key: privateData.twitterAccessToken,
+    access_token_secret: privateData.twitterAccessTokenSecret,
   });
 
-  await twitter.post('account/update_profile_image', { image });
+  await twitter.post('account/update_profile_image', { image, include_entities: true, skip_status: true });
 };

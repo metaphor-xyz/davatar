@@ -7,7 +7,11 @@ import { httpsCallable } from '../firebase';
 import useUser from '../useUser';
 import Button from './Button';
 
-export default function ConnectTwitter() {
+export interface Props {
+  onComplete: () => void;
+}
+
+export default function ConnectTwitter({ onComplete }: Props) {
   const [connected, setConnected] = useState(false);
   const { user } = useUser();
 
@@ -39,7 +43,9 @@ export default function ConnectTwitter() {
       oauthTokenSecret: requestData.oauth_token_secret,
       oauthVerifier: response.params.oauth_verifier,
     });
-  }, []);
+
+    onComplete();
+  }, [onComplete]);
 
   return (
     <View style={styles.container}>

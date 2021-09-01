@@ -63,7 +63,8 @@ export const onAuthStateChanged = (nextOrObserver: NextOrObserver<User>) =>
 export { UserInfo } from 'firebase/auth';
 export { uploadBytes, getDownloadURL } from 'firebase/storage';
 export const collection = (name: string) => firestoreCollection(Firebase.firestore, name);
-export const doc = (path: string) => getDoc(firestoreDoc(Firebase.firestore, path));
+export const doc = (path: string, segments?: string[]) =>
+  getDoc(firestoreDoc(Firebase.firestore, path, ...(segments || [])));
 export const snapshot = <T>(
   collectionName: string,
   path: string,
