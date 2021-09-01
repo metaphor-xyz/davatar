@@ -28,22 +28,31 @@ export default function UserProvider({ children }: React.PropsWithChildren<Recor
   useEffect(() => {
     return onAuthStateChanged(u => {
       setAuthUser(u);
+
+      if (!u) {
+        setLoading(false);
+      }
     });
   }, []);
 
   useEffect(() => {
     if (authUser) {
-      return snapshot('users', authUser.uid, async doc => {
-        const data = doc.data() as User;
+      return snapshot(
+        'users',
+        authUser.uid,
+        async doc => {
+          const data = doc.data() as User;
 
-        if (data.currentAvatar) {
-          const url = await getDownloadURL(storageRef(`${authUser.uid}/${data.currentAvatar}`));
-          data.avatarPreviewURL = url;
-        }
+          if (data.currentAvatar) {
+            const url = await getDownloadURL(storageRef(`${authUser.uid}/${data.currentAvatar}`));
+            data.avatarPreviewURL = url;
+          }
 
-        setUser(data);
-        setLoading(false);
-      });
+          setUser(data);
+          setLoading(false);
+        },
+        () => setLoading(false)
+      );
     }
   }, [authUser]);
 

@@ -20,6 +20,7 @@ import {
   query,
   limit,
   getDocs,
+  FirestoreError,
 } from 'firebase/firestore';
 import { getFunctions, connectFunctionsEmulator, httpsCallable as callable } from 'firebase/functions';
 import { getStorage, connectStorageEmulator, ref } from 'firebase/storage';
@@ -63,8 +64,13 @@ export { UserInfo } from 'firebase/auth';
 export { uploadBytes, getDownloadURL } from 'firebase/storage';
 export const collection = (name: string) => firestoreCollection(Firebase.firestore, name);
 export const doc = (path: string) => getDoc(firestoreDoc(Firebase.firestore, path));
-export const snapshot = <T>(collectionName: string, path: string, next: (_snap: DocumentSnapshot<T>) => void) =>
+export const snapshot = <T>(
+  collectionName: string,
+  path: string,
+  next: (_snap: DocumentSnapshot<T>) => void,
+  error?: (_e: FirestoreError) => void
+) =>
   // @ts-ignore
   // carlos: this complains about an overload that definitely exists...
-  onSnapshot(firestoreDoc(Firebase.firestore, collectionName, path), { next });
+  onSnapshot(firestoreDoc(Firebase.firestore, collectionName, path), { next, error });
 export const docs = (coll: string) => getDocs(query(firestoreCollection(Firebase.firestore, coll), limit(20)));
