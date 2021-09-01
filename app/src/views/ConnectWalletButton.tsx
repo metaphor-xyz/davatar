@@ -13,15 +13,15 @@ import Jazzicon from './Jazzicon';
 export default function ConnectWalletButton() {
   // eslint-disable-next-line
   const navigation: any = useNavigation();
-  const { address } = useWallet();
-  const { user } = useUser();
-  const { name } = useENS();
+  const { address, loadingWallet } = useWallet();
+  const { user, loading: loadingUser } = useUser();
+  const { name, loading: loadingENS } = useENS();
 
   const onPress = useCallback(() => {
     navigation.navigate(VIEW_STEPS.CONNECT_WALLET_MODAL);
   }, [navigation]);
 
-  if (!address || !user) return null;
+  if (!address || !user || loadingWallet || loadingENS || loadingUser) return null;
 
   // TODO : ELLIPSIS WHE
   const slicedAddress = sliceWalletAddress(address);

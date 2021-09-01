@@ -86,7 +86,12 @@ export default function SelectNFTSection() {
         <Typography style={[styles.subtitle, isMoWeb && styles.subtitleXS]}>Choose your new look!</Typography>
 
         <View style={[styles.previewContainer, styles.previewContainerXS]}>
-          <Avatar address={address} size={200} style={styles.preview} uri={avatarPreview} />
+          <Avatar
+            address={address}
+            size={200}
+            style={isMoWeb ? styles.previewXS : styles.preview}
+            uri={avatarPreview}
+          />
 
           <ENSDisplay />
 
@@ -140,6 +145,12 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 200,
+  },
+  previewXS: {
+    flex: 1,
+    width: 150,
+    height: 150,
+    borderRadius: 150,
   },
   previewPlaceholder: {
     width: 200,

@@ -1,6 +1,7 @@
+import { FontAwesome5 } from '@expo/vector-icons';
 import { makeRedirectUri, startAsync } from 'expo-auth-session';
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 
 import { httpsCallable } from '../firebase';
 import useUser from '../useUser';
@@ -42,7 +43,14 @@ export default function ConnectTwitter() {
 
   return (
     <View style={styles.container}>
-      <Button disabled={connected} title="Connect Twitter" onPress={login} />
+      {user?.avatarPreviewURL && <Image style={styles.avatar} source={{ uri: user.avatarPreviewURL }} />}
+
+      <Button
+        disabled={connected}
+        title="Connect Twitter"
+        onPress={login}
+        preTextComponent={<FontAwesome5 style={{ marginRight: 8 }} name="twitter" size={24} color="white" />}
+      />
     </View>
   );
 }
@@ -52,5 +60,12 @@ const styles = StyleSheet.create({
     display: 'flex',
     width: '400px',
     alignItems: 'center',
+  },
+  avatar: {
+    flex: 1,
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    marginBottom: 24,
   },
 });

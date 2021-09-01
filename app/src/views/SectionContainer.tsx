@@ -5,10 +5,11 @@ import useIsMoWeb from '../useIsMoWeb';
 
 type Props = {
   noTopPadding?: boolean;
+  noBottomPadding?: boolean;
   backgroundColor?: string;
 } & React.PropsWithChildren<Record<string, unknown>>;
 
-export default function SectionContainer({ children, backgroundColor, noTopPadding }: Props) {
+export default function SectionContainer({ children, backgroundColor, noTopPadding, noBottomPadding }: Props) {
   const isMoWeb = useIsMoWeb();
 
   return (
@@ -18,6 +19,7 @@ export default function SectionContainer({ children, backgroundColor, noTopPaddi
         isMoWeb && styles.outerContainerXS,
         { backgroundColor: backgroundColor || '#f8f8fe' },
         noTopPadding && { paddingTop: 0 },
+        noBottomPadding && { paddingBottom: 0 },
       ]}
     >
       <View style={[styles.container, isMoWeb && styles.containerXS]}>{children}</View>

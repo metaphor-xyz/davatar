@@ -28,7 +28,7 @@ export default function ConnectSocialsModal() {
 
 const styles = StyleSheet.create({
   spaced: {
-    paddingTop: spacing(2),
+    paddingTop: spacing(3),
   },
   doneButton: {
     alignSelf: 'flex-end',

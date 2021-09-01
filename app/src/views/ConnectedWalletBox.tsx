@@ -38,7 +38,9 @@ export default function ConnectedWalletBox({ onDisconnect }: Props) {
       <View style={[styles.addressContainer, isMoWeb && styles.addressContainerXS]}>
         <View>
           <Typography style={styles.providerText}>
-            <>Connected with {walletName}</>
+            <>
+              Connected with <span style={{ fontWeight: 600 }}>{walletName}</span>
+            </>
           </Typography>
           <View style={styles.avatarAndAccountText}>
             {user?.avatarPreviewURL ? (
