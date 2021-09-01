@@ -1,3 +1,4 @@
+import { getAnalytics } from 'firebase/analytics';
 import { initializeApp } from 'firebase/app';
 import {
   getAuth,
@@ -42,6 +43,7 @@ export namespace Firebase {
   export const auth = getAuth(app);
   export const storage = getStorage(app);
   export const firestore = getFirestore(app);
+  export const analytics = getAnalytics(app);
 
   if (process.env.NODE_ENV === 'development') {
     connectFunctionsEmulator(functions, 'localhost', 5002);
