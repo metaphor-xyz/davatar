@@ -14,6 +14,7 @@ export interface Props {
 export default function ConnectTwitter({ onComplete }: Props) {
   const [connected, setConnected] = useState(false);
   const { user } = useUser();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -26,25 +27,32 @@ export default function ConnectTwitter({ onComplete }: Props) {
   }, [user]);
 
   const login = useCallback(async () => {
-    const request = await httpsCallable('requestTwitterToken')({ redirectUri: makeRedirectUri({ scheme: 'davatar' }) });
+    try {
+      setLoading(true);
+      const request = await httpsCallable('requestTwitterToken')({
+        redirectUri: makeRedirectUri({ scheme: 'davatar' }),
+      });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const requestData = request.data as any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const requestData = request.data as any;
 
-    const authUrl = `https://api.twitter.com/oauth/authenticate?${new URLSearchParams(requestData).toString()}`;
-    const response = await startAsync({ authUrl, returnUrl: makeRedirectUri({ scheme: 'davatar' }) });
+      const authUrl = `https://api.twitter.com/oauth/authenticate?${new URLSearchParams(requestData).toString()}`;
+      const response = await startAsync({ authUrl, returnUrl: makeRedirectUri({ scheme: 'davatar' }) });
 
-    if (response.type !== 'success') {
-      throw new Error('user denied authentication');
+      if (response.type !== 'success') {
+        throw new Error('user denied authentication');
+      }
+
+      await httpsCallable('connectTwitter')({
+        oauthToken: requestData.oauth_token,
+        oauthTokenSecret: requestData.oauth_token_secret,
+        oauthVerifier: response.params.oauth_verifier,
+      });
+
+      onComplete();
+    } finally {
+      setLoading(false);
     }
-
-    await httpsCallable('connectTwitter')({
-      oauthToken: requestData.oauth_token,
-      oauthTokenSecret: requestData.oauth_token_secret,
-      oauthVerifier: response.params.oauth_verifier,
-    });
-
-    onComplete();
   }, [onComplete]);
 
   return (
@@ -56,6 +64,7 @@ export default function ConnectTwitter({ onComplete }: Props) {
         title="Connect Twitter"
         onPress={login}
         preTextComponent={<FontAwesome5 style={{ marginRight: 8 }} name="twitter" size={24} color="white" />}
+        loading={loading}
       />
     </View>
   );
