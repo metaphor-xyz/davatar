@@ -12,7 +12,6 @@ import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
 import Avatar from '../views/Avatar';
 import ENSDisplay from '../views/ENSDisplay';
-import Jazzicon from '../views/Jazzicon';
 import PageContainer from '../views/PageContainer';
 import SaveENS from '../views/SaveENS';
 import Typography from '../views/Typography';
@@ -87,14 +86,12 @@ export default function SelectNFTSection() {
         <Typography style={[styles.subtitle, isMoWeb && styles.subtitleXS]}>Choose your new look!</Typography>
 
         <View style={[styles.previewContainer, styles.previewContainerXS]}>
-          {!avatarPreview && address && (
-            <Jazzicon
-              address={address}
-              size={200}
-              style={isMoWeb ? styles.previewPlaceholderXS : styles.previewPlaceholder}
-            />
-          )}
-          {avatarPreview && <Avatar style={isMoWeb ? styles.previewXS : styles.preview} uri={avatarPreview} />}
+          <Avatar
+            address={address}
+            size={200}
+            style={isMoWeb ? styles.previewXS : styles.preview}
+            uri={avatarPreview}
+          />
 
           <ENSDisplay />
 
@@ -147,13 +144,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 200,
     height: 200,
-    borderRadius: 100,
+    borderRadius: 200,
   },
   previewXS: {
     flex: 1,
     width: 150,
     height: 150,
-    borderRadius: 100,
+    borderRadius: 150,
   },
   previewPlaceholder: {
     width: 200,
