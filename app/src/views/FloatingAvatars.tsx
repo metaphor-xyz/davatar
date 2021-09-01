@@ -4,6 +4,7 @@ import { View, LayoutChangeEvent, StyleSheet, Animated } from 'react-native';
 import { OpenSeaNFT } from '../WalletProvider';
 import { docs, storageRef, getDownloadURL } from '../firebase';
 import Avatar from './Avatar';
+import Typography from './Typography';
 
 const dist = (x1: number, y1: number, x2: number, y2: number): number => {
   return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
@@ -14,9 +15,10 @@ interface FloatingAvatarProps {
   y: number;
   r: number;
   uri: string;
+  name?: string;
 }
 
-function FloatingAvatar({ x, y, r, uri }: FloatingAvatarProps) {
+function FloatingAvatar({ x, y, r, uri, name }: FloatingAvatarProps) {
   const ax = useRef(new Animated.Value(x - r)).current;
   const ay = useRef(new Animated.Value(y - r)).current;
 
@@ -40,34 +42,66 @@ function FloatingAvatar({ x, y, r, uri }: FloatingAvatarProps) {
   }, [ay, r, y]);
 
   return (
-    <Animated.View style={{ left: ax, top: ay }}>
-      <Avatar style={[styles.circle, { height: r * 2, width: r * 2, borderRadius: r * 2 }]} uri={uri} />
+    <Animated.View style={[styles.circleContainer, { left: ax, top: ay, height: r * 2 + 10 }]}>
+      <Avatar
+        size={r * 2}
+        style={[styles.circle, { top: 0, left: 0, height: r * 2, width: r * 2, borderRadius: r * 2 }]}
+        uri={uri}
+      />
+      {name && <Typography style={styles.circleText}>{name}</Typography>}
     </Animated.View>
   );
 }
 
+const NUM_AVATARS = 15;
+const collections = ['boredapeyachtclub', 'meebits', 'pudgypenguins', 'myfuckingpickle'];
+
+const getRandomAvatars = async (count: number): Promise<{ url: string }[]> => {
+  const breakdown: number[] = [];
+  let total = 0;
+  let currentIndex = 0;
+
+  while (total < count) {
+    const portion = Math.ceil(Math.random() * (NUM_AVATARS / 2));
+
+    breakdown[currentIndex] = portion;
+    total += portion;
+    currentIndex = (currentIndex + 1) % collections.length;
+  }
+
+  const avatarCollections = await Promise.all(
+    collections.map((c, i) =>
+      fetch(`https://api.opensea.io/api/v1/assets?order_direction=desc&limit=${breakdown[i]}&collection=${c}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.assets) {
+            return data.assets.map((n: OpenSeaNFT) => ({ url: n.image_thumbnail_url }));
+          } else {
+            return [];
+          }
+        })
+    )
+  );
+
+  return avatarCollections.flat();
+};
+
 export default function FloatingAvatars() {
   const [avatars, setAvatars] = useState<ReactElement[]>([]);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<{ name?: string; url: string }[]>([]);
   const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
 
   useEffect(() => {
     docs('featured').then(featured => {
-      Promise.all(featured.docs.map(d => getDownloadURL(storageRef(d.data().key)))).then(featuredUrls => {
-        if (featuredUrls.length < 10) {
-          fetch(
-            `https://api.opensea.io/api/v1/assets?order_direction=desc&limit=${
-              10 - featured.size
-            }&collection=boredapeyachtclub`
-          )
-            .then(res => res.json())
-            .then(data => {
-              if (data && data.assets) {
-                setImages([...featuredUrls, ...data.assets.map((n: OpenSeaNFT) => n.image_thumbnail_url)]);
-              }
-            });
+      Promise.all(
+        featured.docs.map(d => getDownloadURL(storageRef(d.data().key)).then(url => ({ name: d.data().ethName, url })))
+      ).then(feat => {
+        if (feat.length < NUM_AVATARS) {
+          getRandomAvatars(NUM_AVATARS - feat.length).then(collectionAvatars => {
+            setImages([...feat, ...collectionAvatars]);
+          });
         } else {
-          setImages(featuredUrls);
+          setImages(feat);
         }
       });
     });
@@ -84,7 +118,7 @@ export default function FloatingAvatars() {
     }
 
     const circles = [];
-    const numCircles = 15;
+    const numCircles = NUM_AVATARS;
     const max = 10000;
     let counter = 0;
     const radius = 30;
@@ -121,7 +155,13 @@ export default function FloatingAvatars() {
       counter++;
     }
 
-    setAvatars(circles.map((c, i) => <FloatingAvatar key={i} x={c.x} y={c.y} r={c.r} uri={images[i]} />));
+    if (images.length >= circles.length) {
+      setAvatars(
+        circles.map((c, i) => (
+          <FloatingAvatar key={i} x={c.x} y={c.y} r={c.r} uri={images[i].url} name={images[i].name} />
+        ))
+      );
+    }
   }, [images, dimensions, avatars]);
 
   return (
@@ -138,8 +178,16 @@ const styles = StyleSheet.create({
     width: '100%',
     top: '220px',
   },
-  circle: {
+  circleContainer: {
     position: 'absolute',
+  },
+  circle: {
     backgroundColor: '#000',
+  },
+  circleText: {
+    marginTop: 3,
+    fontSize: 10,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });

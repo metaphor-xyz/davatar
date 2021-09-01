@@ -42,9 +42,9 @@ export default function SuccessScreen() {
   }, [name]);
 
   const onFeature = useCallback(() => {
-    httpsCallable('featureAvatar')();
+    httpsCallable('featureAvatar')({ ethName: name });
     setIsFeatured(true);
-  }, []);
+  }, [name]);
 
   if (loading || loadingENS)
     return (

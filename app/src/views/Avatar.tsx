@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Image, ImageStyle } from 'react-native';
 
+import Jazzicon from './Jazzicon';
+
 export interface Props {
-  uri: string;
+  uri?: string | null;
+  address?: string | null;
+  size: number;
   style?: ImageStyle | ImageStyle[] | null;
 }
 
-export default function Avatar({ uri, style }: Props) {
+export default function Avatar({ uri, style, size, address }: Props) {
   const [url, setUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!uri) {
+      return;
+    }
+
     const match = new RegExp(/([a-z]+):\/\/(.*)/).exec(uri);
     if (match && match.length === 3) {
       const protocol = match[1];
@@ -90,7 +98,11 @@ export default function Avatar({ uri, style }: Props) {
   }, [uri]);
 
   if (!url) {
-    return null;
+    if (address) {
+      return <Jazzicon address={address} size={size} />;
+    } else {
+      return null;
+    }
   }
 
   return <Image style={style} source={{ uri: url }} />;

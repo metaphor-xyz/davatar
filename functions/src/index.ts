@@ -230,7 +230,7 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
   }
 });
 
-export const featureAvatar = functions.https.onCall(async (_data, context) => {
+export const featureAvatar = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new Error('not logged in');
   }
@@ -246,7 +246,11 @@ export const featureAvatar = functions.https.onCall(async (_data, context) => {
   const featureKey = userData.currentAvatar ? `${context.auth.uid}/${userData.currentAvatar}` : undefined;
 
   if (featureKey) {
-    await admin.firestore().collection('featured').doc(context.auth.uid).set({ key: featureKey });
+    await admin
+      .firestore()
+      .collection('featured')
+      .doc(context.auth.uid)
+      .set({ key: featureKey, ethName: data.ethName });
   }
 
   return true;
