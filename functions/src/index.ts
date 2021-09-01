@@ -212,17 +212,17 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
       await axios.get('http://localhost:1984/mine');
     }
 
-    if (userData.avatarProtocol === 'arweave') {
+    if (userData.avatarProtocol === 'ar') {
       functions.logger.info(transaction.id);
       return { avatarProtocol: userData.avatarProtocol, avatarId: userData.avatarId };
     } else {
       await admin.firestore().collection('users').doc(context.auth.uid).update({
         currentAvatar: avatarId,
-        avatarProtocol: 'arweave',
+        avatarProtocol: 'ar',
         avatarId: transaction.id,
       });
 
-      return { avatarProtocol: 'arweave', avatarId: transaction.id };
+      return { avatarProtocol: 'ar', avatarId: transaction.id };
     }
   } catch (e) {
     functions.logger.error(e, { structuredData: true });

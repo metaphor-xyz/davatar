@@ -16,7 +16,7 @@ export default function Avatar({ uri, style }: Props) {
       const id = match[2];
 
       switch (protocol) {
-        case 'arweave': {
+        case 'ar': {
           const baseUrl = process.env.NODE_ENV === 'production' ? 'https://arweave.net' : 'https://localhost:1984';
 
           fetch(`${baseUrl}/graphql`, {

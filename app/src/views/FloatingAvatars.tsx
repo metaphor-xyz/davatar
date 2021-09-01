@@ -89,9 +89,8 @@ export default function FloatingAvatars() {
     let counter = 0;
     const radius = 30;
     const padding = 20;
-    const centerPadding = 300;
-    const centerX = dimensions.width / 2;
-    const centerY = dimensions.height / 2;
+    const leftX = dimensions.width / 3 - 50;
+    const rightX = (dimensions.width / 3) * 2 + 50;
 
     while (circles.length < numCircles && counter < max) {
       const circle = {
@@ -106,8 +105,7 @@ export default function FloatingAvatars() {
       for (let i = 0; i < circles.length; i++) {
         const existing = circles[i];
         const d = dist(circle.x, circle.y, existing.x, existing.y);
-        const dCenter = dist(circle.x, circle.y, centerX, centerY);
-        if (d < circle.r + existing.r + padding || dCenter < centerPadding) {
+        if (d < circle.r + existing.r + padding || (circle.x > leftX && circle.x < rightX)) {
           // They are overlapping
           overlapping = true;
           // do not add to array
@@ -138,7 +136,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: '100px',
     width: '100%',
-    top: '200px',
+    top: '220px',
   },
   circle: {
     position: 'absolute',
