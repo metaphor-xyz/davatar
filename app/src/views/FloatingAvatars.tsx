@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState, ReactElement } from 'react';
 import { View, LayoutChangeEvent, StyleSheet } from 'react-native';
 
-import { OpenSeaNFT } from '../WalletProvider';
+import defaultAvatars from '../defaultAvatars';
 import { docs, storageRef, getDownloadURL } from '../firebase';
 import useIsMoWeb from '../useIsMoWeb';
 import Avatar from './Avatar';
@@ -68,9 +68,14 @@ function NotFloatingAvatar({ x, y, r, uri, name }: FloatingAvatarProps) {
 // }
 
 const NUM_AVATARS = 40;
-const collections = ['boredapeyachtclub', 'meebits', 'pudgypenguins', 'myfuckingpickle'];
+const collections: (keyof typeof defaultAvatars)[] = [
+  'boredapeyachtclub',
+  'meebits',
+  'pudgypenguins',
+  'myfuckingpickle',
+];
 
-const getRandomAvatars = async (count: number): Promise<{ url: string }[]> => {
+const getRandomAvatars = (count: number): { url: string }[] => {
   const breakdown: number[] = [];
   let total = 0;
   let currentIndex = 0;
@@ -78,24 +83,12 @@ const getRandomAvatars = async (count: number): Promise<{ url: string }[]> => {
   while (total < count) {
     const portion = Math.ceil(Math.random() * (NUM_AVATARS / 2));
 
-    breakdown[currentIndex] = portion;
+    breakdown[currentIndex] = breakdown[currentIndex] ? breakdown[currentIndex] + portion : portion;
     total += portion;
     currentIndex = (currentIndex + 1) % collections.length;
   }
 
-  const avatarCollections = await Promise.all(
-    collections.map((c, i) =>
-      fetch(`https://api.opensea.io/api/v1/assets?order_direction=desc&limit=${breakdown[i]}&collection=${c}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.assets) {
-            return data.assets.map((n: OpenSeaNFT) => ({ url: n.image_thumbnail_url }));
-          } else {
-            return [];
-          }
-        })
-    )
-  );
+  const avatarCollections = collections.map((c, i) => defaultAvatars[c].slice(0, breakdown[i]).map(u => ({ url: u })));
 
   return avatarCollections.flat();
 };
@@ -112,9 +105,8 @@ export default function FloatingAvatars() {
         featured.docs.map(d => getDownloadURL(storageRef(d.data().key)).then(url => ({ name: d.data().ethName, url })))
       ).then(feat => {
         if (feat.length < NUM_AVATARS) {
-          getRandomAvatars(NUM_AVATARS - feat.length).then(collectionAvatars => {
-            setImages([...feat, ...collectionAvatars]);
-          });
+          const collectionAvatars = getRandomAvatars(NUM_AVATARS - feat.length);
+          setImages([...feat, ...collectionAvatars]);
         } else {
           setImages(feat);
         }
