@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     maxWidth: 250,
   },
   modalButtonsContainer: {
-    paddingTop: spacing(2),
+    paddingTop: spacing(3),
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',

@@ -94,7 +94,7 @@ export default function SelectNFTSection() {
               style={isMoWeb ? styles.previewPlaceholderXS : styles.previewPlaceholder}
             />
           )}
-          {avatarPreview && <Avatar style={styles.preview} uri={avatarPreview} />}
+          {avatarPreview && <Avatar style={isMoWeb ? styles.previewXS : styles.preview} uri={avatarPreview} />}
 
           <ENSDisplay />
 
@@ -145,8 +145,14 @@ const styles = StyleSheet.create({
   },
   preview: {
     flex: 1,
-    width: '200px',
-    height: '200px',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+  },
+  previewXS: {
+    flex: 1,
+    width: 150,
+    height: 150,
     borderRadius: 100,
   },
   previewPlaceholder: {

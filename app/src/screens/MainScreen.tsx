@@ -19,11 +19,11 @@ import TeamSection from './TeamSection';
 
 export default function MainScreen() {
   const isMoWeb = useIsMoWeb();
-  const { wallet } = useWallet();
+  const { wallet, loadingWallet } = useWallet();
   const { loading, user } = useUser();
   const { loading: loadingENS } = useENS();
 
-  if (loading || loadingENS) {
+  if (loading || loadingENS || loadingWallet) {
     return (
       <PageContainer>
         <View style={styles.loaderContainer}>
