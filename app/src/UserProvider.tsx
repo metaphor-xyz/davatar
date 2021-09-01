@@ -31,6 +31,7 @@ export default function UserProvider({ children }: React.PropsWithChildren<Recor
 
       if (!u) {
         setLoading(false);
+        setUser(null);
       }
     });
   }, []);
