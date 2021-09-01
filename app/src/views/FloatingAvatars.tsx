@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     width: '100%',
     top: 175,
     alignItems: 'center',
-    overflow: 'hidden',
+    overflowX: 'clip',
   },
   containerXS: {
     height: '100px',
