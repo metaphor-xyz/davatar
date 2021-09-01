@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useCallback, useState, ReactElement } from 'r
 import { View, LayoutChangeEvent, StyleSheet, Animated } from 'react-native';
 
 import { OpenSeaNFT } from '../WalletProvider';
+import { docs, storageRef, getDownloadURL } from '../firebase';
 import Avatar from './Avatar';
 
 const dist = (x1: number, y1: number, x2: number, y2: number): number => {
@@ -24,7 +25,7 @@ function FloatingAvatar({ x, y, r, uri }: FloatingAvatarProps) {
       Animated.sequence([
         Animated.delay(Math.random() * 2000 + 100),
         Animated.timing(ay, {
-          toValue: y - r + 10,
+          toValue: y - r + 5,
           duration: 2000,
           useNativeDriver: true,
         }),
@@ -51,13 +52,25 @@ export default function FloatingAvatars() {
   const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
 
   useEffect(() => {
-    fetch('https://api.opensea.io/api/v1/assets?order_direction=desc&limit=20&collection=boredapeyachtclub')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.assets) {
-          setImages(data.assets.map((n: OpenSeaNFT) => n.image_thumbnail_url));
+    docs('featured').then(featured => {
+      Promise.all(featured.docs.map(d => getDownloadURL(storageRef(d.data().key)))).then(featuredUrls => {
+        if (featuredUrls.length < 10) {
+          fetch(
+            `https://api.opensea.io/api/v1/assets?order_direction=desc&limit=${
+              10 - featured.size
+            }&collection=boredapeyachtclub`
+          )
+            .then(res => res.json())
+            .then(data => {
+              if (data && data.assets) {
+                setImages([...featuredUrls, ...data.assets.map((n: OpenSeaNFT) => n.image_thumbnail_url)]);
+              }
+            });
+        } else {
+          setImages(featuredUrls);
         }
       });
+    });
   }, []);
 
   const onLayout = useCallback((e: LayoutChangeEvent) => {
@@ -74,7 +87,7 @@ export default function FloatingAvatars() {
     const numCircles = 15;
     const max = 10000;
     let counter = 0;
-    const radius = 50;
+    const radius = 30;
     const padding = 20;
     const centerPadding = 300;
     const centerX = dimensions.width / 2;
@@ -123,9 +136,9 @@ export default function FloatingAvatars() {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    height: '300px',
+    height: '100px',
     width: '100%',
-    top: '250px',
+    top: '200px',
   },
   circle: {
     position: 'absolute',

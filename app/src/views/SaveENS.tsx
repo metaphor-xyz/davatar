@@ -31,8 +31,8 @@ export default function SaveENS({ loading, disabled, onSave, preview }: Props) {
     if (!connected && !modalVisible) {
       setModalVisible(true);
     } else {
-      await onSave();
       onCloseModal();
+      await onSave();
     }
   }, [onSave, onCloseModal, connected, modalVisible]);
 
