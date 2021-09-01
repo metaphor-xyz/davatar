@@ -127,6 +127,10 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 20,
     backgroundColor: 'linear-gradient(90deg, rgba(91, 88, 235, 1) 0%, rgba(142, 141, 220, 1) 140%)',
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   disabled: {
     opacity: 0.6,
