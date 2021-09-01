@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { spacing } from '../constants';
@@ -11,12 +11,16 @@ import Typography from './Typography';
 export default function ConnectSocialsModal() {
   const navigation = useNavigation();
 
+  const onComplete = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
   return (
     <CustomModal>
       <Typography style={styles.text}>Want to update your Twitter profile photo too?</Typography>
 
       <View style={styles.spaced}>
-        <ConnectTwitter />
+        <ConnectTwitter onComplete={onComplete} />
       </View>
 
       <View style={styles.doneButton}>
