@@ -27,7 +27,6 @@ export default function SectionContainer({ children, backgroundColor, noTopPaddi
 
 const styles = StyleSheet.create({
   outerContainer: {
-    backgroundColor: '#f8f8fe',
     width: '100%',
     alignItems: 'center',
     paddingTop: 54,

@@ -16,6 +16,9 @@ import {
   getDoc,
   onSnapshot,
   DocumentSnapshot,
+  query,
+  limit,
+  getDocs,
 } from 'firebase/firestore';
 import { getFunctions, connectFunctionsEmulator, httpsCallable as callable } from 'firebase/functions';
 import { getStorage, connectStorageEmulator, ref } from 'firebase/storage';
@@ -62,3 +65,4 @@ export const snapshot = <T>(collectionName: string, path: string, next: (_snap: 
   // @ts-ignore
   // carlos: this complains about an overload that definitely exists...
   onSnapshot(firestoreDoc(Firebase.firestore, collectionName, path), { next });
+export const docs = (coll: string) => getDocs(query(firestoreCollection(Firebase.firestore, coll), limit(20)));

@@ -230,6 +230,28 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
   }
 });
 
+export const featureAvatar = functions.https.onCall(async (_data, context) => {
+  if (!context.auth) {
+    throw new Error('not logged in');
+  }
+
+  const user = await admin.firestore().collection('users').doc(context.auth.uid).get();
+
+  if (!user.exists) {
+    throw new Error('user not found');
+  }
+
+  const userData = user.data() as { currentAvatar: string | undefined };
+
+  const featureKey = userData.currentAvatar ? `${context.auth.uid}/${userData.currentAvatar}` : undefined;
+
+  if (featureKey) {
+    await admin.firestore().collection('featured').doc(context.auth.uid).set({ key: featureKey });
+  }
+
+  return true;
+});
+
 export const authDiscord = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     throw new Error('must be logged in');

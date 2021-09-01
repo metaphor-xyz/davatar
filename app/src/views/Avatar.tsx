@@ -3,7 +3,7 @@ import { Image, ImageStyle } from 'react-native';
 
 export interface Props {
   uri: string;
-  style?: ImageStyle | null;
+  style?: ImageStyle | ImageStyle[] | null;
 }
 
 export default function Avatar({ uri, style }: Props) {
@@ -84,6 +84,8 @@ export default function Avatar({ uri, style }: Props) {
           setUrl(uri);
           break;
       }
+    } else {
+      setUrl(uri);
     }
   }, [uri]);
 
