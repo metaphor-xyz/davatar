@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { useWallet } from './WalletProvider';
 import { httpsCallable, signInWithCustomToken } from './firebase';
@@ -12,10 +12,13 @@ type Props = {
 
 export default function ConnectWallet({ onConnectSuccess, onConnectFail, disableAnimation }: Props) {
   const { connect, signMessage, connecting } = useWallet();
+  const [signing, setSigning] = useState(false);
 
   const connectWallet = useCallback(async () => {
     // Connect the wallet
     try {
+      setSigning(true);
+
       const wallet = await connect();
 
       if (!wallet) {
@@ -45,6 +48,8 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail, disable
           onConnectFail();
         }
       }
+    } finally {
+      setSigning(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connect, onConnectFail, onConnectSuccess]);
@@ -54,7 +59,7 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail, disable
       title="Connect Wallet"
       onPress={connectWallet}
       disableAnimation={disableAnimation}
-      loading={connecting}
+      loading={connecting || signing}
     />
   );
 }
