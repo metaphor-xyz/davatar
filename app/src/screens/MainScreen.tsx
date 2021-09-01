@@ -38,7 +38,7 @@ export default function MainScreen() {
   return (
     <>
       <PageContainer containerNoMaxWidth noBottomPadding backgroundComponent={<FloatingAvatars />}>
-        <SectionContainer noTopPadding backgroundColor={'unset'}>
+        <SectionContainer noTopPadding>
           {isMoWeb && (
             <Typography style={styles.header} variant="header" fontWeight={600}>
               davatar
@@ -51,11 +51,11 @@ export default function MainScreen() {
           <ConnectButton disableAnimation={isMoWeb} />
         </SectionContainer>
 
-        <SectionContainer noBottomPadding backgroundColor="#5a58eb">
+        <SectionContainer backgroundColor="#5a58eb">
           <AboutSection />
         </SectionContainer>
 
-        <SectionContainer noBottomPadding>
+        <SectionContainer>
           <HowItWorks />
         </SectionContainer>
 

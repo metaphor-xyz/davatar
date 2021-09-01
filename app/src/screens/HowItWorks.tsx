@@ -12,7 +12,7 @@ export default function HowItWorks() {
           How it works
         </Typography>
 
-        <View style={styles.valuePropContainerFirst}>
+        <View style={styles.valuePropContainer}>
           <Typography style={styles.textIcon}>
             <span style={{ fontWeight: 600 }}>☝️</span>
           </Typography>
@@ -101,13 +101,6 @@ const styles = StyleSheet.create({
     // marginTop: 32,
     width: '100%',
     padding: 16,
-    flexDirection: 'row',
-  },
-  valuePropContainerFirst: {
-    padding: 16,
-    textAlign: 'left',
-    marginTop: 24,
-    width: '100%',
     flexDirection: 'row',
   },
   meetTeamContainer: {

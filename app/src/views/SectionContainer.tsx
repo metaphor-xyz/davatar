@@ -17,7 +17,7 @@ export default function SectionContainer({ children, backgroundColor, noTopPaddi
       style={[
         styles.outerContainer,
         isMoWeb && styles.outerContainerXS,
-        { backgroundColor: backgroundColor || '#f8f8fe' },
+        { backgroundColor: backgroundColor || 'transparent' },
         noTopPadding && { paddingTop: 0 },
         noBottomPadding && { paddingBottom: 0 },
       ]}
