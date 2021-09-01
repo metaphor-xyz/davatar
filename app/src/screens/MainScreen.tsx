@@ -12,7 +12,7 @@ import PageContainer from '../views/PageContainer';
 import SectionContainer from '../views/SectionContainer';
 import Typography from '../views/Typography';
 import AboutSection from './AboutSection';
-import ConnectSection from './ConnectSection';
+import ConnectButton from './ConnectButton';
 import HowItWorks from './HowItWorks';
 import SelectNFTSection from './SelectNFTSection';
 import TeamSection from './TeamSection';
@@ -44,9 +44,11 @@ export default function MainScreen() {
               davatar
             </Typography>
           )}
-          <Typography style={styles.subtitle}>One avatar for everything Web3</Typography>
+          <Typography style={[styles.subtitle, isMoWeb && styles.subtitleXS]}>
+            One avatar for everything Web3
+          </Typography>
 
-          <ConnectSection />
+          <ConnectButton disableAnimation={isMoWeb} />
         </SectionContainer>
 
         <SectionContainer noBottomPadding backgroundColor="#5a58eb">
@@ -75,6 +77,11 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 44,
+    paddingBottom: 54,
+  },
+  subtitleXS: {
+    fontSize: 24,
+    paddingBottom: 32,
   },
   loaderContainer: {
     paddingTop: spacing(5),

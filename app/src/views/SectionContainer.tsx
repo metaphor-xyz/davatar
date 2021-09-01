@@ -15,6 +15,7 @@ export default function SectionContainer({ children, backgroundColor, noTopPaddi
     <View
       style={[
         styles.outerContainer,
+        isMoWeb && styles.outerContainerXS,
         { backgroundColor: backgroundColor || '#f8f8fe' },
         noTopPadding && { paddingTop: 0 },
       ]}
@@ -28,6 +29,10 @@ const styles = StyleSheet.create({
   outerContainer: {
     width: '100%',
     alignItems: 'center',
+    paddingTop: 54,
+    paddingBottom: 54,
+  },
+  outerContainerXS: {
     paddingTop: 40,
     paddingBottom: 40,
   },

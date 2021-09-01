@@ -47,10 +47,10 @@ export default function TeamSection() {
   }, []);
 
   return (
-    <>
+    <View style={styles.outerContainer}>
       <View style={styles.container}>
         <Typography style={styles.teamHeader} variant="header">
-          Meet the Team
+          Meet the Makers
         </Typography>
 
         <View style={styles.teamContainer}>
@@ -85,7 +85,7 @@ export default function TeamSection() {
           <Link style={styles.discordLink} onPress={onJoinDiscord} title="Join our Discord" />
         </View>
       </View>
-    </>
+    </View>
   );
 }
 
@@ -97,7 +97,10 @@ const styles = StyleSheet.create({
   discordLink: {
     color: '#fff',
   },
-
+  outerContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
   container: {
     width: 550,
     maxWidth: '100%',
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'center',
-    paddingTop: 16,
+    paddingTop: 24,
     paddingBottom: 16,
   },
 });
