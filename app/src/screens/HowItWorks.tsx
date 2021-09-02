@@ -16,7 +16,7 @@ export default function HowItWorks() {
           <Typography style={styles.textIcon}>
             <span style={{ fontWeight: 600 }}>☝️</span>
           </Typography>
-          <Typography style={styles.text}>Connect your wallet 🔌</Typography>
+          <Typography style={styles.text}>Connect the wallet that owns your ENS name 🔌</Typography>
         </View>
 
         <View style={styles.valuePropContainer}>
