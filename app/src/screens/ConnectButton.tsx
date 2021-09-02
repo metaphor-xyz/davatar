@@ -1,9 +1,10 @@
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
 
 import ConnectWallet from '../ConnectWallet';
 import { useWallet } from '../WalletProvider';
 import useUser from '../useUser';
+import Typography from '../views/Typography';
 
 type Props = {
   disableAnimation?: boolean;
@@ -19,5 +20,28 @@ export default function ConnectButton({ disableAnimation }: Props) {
 
   if (user && wallet) return null;
 
-  return <ConnectWallet disableAnimation={disableAnimation} />;
+  return (
+    <>
+      <ConnectWallet disableAnimation={disableAnimation} />
+
+      <View style={styles.container}>
+        <View style={styles.innerContainer}>
+          <Typography variant="caption">* Use the wallet that owns your ENS name</Typography>
+        </View>
+      </View>
+    </>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  innerContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 6,
+    textAlign: 'center',
+  },
+});
