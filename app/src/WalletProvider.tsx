@@ -1,5 +1,5 @@
-import { withWalletConnect, useWalletConnect } from '@carlosdp/react-native-dapp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { withWalletConnect, useWalletConnect } from '@walletconnect/react-native-dapp';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
 import { Platform, View, Text, StyleSheet } from 'react-native';
