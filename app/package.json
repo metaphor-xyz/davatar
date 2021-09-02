@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@carlosdp/react-native-dapp": "^1.5.4",
+    "@walletconnect/react-native-dapp": "^1.6.5",
     "@ensdomains/ensjs": "^2.0.1",
     "@expo-google-fonts/inter": "^0.2.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
