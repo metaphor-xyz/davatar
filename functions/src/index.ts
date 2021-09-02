@@ -279,8 +279,8 @@ export const authDiscord = functions.https.onCall(async (data, context) => {
       url: 'https://discord.com/api/oauth2/token',
       method: 'POST',
       data: new URLSearchParams({
-        client_id: '871783976115798036',
-        client_secret: 'ILh21Ji_TpiKoDdjQKNcEHwDgvhs87sf',
+        client_id: 'xxx',
+        client_secret: 'xxx',
         grant_type: 'authorization_code',
         code: code,
         code_verifier: verifier,
