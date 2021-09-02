@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   circle: {
-    backgroundColor: '#000',
+    backgroundColor: '#FFF',
   },
   circleText: {
     marginTop: 3,
