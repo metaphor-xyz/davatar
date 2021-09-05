@@ -16,11 +16,12 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  ignorePatterns: ['node_modules', 'build', '*-build', '*.json'],
+  ignorePatterns: ['node_modules', 'build', '*-build', '*.json', '!*'],
   rules: {
     'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     'no-console': 'warn',
     'no-shadow': 'warn',
+    'ignored-by-default': 0,
     '@typescript-eslint/no-unused-vars': [
       'warn',
       { vars: 'all', args: 'after-used', argsIgnorePattern: '^_', varsIgnorePattern: '^_' },

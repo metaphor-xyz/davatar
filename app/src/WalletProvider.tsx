@@ -52,7 +52,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   useEffect(() => {
     if (Platform.OS === 'web') {
       web3Modal = new Web3Modal({
-        cacheProvider: true,
+        cacheProvider: false,
         providerOptions: {
           walletconnect: {
             package: WalletConnectProvider,
