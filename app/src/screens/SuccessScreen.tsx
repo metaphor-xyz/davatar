@@ -74,7 +74,7 @@ export default function SuccessScreen() {
         </View>
 
         <View style={styles.container}>
-          <Typography>This update will be reflected on ENS in a few minutes!</Typography>
+          <Typography>Success! This update will be reflected on ENS in a few minutes!</Typography>
         </View>
 
         <View style={styles.container}>

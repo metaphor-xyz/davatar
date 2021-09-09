@@ -1,9 +1,11 @@
+import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useCallback } from 'react';
 import { useState } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 
 import { useENS } from '../ENSProvider';
 import { spacing } from '../constants';
+import useConnectTwitter from '../useConnectTwitter';
 import useIsMoWeb from '../useIsMoWeb';
 import BigButton from './BigButton';
 import Button from './Button';
@@ -20,21 +22,28 @@ type Props = {
 
 export default function SaveENS({ loading, disabled, onSave, preview }: Props) {
   const isMoWeb = useIsMoWeb();
+  const { connected: twitterConnected, loading: twitterLoading, logout: logoutOfTwitter } = useConnectTwitter();
   const { connected, loading: loadingENS, pendingTransaction } = useENS();
   const [modalVisible, setModalVisible] = useState(false);
+  const [twitterConnectedBeforehand, setTwitterConnectedBeforehand] = useState(twitterConnected);
+
+  const onLogout = useCallback(async () => {
+    await logoutOfTwitter();
+  }, [logoutOfTwitter]);
 
   const onCloseModal = useCallback(() => {
     setModalVisible(false);
   }, []);
 
   const onClickSave = useCallback(async () => {
-    if (!connected && !modalVisible) {
+    if ((!connected || twitterConnected) && !modalVisible) {
+      setTwitterConnectedBeforehand(twitterConnected);
       setModalVisible(true);
     } else {
       onCloseModal();
       await onSave();
     }
-  }, [onSave, onCloseModal, connected, modalVisible]);
+  }, [onSave, onCloseModal, connected, modalVisible, twitterConnected]);
 
   return (
     <View style={styles.container}>
@@ -53,10 +62,40 @@ export default function SaveENS({ loading, disabled, onSave, preview }: Props) {
             {preview && <Image style={styles.preview} source={{ uri: preview }} />}
 
             <View style={styles.messageContainer}>
-              <Typography>
-                To update, you will be charged a one-time gas fee. After, all subsequent updates are free!
-              </Typography>
+              {connected ? (
+                <Typography>Welcome back! No gas fees required for this update!</Typography>
+              ) : (
+                <Typography>
+                  To update, you will be charged a one-time gas fee. After, all subsequent updates are free!
+                </Typography>
+              )}
+
+              {twitterConnectedBeforehand && (
+                <>
+                  {twitterConnected ? (
+                    <Typography style={styles.spaced}>
+                      Your Twitter account is connected so we will update your Twitter profile pic too.
+                    </Typography>
+                  ) : (
+                    <Typography style={styles.spaced}>
+                      Your Twitter account is no longer connected, so we will not update your Twitter profile pic.
+                    </Typography>
+                  )}
+                  <View style={styles.twitterButton}>
+                    <Button
+                      disabled={!twitterConnected}
+                      title={twitterConnected ? 'Disconnect Twitter' : 'Twitter disconnected ✅'}
+                      onPress={onLogout}
+                      preTextComponent={
+                        <FontAwesome5 style={{ marginRight: 8 }} name="twitter" size={24} color="white" />
+                      }
+                      loading={twitterLoading}
+                    />
+                  </View>
+                </>
+              )}
             </View>
+
             <View style={styles.modalButtonsContainer}>
               <Link title="Cancel" onPress={onCloseModal} />
               <Button title="Sounds good!" onPress={onClickSave} />
@@ -88,7 +127,8 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     paddingTop: 16,
-    maxWidth: 250,
+    width: 300,
+    maxWidth: '100%',
   },
   modalButtonsContainer: {
     paddingTop: spacing(3),
@@ -102,5 +142,12 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 100,
+  },
+  spaced: {
+    paddingTop: spacing(3),
+    paddingBottom: spacing(1),
+  },
+  twitterButton: {
+    paddingBottom: spacing(1),
   },
 });

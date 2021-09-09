@@ -459,6 +459,35 @@ export const connectTwitter = functions.https.onCall(async (data, context) => {
   }
 });
 
+export const disconnectTwitter = functions.https.onCall(async (_data, context) => {
+  if (!context.auth) {
+    throw new Error('not logged in');
+  }
+
+  try {
+    await admin.firestore().collection('users').doc(`${context.auth.uid}/private/twitter`).set(
+      {
+        twitterHandle: null,
+        twitterAccessToken: null,
+        twitterAccessTokenSecret: null,
+      },
+      { merge: true }
+    );
+    await admin.firestore().collection('users').doc(context.auth.uid).set(
+      {
+        twitterConnected: false,
+      },
+      { merge: true }
+    );
+
+    return true;
+  } catch (e) {
+    functions.logger.error(e);
+
+    return false;
+  }
+});
+
 const updateTwitterAvatar = async (userId: string) => {
   const user = await admin.firestore().collection('users').doc(userId).get();
   const privateUser = await admin.firestore().collection('users').doc(`${userId}/private/twitter`).get();

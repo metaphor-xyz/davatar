@@ -21,7 +21,7 @@ export default function useConnectTwitter(): ContextProps {
   useEffect(() => {
     if (user) {
       if (user.twitterConnected) {
-        setConnected(false);
+        setConnected(true);
       } else {
         setConnected(false);
       }
@@ -63,7 +63,7 @@ export default function useConnectTwitter(): ContextProps {
     try {
       setLoading(true);
 
-      // TODO : ADD DISCONNECT TWITTER
+      await httpsCallable('disconnectTwitter')();
 
       if (onComplete) {
         onComplete();
