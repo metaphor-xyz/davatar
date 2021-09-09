@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     width: '20px',
     borderRadius: 50,
     marginRight: '8px',
-    backgroundColor: 'blue',
   },
   buttonStyleXS: {
     maxWidth: 180,

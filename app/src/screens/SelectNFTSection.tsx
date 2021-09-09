@@ -85,10 +85,10 @@ export default function SelectNFTSection() {
       <PageContainer>
         <Typography style={[styles.subtitle, isMoWeb && styles.subtitleXS]}>Choose your new look!</Typography>
 
-        <View style={[styles.previewContainer, styles.previewContainerXS]}>
+        <View style={[styles.previewContainer, isMoWeb && styles.previewContainerXS]}>
           <Avatar
             address={address}
-            size={200}
+            size={isMoWeb ? 150 : 200}
             style={isMoWeb ? styles.previewXS : styles.preview}
             uri={avatarPreview}
           />

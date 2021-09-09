@@ -2,9 +2,12 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { spacing } from '../constants';
+import useIsMoWeb from '../useIsMoWeb';
 import Typography from '../views/Typography';
 
 export default function HowItWorks() {
+  const isMoWeb = useIsMoWeb();
+
   return (
     <View style={styles.outerContainer}>
       <View style={styles.container}>
@@ -36,7 +39,7 @@ export default function HowItWorks() {
         </View>
 
         <View style={styles.valuePropContainer}>
-          <Typography style={styles.textIcon}>
+          <Typography style={isMoWeb ? styles.textIcon : styles.textIconLast}>
             <span style={{ fontWeight: 600 }}>👋 </span>
           </Typography>
           <Typography style={styles.text}>Come back anytime! All updates are gasless! 💅</Typography>
@@ -88,6 +91,12 @@ const styles = StyleSheet.create({
   },
   textIcon: {
     marginRight: 8,
+    marginLeft: 4,
+    fontSize: 18,
+    // paddingTop: 2,
+  },
+  textIconLast: {
+    marginRight: 3,
     marginLeft: 4,
     fontSize: 18,
     // paddingTop: 2,

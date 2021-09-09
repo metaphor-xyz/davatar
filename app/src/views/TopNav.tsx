@@ -6,6 +6,7 @@ import pixelLogo from '../assets/logo.png';
 import { spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
 import ConnectWalletButton from './ConnectWalletButton';
+import ForDevelopersLink from './ForDevelopersLink';
 import Typography from './Typography';
 
 export default function TopNav() {
@@ -26,6 +27,7 @@ export default function TopNav() {
           </View>
         </View>
 
+        <ForDevelopersLink />
         <ConnectWalletButton />
       </View>
     </View>

@@ -142,7 +142,6 @@ const styles = StyleSheet.create({
     width: '75px',
     borderRadius: 50,
     margin: '4px',
-    backgroundColor: 'blue',
   },
   teamMemberAvatarText: {
     color: '#fff',
