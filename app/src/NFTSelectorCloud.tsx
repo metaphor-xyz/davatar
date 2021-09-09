@@ -10,7 +10,7 @@ export interface Props {
 }
 
 export default function NFTSelectorCloud({ selectedIndex, onSelect, uploadImageComponent }: Props) {
-  const { nfts } = useWallet();
+  const { loadingNfts, nfts } = useWallet();
 
   const setSelected = useCallback(
     (index: number) => {
@@ -28,19 +28,23 @@ export default function NFTSelectorCloud({ selectedIndex, onSelect, uploadImageC
   return (
     <View>
       <View style={styles.NFTContainerRow}>
-        {nfts.map((nft, i) => (
-          <TouchableOpacity
-            key={nft.id}
-            style={[styles.NFTImageContainer]}
-            onPress={setSelected(i)}
-            activeOpacity={0.8}
-          >
-            <Image
-              style={[styles.NFTImage, selectedIndex === i && styles.selectedNFTImage]}
-              source={{ uri: nft.image_thumbnail_url }}
-            />
-          </TouchableOpacity>
-        ))}
+        {!loadingNfts && nfts && (
+          <>
+            {nfts.map((nft, i) => (
+              <TouchableOpacity
+                key={nft.id}
+                style={[styles.NFTImageContainer]}
+                onPress={setSelected(i)}
+                activeOpacity={0.8}
+              >
+                <Image
+                  style={[styles.NFTImage, selectedIndex === i && styles.selectedNFTImage]}
+                  source={{ uri: nft.image_thumbnail_url }}
+                />
+              </TouchableOpacity>
+            ))}
+          </>
+        )}
         {uploadImageComponent}
       </View>
     </View>
@@ -65,7 +69,7 @@ const styles = StyleSheet.create({
     width: '75px',
     borderRadius: 50,
     margin: '4px',
-    backgroundColor: 'blue',
+    backgroundColor: 'rgba(90, 88, 235, 0.85)',
   },
   selectedNFTImage: {
     height: '83px',

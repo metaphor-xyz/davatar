@@ -24,7 +24,7 @@ export interface Context {
   wallet: Web3 | null;
   address: string | null;
   walletName: string | null;
-  connect: () => Promise<Web3 | null>;
+  connect: () => Promise<Web3 | null | undefined>;
   disconnect: () => void;
   connecting: boolean;
   nfts: OpenSeaNFT[];
@@ -120,6 +120,9 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
       }
 
       return newWallet;
+    } catch (e) {
+      // eslint-disable-next-line
+      console.error(e);
     } finally {
       setLoadingWallet(false);
       setConnecting(false);

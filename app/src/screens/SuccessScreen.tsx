@@ -74,10 +74,14 @@ export default function SuccessScreen() {
         </View>
 
         <View style={styles.container}>
+          <Typography>This update will be reflected on ENS in a few minutes!</Typography>
+        </View>
+
+        <View style={styles.container}>
           <Typography>Can we feature your davatar?</Typography>
           <View style={styles.spaced}>
             <Button
-              title="Feature my davatar"
+              title={`Feature my davatar ${isFeatured ? '✅' : ''}`}
               onPress={onFeature}
               disabled={isFeatured}
               preTextComponent={<FontAwesome5 style={styles.buttonIcon} name="crown" size={22} color="white" />}

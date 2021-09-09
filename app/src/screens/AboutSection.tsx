@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   iconLast: {
-    marginRight: 12,
+    marginRight: 16,
     marginLeft: 6,
   },
   text: {

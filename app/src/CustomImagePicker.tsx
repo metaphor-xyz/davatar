@@ -2,6 +2,7 @@ import { Feather } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback, useState } from 'react';
 import { StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 
 import { useWallet } from './WalletProvider';
 import { spacing } from './constants';
@@ -20,7 +21,7 @@ export default function CustomImagePicker({ onChange }: Props) {
     setMouseEntered(false);
   }, []);
 
-  const { nfts } = useWallet();
+  const { loadingNfts, nfts } = useWallet();
   const pick = useCallback(async () => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -61,19 +62,22 @@ export default function CustomImagePicker({ onChange }: Props) {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <TouchableOpacity
-        accessibilityLabel="Upload photo"
-        style={[styles.container, nfts.length === 0 && styles.containerWithText, mouseEntered && styles.hover]}
-        onPress={pick}
-        activeOpacity={0.8}
-      >
-        {nfts?.length === 0 && (
-          <Typography style={styles.text} fontWeight={600}>
-            Upload image
-          </Typography>
-        )}
-        <Feather name="upload" size={24} color="white" />
-      </TouchableOpacity>
+      {loadingNfts && <ActivityIndicator size={24} />}
+      {!loadingNfts && (
+        <TouchableOpacity
+          accessibilityLabel="Upload photo"
+          style={[styles.container, nfts.length === 0 && styles.containerWithText, mouseEntered && styles.hover]}
+          onPress={pick}
+          activeOpacity={0.8}
+        >
+          {nfts?.length === 0 && (
+            <Typography style={styles.text} fontWeight={600}>
+              Upload image
+            </Typography>
+          )}
+          <Feather name="upload" size={24} color="white" />
+        </TouchableOpacity>
+      )}
     </button>
   );
 }
