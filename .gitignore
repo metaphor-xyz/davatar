@@ -64,3 +64,4 @@ web-build/
 data/
 .runtimeconfig.json
 *.log
+.firebase/
