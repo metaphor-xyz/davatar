@@ -91,7 +91,6 @@ export default function SuccessScreen() {
 
         <View style={styles.container}>
           <Typography style={styles.spaced}>Want to share about davatar?</Typography>
-          <Typography>(& enter for a chance to get your gas fee refunded!)</Typography>
           <Typography style={styles.smallSpaced} variant="caption">
             Include your ENS name to enter.
           </Typography>
