@@ -1,12 +1,14 @@
 {
   "dependencies": {
-    "@walletconnect/react-native-dapp": "^1.6.5",
     "@ensdomains/ensjs": "^2.0.1",
     "@expo-google-fonts/inter": "^0.2.0",
+    "@gnosis.pm/safe-apps-sdk": "^4.3.0",
+    "@gnosis.pm/safe-apps-web3modal": "^3.0.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.0.6",
     "@react-navigation/stack": "^6.0.7",
+    "@walletconnect/react-native-dapp": "file:../../walletconnect-monorepo/packages/helpers/react-native-dapp",
     "@walletconnect/web3-provider": "^1.5.4",
     "color": "^3.2.1",
     "expo": "~42.0.0",
@@ -23,6 +25,7 @@
     "react-native-paper": "^4.9.2",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
+    "react-native-svg": "12.1.1",
     "react-native-web": "^0.13.18",
     "web3": "^1.5.1",
     "web3modal": "^1.9.4"
@@ -30,6 +33,7 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@expo/config": "^5.0.6",
+    "@expo/webpack-config": "^0.16.0",
     "@types/color": "^3.0.2",
     "@types/mersenne-twister": "^1.1.2",
     "@types/react": "~16.9.35",
