@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
+import { View } from 'react-native';
 
 import { useENS } from '../ENSProvider';
 import { useWallet } from '../WalletProvider';
@@ -22,7 +22,6 @@ export default function ConnectWalletButton() {
 
   if (!address || !user || loadingWallet || loadingENS || loadingUser) return null;
 
-  // TODO : ELLIPSIS WHE
   const slicedAddress = sliceWalletAddress(address);
 
   return (
@@ -30,7 +29,9 @@ export default function ConnectWalletButton() {
       title={name || slicedAddress}
       onPress={onPress}
       preTextComponent={
-        <Avatar address={address} size={20} uri={user.avatarPreviewURL} style={{ marginRight: '8px' }} />
+        <View style={{ marginRight: '8px' }}>
+          <Avatar address={address} size={20} uri={user.avatarPreviewURL} />
+        </View>
       }
     />
   );
