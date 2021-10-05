@@ -1,14 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { useCallback } from 'react';
-import { StyleSheet, Image } from 'react-native';
 
 import { useENS } from '../ENSProvider';
 import { useWallet } from '../WalletProvider';
 import { sliceWalletAddress, VIEW_STEPS } from '../constants';
 import useUser from '../useUser';
+import Avatar from './Avatar';
 import Button from './Button';
-import Jazzicon from './Jazzicon';
 
 export default function ConnectWalletButton() {
   // eslint-disable-next-line
@@ -31,24 +30,8 @@ export default function ConnectWalletButton() {
       title={name || slicedAddress}
       onPress={onPress}
       preTextComponent={
-        user.avatarPreviewURL ? (
-          <Image style={styles.avatarImage} source={{ uri: user.avatarPreviewURL }} />
-        ) : (
-          <Jazzicon address={address} size={20} style={styles.avatarImage} />
-        )
+        <Avatar address={address} size={20} uri={user.avatarPreviewURL} style={{ marginRight: '8px' }} />
       }
     />
   );
 }
-
-const styles = StyleSheet.create({
-  avatarImage: {
-    height: '20px',
-    width: '20px',
-    borderRadius: 50,
-    marginRight: '8px',
-  },
-  buttonStyleXS: {
-    maxWidth: 180,
-  },
-});

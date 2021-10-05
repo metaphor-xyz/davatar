@@ -1,10 +1,9 @@
 import React, { useEffect, useCallback, useState, ReactElement } from 'react';
-import { View, LayoutChangeEvent, StyleSheet } from 'react-native';
+import { View, LayoutChangeEvent, StyleSheet, Image } from 'react-native';
 
 import defaultAvatars from '../defaultAvatars';
 import { docs, storageRef, getDownloadURL } from '../firebase';
 import useIsMoWeb from '../useIsMoWeb';
-import Avatar from './Avatar';
 import Typography from './Typography';
 
 const dist = (x1: number, y1: number, x2: number, y2: number): number => {
@@ -22,10 +21,9 @@ interface FloatingAvatarProps {
 function NotFloatingAvatar({ x, y, r, uri, name }: FloatingAvatarProps) {
   return (
     <View style={[styles.circleContainer, { left: x - r, top: y - r, height: r * 2 + 10 }]}>
-      <Avatar
-        size={r * 2}
+      <Image
         style={[styles.circle, { top: 0, left: 0, height: r * 2, width: r * 2, borderRadius: r * 2 }]}
-        uri={uri}
+        source={{ uri }}
       />
       {name && <Typography style={styles.circleText}>{name}</Typography>}
     </View>

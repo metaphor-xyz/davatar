@@ -1,12 +1,13 @@
 {
   "dependencies": {
-    "@walletconnect/react-native-dapp": "^1.6.5",
+    "@davatar/react": "^1.8.1",
     "@ensdomains/ensjs": "^2.0.1",
     "@expo-google-fonts/inter": "^0.2.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.0.6",
     "@react-navigation/stack": "^6.0.7",
+    "@walletconnect/react-native-dapp": "^1.6.5",
     "@walletconnect/web3-provider": "^1.5.4",
     "color": "^3.2.1",
     "expo": "~42.0.0",

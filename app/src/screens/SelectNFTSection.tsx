@@ -86,12 +86,14 @@ export default function SelectNFTSection() {
         <Typography style={[styles.subtitle, isMoWeb && styles.subtitleXS]}>Choose your new look!</Typography>
 
         <View style={[styles.previewContainer, isMoWeb && styles.previewContainerXS]}>
-          <Avatar
-            address={address}
-            size={isMoWeb ? 150 : 200}
-            style={isMoWeb ? styles.previewXS : styles.preview}
-            uri={avatarPreview}
-          />
+          {address && (
+            <Avatar
+              address={address}
+              size={isMoWeb ? 150 : 200}
+              style={isMoWeb ? styles.previewXS : styles.preview}
+              uri={avatarPreview}
+            />
+          )}
 
           <ENSDisplay />
 
