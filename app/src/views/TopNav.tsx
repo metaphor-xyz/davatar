@@ -1,6 +1,8 @@
+import { ENSClaimButton } from '@metaphor-xyz/ens-claim';
 import React from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 
+import { useWallet } from '../WalletProvider';
 // @ts-ignore
 import pixelLogo from '../assets/logo.png';
 import { spacing } from '../constants';
@@ -11,6 +13,10 @@ import Typography from './Typography';
 
 export default function TopNav() {
   const isMoWeb = useIsMoWeb();
+  const { address, wallet } = useWallet();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const provider = wallet as any;
 
   return (
     <View style={[styles.container, isMoWeb && styles.containerXS]}>
@@ -28,7 +34,13 @@ export default function TopNav() {
         </View>
 
         <ForDevelopersLink />
-        <ConnectWalletButton />
+
+        <View style={styles.rightButtonContainer}>
+          <View style={styles.ensButtonContainer}>
+            {address && wallet && <ENSClaimButton address={address} provider={provider} delegate="metaphor.xyz" />}
+          </View>
+          <ConnectWalletButton />
+        </View>
       </View>
     </View>
   );
@@ -71,5 +83,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  rightButtonContainer: {
+    flexDirection: 'row',
+  },
+  ensButtonContainer: {
+    marginRight: 10,
+    justifyContent: 'center',
   },
 });
