@@ -197,7 +197,7 @@ export const setAvatar = functions.https.onCall(async (data, context) => {
 
     // The Origin tag allows us to support "mutable" records, a draft spec being worked on with Arweave team
     if (userData.avatarProtocol === 'arweave') {
-      transaction.addTag('Origin', userData.avatarId);
+      transaction.addTag('Origin', context.auth.uid);
     }
 
     await arweave.transactions.sign(transaction, ARWEAVE_KEY);
