@@ -1,3 +1,4 @@
+import { SafeAppWeb3Modal } from '@gnosis.pm/safe-apps-web3modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { withWalletConnect, useWalletConnect } from '@walletconnect/react-native-dapp';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -5,7 +6,6 @@ import React, { createContext, useState, useContext, useCallback, useEffect } fr
 import { Platform, View, Text, StyleSheet } from 'react-native';
 import { ActivityIndicator, Avatar } from 'react-native-paper';
 import Web3 from 'web3';
-import Web3Modal from 'web3modal';
 
 import { spacing } from './constants';
 import { logout } from './firebase';
@@ -18,6 +18,8 @@ export interface OpenSeaNFT {
   image_thumbnail_url: string;
   image_preview_url: string;
   image_url: string;
+  token_id: string;
+  asset_contract: { address: string };
 }
 
 export interface Context {
@@ -35,7 +37,7 @@ export interface Context {
 
 const WalletContext = createContext<Context>(null!);
 
-let web3Modal: Web3Modal | null = null;
+let web3Modal: SafeAppWeb3Modal | null = null;
 
 function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   const [wallet, setWallet] = useState<Web3 | null>(null);
@@ -51,7 +53,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
 
   useEffect(() => {
     if (Platform.OS === 'web') {
-      web3Modal = new Web3Modal({
+      web3Modal = new SafeAppWeb3Modal({
         cacheProvider: true,
         providerOptions: {
           walletconnect: {
@@ -73,7 +75,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
     try {
       if (Platform.OS === 'web') {
         if (web3Modal) {
-          const provider = await web3Modal.connect();
+          const provider = await web3Modal.requestProvider();
           newWallet = new Web3(provider);
           if (provider.isMetaMask) {
             setWalletName('MetaMask');

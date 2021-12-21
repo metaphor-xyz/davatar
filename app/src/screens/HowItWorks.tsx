@@ -26,16 +26,14 @@ export default function HowItWorks() {
           <Typography style={styles.textIcon}>
             <span style={{ fontWeight: 600 }}>✌️</span>
           </Typography>
-          <Typography style={styles.text}>Select your new look (NFT or upload a photo) 🎨</Typography>
+          <Typography style={styles.text}>Select your new look (NFT) 🎨</Typography>
         </View>
 
         <View style={styles.valuePropContainer}>
           <Typography style={styles.textIcon}>
             <span style={{ fontWeight: 600 }}>🖖</span>
           </Typography>
-          <Typography style={styles.text}>
-            Click Save, pay the one-time gas fee, and watch your ENS profile photo update everywhere 💫
-          </Typography>
+          <Typography style={styles.text}>Click Save, and watch your ENS profile photo update everywhere 💫</Typography>
         </View>
 
         <View style={styles.valuePropContainer}>

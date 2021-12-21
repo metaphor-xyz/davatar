@@ -7,6 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     name: 'davatar',
     slug: 'davatar',
     description: 'One decentralized avatar for everything Web3.',
+    icon: './src/assets/logo.png',
     web: {
       favicon: './src/assets/logo.png',
       name: 'davatar',

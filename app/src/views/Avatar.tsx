@@ -1,8 +1,6 @@
-import Davatar from '@davatar/react';
-import React, { CSSProperties } from 'react';
-import { Image, ImageStyle } from 'react-native';
-
-import { useWallet } from '../WalletProvider';
+import Davatar, { Image as DavatarImage } from '@davatar/react';
+import React from 'react';
+import { ImageStyle } from 'react-native';
 
 export interface Props {
   uri?: string | null;
@@ -12,23 +10,13 @@ export interface Props {
 }
 
 export default function Avatar({ uri, style, size, address }: Props) {
-  const { wallet } = useWallet();
-
-  if (!uri) {
-    return <Davatar provider={wallet?.currentProvider} address={address} size={size} style={style as CSSProperties} />;
-  }
-
-  if (!uri.includes('data:')) {
-    return (
-      <Davatar
-        provider={wallet?.currentProvider}
-        address={address}
-        size={size}
-        defaultComponent={<Image style={style} source={{ uri }} />}
-        style={style as CSSProperties}
-      />
-    );
+  if (uri) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return <DavatarImage size={size} style={style as any} uri={uri} />;
+  } else if (address) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return <Davatar size={size} style={style as any} address={address} />;
   } else {
-    return <Image style={style} source={{ uri }} />;
+    return null;
   }
 }
