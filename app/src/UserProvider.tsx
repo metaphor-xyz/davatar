@@ -1,5 +1,6 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 
+import { useWallet } from './WalletProvider';
 import { onAuthStateChanged, snapshot, UserInfo, storageRef, getDownloadURL } from './firebase';
 
 export interface User {
@@ -24,6 +25,7 @@ export default function UserProvider({ children }: React.PropsWithChildren<Recor
   const [loading, setLoading] = useState(true);
   const [authUser, setAuthUser] = useState<UserInfo | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const { wallet } = useWallet();
 
   useEffect(() => {
     return onAuthStateChanged(u => {
@@ -57,9 +59,7 @@ export default function UserProvider({ children }: React.PropsWithChildren<Recor
     }
   }, [authUser]);
 
-  return (
-    <ProviderContext.Provider value={{ loading, loggedIn: !!authUser, user }}>{children}</ProviderContext.Provider>
-  );
+  return <ProviderContext.Provider value={{ loading, loggedIn: !!wallet, user }}>{children}</ProviderContext.Provider>;
 }
 
 export function useUser() {

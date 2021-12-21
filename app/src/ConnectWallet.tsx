@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react';
 
 import { useWallet } from './WalletProvider';
-import { httpsCallable, signInWithCustomToken } from './firebase';
 import AnimatedPointingButton from './views/AnimatedPointingButton';
 
 type Props = {
@@ -11,7 +10,7 @@ type Props = {
 };
 
 export default function ConnectWallet({ onConnectSuccess, onConnectFail, disableAnimation }: Props) {
-  const { connect, signMessage, connecting } = useWallet();
+  const { connect, connecting } = useWallet();
   const [signing, setSigning] = useState(false);
 
   const connectWallet = useCallback(async () => {
@@ -25,19 +24,19 @@ export default function ConnectWallet({ onConnectSuccess, onConnectFail, disable
         throw new Error('no wallet connected');
       }
 
-      const accounts = await wallet.eth.getAccounts();
-      const address = accounts[0];
+      // const accounts = await wallet.eth.getAccounts();
+      // const address = accounts[0];
 
-      const challenge = await httpsCallable('connectWallet')({ address });
+      // const challenge = await httpsCallable('connectWallet')({ address });
 
-      const signature = await signMessage(challenge.data as string, wallet);
+      // const signature = await signMessage(challenge.data as string, wallet);
 
-      const result = await httpsCallable('connectWallet')({
-        address,
-        signature,
-      });
+      // const result = await httpsCallable('connectWallet')({
+      //   address,
+      //   signature,
+      // });
 
-      await signInWithCustomToken(result.data as string);
+      // await signInWithCustomToken(result.data as string);
 
       if (onConnectSuccess) {
         onConnectSuccess();

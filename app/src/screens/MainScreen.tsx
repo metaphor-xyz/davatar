@@ -6,7 +6,6 @@ import { useENS } from '../ENSProvider';
 import { useWallet } from '../WalletProvider';
 import { spacing } from '../constants';
 import useIsMoWeb from '../useIsMoWeb';
-import useUser from '../useUser';
 import FloatingAvatars from '../views/FloatingAvatars';
 import PageContainer from '../views/PageContainer';
 import SectionContainer from '../views/SectionContainer';
@@ -20,10 +19,9 @@ import TeamSection from './TeamSection';
 export default function MainScreen() {
   const isMoWeb = useIsMoWeb();
   const { wallet, loadingWallet } = useWallet();
-  const { loading, user } = useUser();
   const { loading: loadingENS } = useENS();
 
-  if (loading || loadingENS || loadingWallet) {
+  if (loadingENS || loadingWallet) {
     return (
       <PageContainer>
         <View style={styles.loaderContainer}>
@@ -33,7 +31,7 @@ export default function MainScreen() {
     );
   }
 
-  if (wallet && user) return <SelectNFTSection />;
+  if (wallet) return <SelectNFTSection />;
 
   return (
     <>
