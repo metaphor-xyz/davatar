@@ -72,9 +72,8 @@ export default function TeamSection() {
         </View>
 
         <Typography style={styles.spaced}>
-          Davatar is a product built by TBDAO (name pending...). We're a small but mighty group of product people
-          passionate about decentralized communities. We have a mission to make decentralized connection fun and
-          accessible for everyone.
+          Davatar is a product built by Metaphor. We're a small but mighty group of product people passionate about
+          decentralized communities. We have a mission to make decentralized connection fun and accessible for everyone.
         </Typography>
 
         <Typography style={styles.spaced}>
