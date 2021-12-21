@@ -25,10 +25,10 @@ export default function SaveENS({ loading, disabled, onSave, preview }: Props) {
   const { connected: twitterConnected, loading: twitterLoading, logout: logoutOfTwitter } = useConnectTwitter();
   const { connected, loading: loadingENS, pendingTransaction } = useENS();
   const [modalVisible, setModalVisible] = useState(false);
-  const [twitterConnectedBeforehand, setTwitterConnectedBeforehand] = useState(twitterConnected);
+  const [twitterConnectedBeforehand] = useState(twitterConnected);
 
   const onLogout = useCallback(async () => {
-    await logoutOfTwitter();
+    logoutOfTwitter();
   }, [logoutOfTwitter]);
 
   const onCloseModal = useCallback(() => {
@@ -36,14 +36,14 @@ export default function SaveENS({ loading, disabled, onSave, preview }: Props) {
   }, []);
 
   const onClickSave = useCallback(async () => {
-    if ((!connected || twitterConnected) && !modalVisible) {
-      setTwitterConnectedBeforehand(twitterConnected);
-      setModalVisible(true);
-    } else {
-      onCloseModal();
-      await onSave();
-    }
-  }, [onSave, onCloseModal, connected, modalVisible, twitterConnected]);
+    // if ((!connected || twitterConnected) && !modalVisible) {
+    //   setTwitterConnectedBeforehand(twitterConnected);
+    //   setModalVisible(true);
+    // } else {
+    onCloseModal();
+    await onSave();
+    // }
+  }, [onSave, onCloseModal]);
 
   return (
     <View style={styles.container}>
@@ -70,7 +70,7 @@ export default function SaveENS({ loading, disabled, onSave, preview }: Props) {
                 </Typography>
               )}
 
-              {twitterConnectedBeforehand && (
+              {twitterConnectedBeforehand && false && (
                 <>
                   {twitterConnected ? (
                     <Typography style={styles.spaced}>

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@davatar/react": "^1.8.1",
     "@ensdomains/ensjs": "^2.0.1",
     "@expo-google-fonts/inter": "^0.2.0",
     "@gnosis.pm/safe-apps-sdk": "^4.3.0",

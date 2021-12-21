@@ -18,6 +18,8 @@ export interface OpenSeaNFT {
   image_thumbnail_url: string;
   image_preview_url: string;
   image_url: string;
+  token_id: string;
+  asset_contract: { address: string };
 }
 
 export interface Context {

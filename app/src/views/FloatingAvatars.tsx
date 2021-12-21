@@ -4,7 +4,7 @@ import { View, LayoutChangeEvent, StyleSheet } from 'react-native';
 import defaultAvatars from '../defaultAvatars';
 import { docs, storageRef, getDownloadURL } from '../firebase';
 import useIsMoWeb from '../useIsMoWeb';
-import Avatar from './Avatar';
+import Avatar from './OldAvatar';
 import Typography from './Typography';
 
 const dist = (x1: number, y1: number, x2: number, y2: number): number => {

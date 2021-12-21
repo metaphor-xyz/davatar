@@ -48,15 +48,6 @@ export default function AboutScreen() {
             </Typography>
           </View>
 
-          <View style={styles.valuePropContainer}>
-            <Fontisto style={styles.icon} name="dollar" size={24} color="black" />
-            <Typography style={styles.text}>
-              <span style={{ fontWeight: 600 }}>One-time gas fee, unlimited updates.</span> ENS requires a gas fee for
-              each update to your profile photo. Davatar solves this with IPFS. Pay once then all subsequent updates are
-              gasless. Update your NiFTy look as many times as you’d like.
-            </Typography>
-          </View>
-
           <View style={styles.meetTeamContainer}>
             <Typography style={styles.teamHeader} fontWeight={600}>
               Meet the Team

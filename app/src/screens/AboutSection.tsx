@@ -28,15 +28,6 @@ export default function AboutSection() {
             everywhere.
           </Typography>
         </View>
-
-        <View style={styles.valuePropContainer}>
-          <Fontisto style={styles.iconLast} name="dollar" size={24} color="white" />
-          <Typography style={styles.text}>
-            <span style={{ fontWeight: 600 }}>One-time gas fee, unlimited updates.</span> ENS requires a gas fee for
-            each update to your profile photo. Davatar solves this with Arweave. Pay once then all subsequent updates
-            are gasless. Update your NiFTy look as many times as you’d like.
-          </Typography>
-        </View>
       </View>
     </View>
   );

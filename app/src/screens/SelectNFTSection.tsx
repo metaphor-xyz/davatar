@@ -1,13 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import CustomImagePicker from '../CustomImagePicker';
 import { useENS } from '../ENSProvider';
-import NFTSelectorCloud from '../NFTSelectorCloud';
+import NFTSelectorCloudPure from '../NFTSelectorCloudPure';
 import { useWallet } from '../WalletProvider';
 import { spacing, VIEW_STEPS } from '../constants';
-import { httpsCallable, storageRef, uploadBytes } from '../firebase';
 import useIsMoWeb from '../useIsMoWeb';
 import useUser from '../useUser';
 import Avatar from '../views/Avatar';
@@ -18,65 +16,40 @@ import Typography from '../views/Typography';
 
 export default function SelectNFTSection() {
   const isMoWeb = useIsMoWeb();
-  const [avatar, setAvatar] = useState<Blob | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const { address } = useWallet();
   const { user } = useUser();
-  const { name, connected, setAvatar: setEnsAvatar } = useENS();
+  const { name, setAvatar: setEnsAvatar } = useENS();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useNavigation<Record<string, any>>();
   const [nftIndex, setNftIndex] = useState<number | null>(null);
   const [inProgress, setInProgress] = useState(false);
-
-  const setUploadedPhotoAvatar = useCallback((newAvatar: Blob | null) => {
-    setNftIndex(null);
-    setAvatar(newAvatar);
-  }, []);
 
   const upload = useCallback(async () => {
     if (address && avatar) {
       setInProgress(true);
 
       try {
-        const avatarId = await httpsCallable('createAvatar')();
+        const success = await setEnsAvatar(avatar);
 
-        const ref = storageRef(`${address}/${avatarId.data}`);
-        await uploadBytes(ref, avatar);
-
-        const response = await httpsCallable('setAvatar')({ address, avatarId: avatarId.data });
-        const data = response.data as { avatarProtocol: string; avatarId: string } | null;
-
-        if (!connected && data) {
-          await setEnsAvatar(`${data.avatarProtocol}://${data.avatarId}`);
-        }
-
-        if (data) {
+        if (success) {
           navigation.navigate(VIEW_STEPS.SUCCESS_SCREEN);
-          if (user && !user.twitterConnected) {
-            navigation.navigate(VIEW_STEPS.SELECT_SOCIALS_MODAL);
-          }
+          // if (user && !user.twitterConnected) {
+          //   navigation.navigate(VIEW_STEPS.SELECT_SOCIALS_MODAL);
+          // }
         }
       } finally {
         setInProgress(false);
       }
     }
-  }, [address, avatar, connected, navigation, setEnsAvatar, user]);
+  }, [address, avatar, navigation, setEnsAvatar]);
 
-  const setNft = useCallback((blob: Blob, index: number) => {
-    setAvatar(blob);
+  const setNft = useCallback((id: string, image: string, index: number) => {
+    setAvatar(id);
+    setPreview(image);
     setNftIndex(index);
   }, []);
-
-  useEffect(() => {
-    // Set Avatar if Image is Uploaded
-    if (avatar) {
-      const fileReaderInstance = new FileReader();
-      fileReaderInstance.readAsDataURL(avatar);
-      fileReaderInstance.onload = () => {
-        setPreview(fileReaderInstance.result as string);
-      };
-    }
-  }, [avatar]);
 
   const avatarPreview = preview || (user && user.avatarPreviewURL);
 
@@ -98,11 +71,7 @@ export default function SelectNFTSection() {
           {name && (
             <View style={[styles.spaced, isMoWeb && styles.spacedXS]}>
               <Typography>Select NFT or upload image</Typography>
-              <NFTSelectorCloud
-                selectedIndex={nftIndex}
-                onSelect={setNft}
-                uploadImageComponent={<CustomImagePicker onChange={setUploadedPhotoAvatar} />}
-              />
+              <NFTSelectorCloudPure selectedIndex={nftIndex} onSelect={setNft} />
             </View>
           )}
         </View>
