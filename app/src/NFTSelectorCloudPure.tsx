@@ -3,6 +3,8 @@ import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 
 import { useWallet } from './WalletProvider';
 
+const SUPPORTED_ERCS = ['ERC721', 'ERC1155'];
+
 export interface Props {
   selectedIndex?: number | null;
   onSelect?: (_id: string, _image: string, _index: number) => void;
@@ -16,7 +18,11 @@ export default function NFTSelectorCloud({ selectedIndex, onSelect }: Props) {
       return async () => {
         if (onSelect) {
           const nft = nfts[index];
-          onSelect(`${nft.asset_contract.address}/${nft.token_id}`, nft.image_preview_url, index);
+          onSelect(
+            `${nft.asset_contract.schema_name.toLowerCase()}:${nft.asset_contract.address}/${nft.token_id}`,
+            nft.image_preview_url,
+            index
+          );
         }
       };
     },
@@ -28,19 +34,21 @@ export default function NFTSelectorCloud({ selectedIndex, onSelect }: Props) {
       <View style={styles.NFTContainerRow}>
         {!loadingNfts && nfts && (
           <>
-            {nfts.map((nft, i) => (
-              <TouchableOpacity
-                key={nft.id}
-                style={[styles.NFTImageContainer]}
-                onPress={setSelected(i)}
-                activeOpacity={0.8}
-              >
-                <Image
-                  style={[styles.NFTImage, selectedIndex === i && styles.selectedNFTImage]}
-                  source={{ uri: nft.image_thumbnail_url }}
-                />
-              </TouchableOpacity>
-            ))}
+            {nfts
+              .filter(nft => SUPPORTED_ERCS.includes(nft.asset_contract.schema_name))
+              .map((nft, i) => (
+                <TouchableOpacity
+                  key={nft.id}
+                  style={[styles.NFTImageContainer]}
+                  onPress={setSelected(i)}
+                  activeOpacity={0.8}
+                >
+                  <Image
+                    style={[styles.NFTImage, selectedIndex === i && styles.selectedNFTImage]}
+                    source={{ uri: nft.image_thumbnail_url }}
+                  />
+                </TouchableOpacity>
+              ))}
           </>
         )}
       </View>

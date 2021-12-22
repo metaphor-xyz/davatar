@@ -79,7 +79,7 @@ export default function ENSProvider({ children }: React.PropsWithChildren<Record
         const provider = wallet.currentProvider as any;
         const ens = new ENS({ provider, ensAddress: getEnsAddress(provider.chainId) });
         const n = ens.name(name);
-        const transaction = await n.setText('avatar', `eip155:1/erc721:${id}`);
+        const transaction = await n.setText('avatar', `eip155:1/${id}`);
         const tx = await wallet.eth.getTransaction(transaction.hash);
         setPendingTransaction(tx);
         AsyncStorage.setItem('pendingTransaction', transaction.hash);
