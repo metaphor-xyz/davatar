@@ -6,21 +6,19 @@ import { useCallback } from 'react';
 import { useENS } from '../ENSProvider';
 import { useWallet } from '../WalletProvider';
 import { sliceWalletAddress, VIEW_STEPS } from '../constants';
-import useUser from '../useUser';
 import Button from './Button';
 
 export default function ConnectWalletButton() {
   // eslint-disable-next-line
   const navigation: any = useNavigation();
   const { address, loadingWallet } = useWallet();
-  const { user, loading: loadingUser } = useUser();
   const { name, loading: loadingENS } = useENS();
 
   const onPress = useCallback(() => {
     navigation.navigate(VIEW_STEPS.CONNECT_WALLET_MODAL);
   }, [navigation]);
 
-  if (!address || !user || loadingWallet || loadingENS || loadingUser) return null;
+  if (!address || loadingWallet || loadingENS) return null;
 
   const slicedAddress = sliceWalletAddress(address);
 

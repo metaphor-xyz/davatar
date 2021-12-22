@@ -33,9 +33,8 @@ export default function TopNav() {
           </View>
         </View>
 
-        <ForDevelopersLink />
-
         <View style={styles.rightButtonContainer}>
+          <ForDevelopersLink />
           <View style={styles.ensButtonContainer}>
             {address && wallet && <ENSClaimButton address={address} provider={provider} delegate="metaphor.xyz" />}
           </View>
