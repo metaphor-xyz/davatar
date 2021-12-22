@@ -20,6 +20,7 @@ export interface OpenSeaNFT {
   image_url: string;
   token_id: string;
   asset_contract: { address: string; schema_name: string };
+  animation_url: string | null;
 }
 
 export interface Context {

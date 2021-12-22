@@ -35,7 +35,7 @@ export default function NFTSelectorCloud({ selectedIndex, onSelect }: Props) {
         {!loadingNfts && nfts && (
           <>
             {nfts
-              .filter(nft => SUPPORTED_ERCS.includes(nft.asset_contract.schema_name))
+              .filter(nft => SUPPORTED_ERCS.includes(nft.asset_contract.schema_name) && !nft.animation_url)
               .map((nft, i) => (
                 <TouchableOpacity
                   key={nft.id}
