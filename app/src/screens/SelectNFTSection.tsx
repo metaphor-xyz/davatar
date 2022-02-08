@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { useENS } from '../ENSProvider';
 import NFTSelectorCloudPure from '../NFTSelectorCloudPure';
@@ -18,7 +18,7 @@ export default function SelectNFTSection() {
   const isMoWeb = useIsMoWeb();
   const [avatar, setAvatar] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const { address } = useWallet();
+  const { address, loadingNfts, nfts, openseaError } = useWallet();
   const { user } = useUser();
   const { name, setAvatar: setEnsAvatar } = useENS();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,12 +70,23 @@ export default function SelectNFTSection() {
 
           <ENSDisplay />
 
-          {name && (
-            <View style={[styles.spaced, isMoWeb && styles.spacedXS]}>
-              <Typography>Select NFT or upload image</Typography>
-              <NFTSelectorCloudPure selectedIndex={nftIndex} onSelect={setNft} />
-            </View>
-          )}
+          <View style={[styles.spaced, isMoWeb && styles.spacedXS]}>
+            {loadingNfts && <ActivityIndicator size={24} />}
+            {openseaError && <Typography>Unable to search wallet for NFTs. Please try again later.</Typography>}
+            {!openseaError && !loadingNfts && (
+              <>
+                {nfts.length > 0 ? (
+                  <>
+                    <Typography>Select NFT or upload image</Typography>
+                    <NFTSelectorCloudPure selectedIndex={nftIndex} onSelect={setNft} nfts={nfts} />
+                  </>
+                ) : (
+                  <Typography>No available NFTs found in your wallet.</Typography>
+                )}
+                )
+              </>
+            )}
+          </View>
         </View>
       </PageContainer>
 

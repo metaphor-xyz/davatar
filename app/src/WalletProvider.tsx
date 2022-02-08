@@ -34,6 +34,8 @@ export interface Context {
   signMessage: (_message: string, _wallet?: Web3) => Promise<string>;
   loadingWallet: boolean;
   loadingNfts: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  openseaError: any;
 }
 
 const WalletContext = createContext<Context>(null!);
@@ -51,6 +53,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   const [isWalletConnect, setIsWalletConnect] = useState(false);
   const [signingExplanationOpen, setSigningExplanationOpen] = useState(false);
   const [loadingNfts, setLoadingNfts] = useState(false);
+  const [openseaError, setOpenseaError] = useState(false);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -115,6 +118,9 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
             if (data && data.assets) {
               setNfts(data.assets);
             }
+          })
+          .catch(e => {
+            setOpenseaError(e);
           })
           .finally(() => setLoadingNfts(false));
 
@@ -196,6 +202,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
         walletName,
         loadingWallet,
         loadingNfts,
+        openseaError,
       }}
     >
       {props.children}

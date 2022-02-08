@@ -1,18 +1,17 @@
 import React, { useCallback } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 
-import { useWallet } from './WalletProvider';
+import { OpenSeaNFT } from './WalletProvider';
 
 const SUPPORTED_ERCS = ['ERC721', 'ERC1155'];
 
 export interface Props {
   selectedIndex?: number | null;
   onSelect?: (_id: string, _image: string, _index: number) => void;
+  nfts: OpenSeaNFT[];
 }
 
-export default function NFTSelectorCloud({ selectedIndex, onSelect }: Props) {
-  const { loadingNfts, nfts } = useWallet();
-
+export default function NFTSelectorCloud({ selectedIndex, onSelect, nfts }: Props) {
   const setSelected = useCallback(
     (index: number) => {
       return async () => {
@@ -32,7 +31,7 @@ export default function NFTSelectorCloud({ selectedIndex, onSelect }: Props) {
   return (
     <View>
       <View style={styles.NFTContainerRow}>
-        {!loadingNfts && nfts && (
+        {nfts && (
           <>
             {nfts
               .filter(nft => SUPPORTED_ERCS.includes(nft.asset_contract.schema_name) && !nft.animation_url)
