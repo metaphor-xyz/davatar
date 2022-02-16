@@ -18,7 +18,7 @@ export default function SelectNFTSection() {
   const isMoWeb = useIsMoWeb();
   const [avatar, setAvatar] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const { address, loadingNfts, nfts, openseaError } = useWallet();
+  const { address, loadingNfts, nfts, error } = useWallet();
   const { user } = useUser();
   const { name, setAvatar: setEnsAvatar } = useENS();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -72,8 +72,8 @@ export default function SelectNFTSection() {
 
           <View style={[styles.spaced, isMoWeb && styles.spacedXS]}>
             {loadingNfts && <ActivityIndicator size={24} />}
-            {openseaError && <Typography>Unable to search wallet for NFTs. Please try again later.</Typography>}
-            {!openseaError && !loadingNfts && (
+            {error && <Typography>{error} Please try again later.</Typography>}
+            {!error && !loadingNfts && (
               <>
                 {nfts.length > 0 ? (
                   <>
