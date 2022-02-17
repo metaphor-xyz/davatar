@@ -34,6 +34,7 @@ export interface Context {
   signMessage: (_message: string, _wallet?: Web3) => Promise<string>;
   loadingWallet: boolean;
   loadingNfts: boolean;
+  error?: string;
 }
 
 const WalletContext = createContext<Context>(null!);
@@ -51,6 +52,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   const [isWalletConnect, setIsWalletConnect] = useState(false);
   const [signingExplanationOpen, setSigningExplanationOpen] = useState(false);
   const [loadingNfts, setLoadingNfts] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -114,7 +116,11 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
           .then(data => {
             if (data && data.assets) {
               setNfts(data.assets);
+              setError(undefined);
             }
+          })
+          .catch(() => {
+            setError('Unable to search wallet using OpenSea for NFTs.');
           })
           .finally(() => setLoadingNfts(false));
 
@@ -196,6 +202,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
         walletName,
         loadingWallet,
         loadingNfts,
+        error,
       }}
     >
       {props.children}
