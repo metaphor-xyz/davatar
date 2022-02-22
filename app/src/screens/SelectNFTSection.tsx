@@ -83,7 +83,6 @@ export default function SelectNFTSection() {
                 ) : (
                   <Typography>No available NFTs found in your wallet.</Typography>
                 )}
-                )
               </>
             )}
           </View>

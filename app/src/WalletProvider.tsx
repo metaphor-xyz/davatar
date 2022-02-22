@@ -1,3 +1,4 @@
+import { getGatewayUrl } from '@davatar/react/dist/Image';
 import { SafeAppWeb3Modal } from '@gnosis.pm/safe-apps-web3modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { withWalletConnect, useWalletConnect } from '@walletconnect/react-native-dapp';
@@ -11,16 +12,19 @@ import { spacing } from './constants';
 import { logout } from './firebase';
 import CustomPaperModal from './views/CustomPaperModal';
 
-export interface OpenSeaNFT {
-  id: number;
-  name: string;
-  description: string;
-  image_thumbnail_url: string;
-  image_preview_url: string;
-  image_url: string;
-  token_id: string;
-  asset_contract: { address: string; schema_name: string };
-  animation_url: string | null;
+interface ResNFT {
+  id: string;
+  identifier: string;
+  uri: string;
+  registry: { id: string };
+}
+
+export interface GraphNFT {
+  type: 'erc721' | 'erc1155';
+  id: string;
+  contractId: string;
+  tokenId: string;
+  uri: string;
 }
 
 export interface Context {
@@ -30,7 +34,7 @@ export interface Context {
   connect: () => Promise<Web3 | null | undefined>;
   disconnect: () => void;
   connecting: boolean;
-  nfts: OpenSeaNFT[];
+  nfts: GraphNFT[];
   signMessage: (_message: string, _wallet?: Web3) => Promise<string>;
   loadingWallet: boolean;
   loadingNfts: boolean;
@@ -47,7 +51,7 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
   const [address, setAddress] = useState<string | null>(null);
   const connector = useWalletConnect();
   const [connecting, setConnecting] = useState(false);
-  const [nfts, setNfts] = useState([]);
+  const [nfts, setNfts] = useState<GraphNFT[]>([]);
   const [walletName, setWalletName] = useState<string | null>(null);
   const [isWalletConnect, setIsWalletConnect] = useState(false);
   const [signingExplanationOpen, setSigningExplanationOpen] = useState(false);
@@ -109,18 +113,58 @@ function WalletProvider(props: React.PropsWithChildren<Record<string, never>>) {
           return null;
         }
 
-        // Load NFT information from OpenSea
+        // Load NFT information from The Graph
         setLoadingNfts(true);
-        fetch(`https://api.opensea.io/api/v1/assets?owner=${accounts[0]}&order_direction=desc&offset=0&limit=50`)
+        fetch('https://api.thegraph.com/subgraphs/name/amxx/eip721-subgraph', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json;charset=UTF-8',
+          },
+          body: JSON.stringify({
+            query: `
+            {
+              tokens(first: 100, where: { owner: "${accounts[0].toLowerCase()}" }) {
+                id
+                identifier
+                uri
+                registry {
+                  id
+                }
+              }
+            }
+            `,
+          }),
+        })
           .then(res => res.json())
-          .then(data => {
-            if (data && data.assets) {
-              setNfts(data.assets);
+          .then(res => {
+            if (res.data && res.data.tokens) {
+              Promise.allSettled<GraphNFT>(
+                res.data.tokens.map((t: ResNFT) => {
+                  const id = t.id.split('-')[1];
+
+                  return fetch(getGatewayUrl(t.uri, id))
+                    .then(r => r.json())
+                    .then((meta: { image: string }) => ({
+                      type: 'erc721',
+                      id: t.id,
+                      contractId: t.registry.id,
+                      tokenId: t.identifier,
+                      uri: meta.image,
+                    }));
+                })
+              ).then(results => {
+                setNfts(
+                  results
+                    .filter(r => r.status === 'fulfilled')
+                    // @ts-ignore
+                    .map((r: PromiseFulfilledResult<GraphNFT>) => r.value)
+                );
+              });
               setError(undefined);
             }
           })
           .catch(() => {
-            setError('Unable to search wallet using OpenSea for NFTs.');
+            setError('Unable to load NFTs.');
           })
           .finally(() => setLoadingNfts(false));
 
