@@ -1,14 +1,13 @@
+import { Image as DavatarImage } from '@davatar/react';
 import React, { useCallback } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 
-import { OpenSeaNFT } from './WalletProvider';
-
-const SUPPORTED_ERCS = ['ERC721', 'ERC1155'];
+import { GraphNFT } from './WalletProvider';
 
 export interface Props {
   selectedIndex?: number | null;
   onSelect?: (_id: string, _image: string, _index: number) => void;
-  nfts: OpenSeaNFT[];
+  nfts: GraphNFT[];
 }
 
 export default function NFTSelectorCloud({ selectedIndex, onSelect, nfts }: Props) {
@@ -17,11 +16,7 @@ export default function NFTSelectorCloud({ selectedIndex, onSelect, nfts }: Prop
       return async () => {
         if (onSelect) {
           const nft = nfts[index];
-          onSelect(
-            `${nft.asset_contract.schema_name.toLowerCase()}:${nft.asset_contract.address}/${nft.token_id}`,
-            nft.image_preview_url,
-            index
-          );
+          onSelect(`${nft.type}:${nft.contractId}/${nft.tokenId}`, nft.uri, index);
         }
       };
     },
@@ -33,21 +28,20 @@ export default function NFTSelectorCloud({ selectedIndex, onSelect, nfts }: Prop
       <View style={styles.NFTContainerRow}>
         {nfts && (
           <>
-            {nfts
-              .filter(nft => SUPPORTED_ERCS.includes(nft.asset_contract.schema_name) && !nft.animation_url)
-              .map((nft, i) => (
-                <TouchableOpacity
-                  key={nft.id}
-                  style={[styles.NFTImageContainer]}
-                  onPress={setSelected(i)}
-                  activeOpacity={0.8}
-                >
-                  <Image
-                    style={[styles.NFTImage, selectedIndex === i && styles.selectedNFTImage]}
-                    source={{ uri: nft.image_thumbnail_url }}
-                  />
-                </TouchableOpacity>
-              ))}
+            {nfts.map((nft, i) => (
+              <TouchableOpacity
+                key={nft.id}
+                style={[styles.NFTImageContainer]}
+                onPress={setSelected(i)}
+                activeOpacity={0.8}
+              >
+                <DavatarImage
+                  style={selectedIndex === i ? styles.selectedNFTImage : styles.NFTImage}
+                  uri={nft.uri}
+                  size={75}
+                />
+              </TouchableOpacity>
+            ))}
           </>
         )}
       </View>
@@ -82,5 +76,6 @@ const styles = StyleSheet.create({
     borderColor: '#5c59eb',
     borderStyle: 'solid',
     borderWidth: 4,
+    backgroundColor: 'rgba(90, 88, 235, 0.85)',
   },
 });
