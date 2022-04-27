@@ -19,7 +19,7 @@
     "expo-image-picker": "~10.2.2",
     "expo-random": "~11.2.0",
     "expo-web-browser": "~9.2.0",
-    "firebase": "^9.0.0-beta.8",
+    "firebase": "^9.6.11",
     "mersenne-twister": "^1.1.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
