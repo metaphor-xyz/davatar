@@ -11,7 +11,7 @@
   "license": "ISC",
   "private": true,
   "devDependencies": {
-    "go-ipfs": "^0.9.1"
+    "go-ipfs": "^0.12.2"
   },
   "dependencies": {
     "@types/express": "^4.17.13",
